@@ -64,19 +64,20 @@ let rawTenant = /* ... */; // Should be const if never reassigned
 
 ## Security
 
-### 1. **Cross-Site Scripting (XSS) Vectors** (Severity: **High**)
-**Files:** Multiple components using `dangerouslySetInnerHTML`
-- `src/ui/pages/common/forms/responseview/comp/detailview/ResultOverview.tsx`
-- `src/ui/pages/common/forms/responseview/comp/questionview/*.tsx`
+### 1. **Cross-Site Scripting (XSS) Vectors** (Severity: **Medium**)
+**Files:** Multiple components using `dangerouslySetInnerHTML` (18+ instances)
+- `src/ui/pages/common/forms/responseview/comp/questionview/PairMatchQuestionView.tsx:48,54,60`
+- `src/ui/pages/common/forms/responseview/comp/questionview/TextAnswerSection.tsx:18`
+- `src/ui/pages/common/forms/submit/interaction/comp/ObjectiveQuestionView.tsx:72`
 
-**Issue:** HTML content rendered without DOMPurify sanitization
-**Fix:** Ensure all user content is sanitized before rendering
+**Issue:** Extensive use of `dangerouslySetInnerHTML` throughout the application
+**Current Protection:** MdQRenderer does use DOMPurify.sanitize() (line 47 in questionmarkit.ts)
+**Risk:** Inconsistent sanitization patterns - some direct usage without explicit sanitization
+**Fix:** Audit all `dangerouslySetInnerHTML` usage to ensure consistent sanitization
 ```typescript
-import DOMPurify from 'dompurify';
-
-// Safe rendering
+// Example fix for direct usage
 <div dangerouslySetInnerHTML={{ 
-  __html: DOMPurify.sanitize(userContent) 
+  __html: DOMPurify.sanitize(MdQRenderer.choiceText(choice.text)) 
 }} />
 ```
 
@@ -197,10 +198,24 @@ app.use(helmet({
 **Issue:** No visible accessibility testing or ARIA attributes
 **Fix:** Implement accessibility standards (WCAG 2.1)
 
-### 2. **Bundle Security** (Severity: **Low**)
-**File:** Build configuration
-**Issue:** Source maps might be exposed in production
-**Fix:** Configure proper source map handling for production
+### 2. **Bundle Security** (Severity: **Medium**)
+**File:** `vite.config.ts:13` - Visualizer plugin enabled
+**Issue:** Build analyzer exposed in production, source maps potentially available
+**Risk:** Potential information disclosure about application structure
+**Fix:** Configure environment-specific build settings
+```typescript
+export default defineConfig({
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    tailwindcss(),
+    ...(process.env.NODE_ENV === 'development' ? [visualizer({ open: true })] : [])
+  ],
+  build: {
+    sourcemap: process.env.NODE_ENV === 'development'
+  }
+});
+```
 
 ## Data & Migrations
 
@@ -263,18 +278,31 @@ app.use(helmet({
 
 ### Authentication Service Issues
 ```typescript
-// CRITICAL: Token logging in production
+// CRITICAL: Token logging in production (src/domain/auth/services/AuthService.ts:25,43,44,49,50,51)
 console.info("AuthService: getAccessToken: accessToken=", accessToken);
 console.info("document.cookie=", document.cookie);
+console.info("saved token=", Cookies.get(AuthConst.keyAccessToken));
 
-// INSECURE: Cookie without security attributes
+// INSECURE: Cookie without security attributes (line 46-47)
 Cookies.set(AuthConst.keyAccessToken, accessToken);
+Cookies.set(AuthConst.keyAppUserType, appUserType.type);
 ```
 
-### XSS Vulnerability Examples
+### XSS Risk Areas  
 ```typescript
-// UNSAFE: HTML rendering without sanitization
-<div dangerouslySetInnerHTML={{ __html: userContent }} />
+// HIGH USAGE: 18+ instances of dangerouslySetInnerHTML
+// Most go through MdQRenderer.sanitize() but some are direct
+<div dangerouslySetInnerHTML={{ __html: MdQRenderer.choiceText(choice.text) }} />
+
+// GOOD: MdQRenderer does sanitize (questionmarkit.ts:47)
+return DOMPurify.sanitize(doc.body.innerHTML);
+```
+
+### Server Security Issues
+```javascript
+// MISSING: No security headers in server.js
+const app = express();
+app.use(express.static(path.join(cwd, "dist"))); // Raw static serving
 ```
 
 ### Performance Issues
