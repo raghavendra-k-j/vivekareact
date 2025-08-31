@@ -1,10 +1,12 @@
 import { JsonObj } from "~/core/types/Json";
+import { BaseAuthRes } from "~/domain/auth/models/BaseAuthRes";
 import { AbsUser } from "~/domain/common/models/AbsUser";
 import { AppUserType } from "~/domain/common/models/AppUserType";
 import { AuthToken } from "~/domain/common/models/AuthToken";
 import { AuthUser } from "~/domain/common/models/AuthUser";
 import { GuestUser } from "~/domain/common/models/GuestUser";
 import { NoAuthUser } from "~/domain/common/models/NoAuthUser";
+import { PlanAndUsage } from "~/domain/common/models/PlanAndUsage";
 
 export enum GetAppUserResType {
     AppUserRetrieved = "APP_USER_RETRIEVED",
@@ -68,17 +70,20 @@ export class GetAppUserRes {
 }
 
 export class GetAppUserSuccessRes {
-    readonly user: AbsUser;
+    readonly baseAuthRes: BaseAuthRes;
     readonly authToken: AuthToken;
 
-    constructor(params: { user: AbsUser; authToken: AuthToken }) {
-        this.user = params.user;
+    constructor(params: { baseAuthRes: BaseAuthRes; authToken: AuthToken }) {
+        this.baseAuthRes = params.baseAuthRes;
         this.authToken = params.authToken;
     }
 
     static fromJson(json: JsonObj): GetAppUserSuccessRes {
-        const userJson = json.user;
+        const baseAuthResJson = json.baseAuthRes;
+        const userJson = baseAuthResJson.user;
         const appUserType = AppUserType.fromTypeStr(userJson.type);
+        const planAndUsage = PlanAndUsage.fromJson(baseAuthResJson.planAndUsage);
+        const authToken = AuthToken.fromJson(json.authToken);
 
         let user: AbsUser;
         if (appUserType.isGuest) {
@@ -91,9 +96,10 @@ export class GetAppUserSuccessRes {
             throw new Error(`Unknown AppUserType: ${userJson.type}`);
         }
 
+        const baseAuthRes = new BaseAuthRes(user, planAndUsage);
         return new GetAppUserSuccessRes({
-            user,
-            authToken: AuthToken.fromJson(json.authToken),
+            baseAuthRes: baseAuthRes,
+            authToken: authToken,
         });
     }
 }

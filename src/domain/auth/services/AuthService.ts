@@ -1,4 +1,4 @@
-import { AuthRes } from "../models/AuthRes";
+import { SoftLoginRes } from "../models/SoftLoginRes";
 import { ResEither } from "~/core/utils/ResEither";
 import { AuthRepo } from "~/infra/repos/AuthRepo";
 import Cookies from 'js-cookie'
@@ -16,13 +16,12 @@ export class AuthService {
         this.authRepo = authRepo;
     }
 
-    async softLogin(accessToken: string): Promise<ResEither<AppError, AuthRes>> {
+    async softLogin(accessToken: string): Promise<ResEither<AppError, SoftLoginRes>> {
         return this.authRepo.softLogin(accessToken);
     }
 
     async getAccessToken(): Promise<string | null> {
         const accessToken = Cookies.get(AuthConst.keyAccessToken) || null;
-        console.info("AuthService: getAccessToken: accessToken=", accessToken);
         return accessToken;
     }
 
@@ -32,23 +31,8 @@ export class AuthService {
     }
 
     async saveTokenLocally({ accessToken, appUserType }: { accessToken: string, appUserType: AppUserType }) {
-        if (typeof window === "undefined") {
-            console.warn("saveTokenLocally called on server — cookies not available");
-            return;
-        }
-        else {
-            console.info("AuthService: saveTokenLocally called on client");
-        }
-
-        console.info("AuthService: saveTokenLocally: accessToken=", accessToken);
-        console.info("AuthService: saveTokenLocally: appUserType=", appUserType);
-
-        Cookies.set(AuthConst.keyAccessToken, accessToken);
-        Cookies.set(AuthConst.keyAppUserType, appUserType.type);
-
-        console.info("document.cookie=", document.cookie);
-        console.info("saved token=", Cookies.get(AuthConst.keyAccessToken));
-        console.info("saved appUserType=", Cookies.get(AuthConst.keyAppUserType));
+        Cookies.set(AuthConst.keyAccessToken, accessToken, {expires: AuthConst.cookieExpiresDays});
+        Cookies.set(AuthConst.keyAppUserType, appUserType.type, {expires: AuthConst.cookieExpiresDays});
     }
 
     async checkAuthEmailOTPStatus(otpId: number): Promise<ResEither<AppError, EmailOtpStatus | null>> {

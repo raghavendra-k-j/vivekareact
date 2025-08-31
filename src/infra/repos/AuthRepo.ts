@@ -1,10 +1,10 @@
+import { AuthConst } from "~/core/const/AuthConst";
 import { ResEither } from "~/core/utils/ResEither";
+import { AutoLoginRes } from "~/domain/auth/models/AutoLoginRes";
+import { SoftLoginRes } from "~/domain/auth/models/SoftLoginRes";
+import { EmailOtpStatus } from "~/domain/common/models/EmailOtpStatus";
 import { ApiClient } from "../datasources/ApiClient";
 import { ApiError } from "../errors/ApiError";
-import { AuthRes } from "~/domain/auth/models/AuthRes";
-import { AuthConst } from "~/core/const/AuthConst";
-import { EmailOtpStatus } from "~/domain/common/models/EmailOtpStatus";
-import { AutoLoginRes } from "~/domain/auth/models/AutoLoginRes";
 
 export class AuthRepo {
 
@@ -14,12 +14,12 @@ export class AuthRepo {
         this.apiClient = apiClient;
     }
 
-    async softLogin(accessToken: string): Promise<ResEither<ApiError, AuthRes>> {
+    async softLogin(accessToken: string): Promise<ResEither<ApiError, SoftLoginRes>> {
         try {
             const res = await this.apiClient.axios.post("/api/v1/auth/soft-login", {
                 [AuthConst.keyAccessToken]: accessToken,
             });
-            const authRes = AuthRes.fromJson(res.data.user);
+            const authRes = SoftLoginRes.fromJson(res.data.user);
             return ResEither.data(authRes);
         }
         catch (error) {
@@ -56,7 +56,5 @@ export class AuthRepo {
             return ResEither.error(apiError);
         }
     }
-
-
 
 }

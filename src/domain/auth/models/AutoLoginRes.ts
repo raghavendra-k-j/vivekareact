@@ -1,27 +1,22 @@
 import { JsonObj } from "~/core/types/Json";
 import { AuthToken } from "~/domain/common/models/AuthToken";
-import { AuthUser } from "~/domain/common/models/AuthUser";
+import { BaseAuthRes } from "./BaseAuthRes";
 
 export type AutoLoginResProps = {
-    user: AuthUser;
+    baseAuthRes: BaseAuthRes;
     authToken: AuthToken;
 }
 
 export class AutoLoginRes {
-
-    public readonly user: AuthUser;
-    public readonly authToken: AuthToken;
-
-    constructor(props: AutoLoginResProps) {
-        this.user = props.user;
-        this.authToken = props.authToken;
-    }
+    constructor(
+        public readonly baseAuthRes: BaseAuthRes,
+        public readonly authToken: AuthToken,
+    ) { }
 
     static fromJson(json: JsonObj): AutoLoginRes {
-        return new AutoLoginRes({
-            user: AuthUser.fromJson(json.user),
-            authToken: AuthToken.fromJson(json.authToken),
-        });
+        const baseAuthRes = BaseAuthRes.fromAuthUserRes(json);
+        const authToken = AuthToken.fromJson(json);
+        return new AutoLoginRes(baseAuthRes, authToken);
     }
 
 }

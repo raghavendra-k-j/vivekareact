@@ -2,6 +2,8 @@ import { makeObservable, observable, runInAction } from "mobx";
 import type { AppEnv } from "~/core/config/AppEnv";
 import { AppError } from "~/core/error/AppError";
 import { logger } from "~/core/utils/logger";
+import { BaseAbsAuthRes } from "~/domain/auth/models/BaseAbsAuthRes";
+import { BaseAuthRes } from "~/domain/auth/models/BaseAuthRes";
 import { AuthService } from "~/domain/auth/services/AuthService";
 import { AbsUser } from "~/domain/common/models/AbsUser";
 import { AuthToken } from "~/domain/common/models/AuthToken";
@@ -122,7 +124,7 @@ export class AppStore {
             }
             const res = (await this._authService.softLogin(accessToken)).getOrError();
             await this.updateAuthResponse({
-                user: res.user,
+                baseAuthRes: res.baseAuthRes,
                 authToken: AuthToken.fromAccessToken(accessToken),
             });
             await this.loadPlanAndUsage();
@@ -168,7 +170,8 @@ export class AppStore {
         }
     }
 
-    async updateAuthResponse({ user, authToken }: { user: AbsUser, authToken: AuthToken }) {
+    async updateAuthResponse({ baseAuthRes, authToken }: { baseAuthRes: BaseAuthRes, authToken: AuthToken }) {
+        const user = baseAuthRes.user;
         await this._authService.clearTokenLocally();
         await this._authService.saveTokenLocally({
             accessToken: authToken.accessToken,
@@ -177,8 +180,11 @@ export class AppStore {
         runInAction(() => {
             this._appUser = user;
             this._authToken = authToken;
+            this._planAndUsage = baseAuthRes.planAndUsage;
+            this._planAndUsageState = DataState.data(undefined);
         });
     }
+
 
     navigateToLogin() {
         const loginUrl = this._appEnv.webBase + "/login";

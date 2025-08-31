@@ -28,7 +28,7 @@ function PngLogo() {
 
 function LogoPng() {
     const appStore = useAppStore();
-    const finalLogoUrl = appStore.orgConfig.org.hasLogoUrl ? ServiceURL.getUrl(`/${appStore.orgConfig.org.logoUrl!}`) : "/logo_sidebar.png";
+    const finalLogoUrl = appStore.orgConfig.org.hasLogoUrl ? ServiceURL.getUrl(`/${appStore.orgConfig.org.logoUrl!}`) : "logo_sidebar.png";
     return (
         <img
             src={finalLogoUrl}

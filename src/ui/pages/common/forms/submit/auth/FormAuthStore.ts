@@ -344,12 +344,9 @@ export class FormAuthStore {
         }
     }
 
-
-
-
     private async onAppUserRetrieved(res: GetAppUserRes) {
         const successRes = res.data as GetAppUserSuccessRes;
-        await this.parentStore.appStore.updateAuthResponse({ user: successRes.user, authToken: successRes.authToken });
+        await this.parentStore.appStore.updateAuthResponse({ baseAuthRes: successRes.baseAuthRes, authToken: successRes.authToken });
         this.parentStore.setCurrentFragmentPreview();
         this.parentStore.startFormImmediatelyAfterLoadForm = true;
         await this.parentStore.loadFormDetail();
