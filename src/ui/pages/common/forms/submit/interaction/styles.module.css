@@ -1,0 +1,513 @@
+.rightPanel {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  width: 300px;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.qIndexPanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  overflow-y: hidden;
+  background-color: var(--color-slate-100);
+  border: 1px solid var(--color-slate-200);
+  border-radius: 4px;
+}
+
+.qIndexPanelTitle {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-default);
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--color-slate-200);
+}
+
+.qIndexPanelContent {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  gap: 0.75rem;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+/* QINDEX ITEM */
+.qIndexItem {
+  min-width: 40px;
+  min-height: 40px;
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-slate-100);
+  border-radius: var(--dimen-button-radius);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-default);
+  box-shadow: 0 0 0 0 transparent;
+}
+
+.qIndexItem:hover,
+.qIndexItem:focus-visible {
+  background-color: var(--color-slate-100);
+  box-shadow: 0 0 0 2px var(--color-slate-200);
+  outline: none;
+}
+
+.qIndexItemAnswered {
+  border-color: var(--color-blue-400);
+  color: var(--color-blue-700);
+  background-color: var(--color-blue-50);
+}
+
+.qIndexItemAnswered:hover,
+.qIndexItemAnswered:focus-visible {
+  background-color: var(--color-blue-100);
+  box-shadow: 0 0 0 2px var(--color-blue-300);
+}
+
+.qIndexItemUnanswered {
+  border-color: var(--color-slate-200);
+  color: var(--color-text-default);
+}
+
+.qIndexItemError {
+  border-color: var(--color-red-400);
+  color: var(--color-red-700);
+  background-color: var(--color-red-50);
+}
+
+.qIndexItemError:hover,
+.qIndexItemError:focus-visible {
+  background-color: var(--color-red-100);
+  box-shadow: 0 0 0 2px var(--color-red-300);
+}
+
+/* QINDEX ITEM */
+
+/* QINDEX LEGEND */
+.qIndexLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  justify-content: flex-start;
+  border-bottom: 1px solid var(--color-slate-200);
+}
+
+.qIndexLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.qIndexLegendItemBox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--color-slate-200);
+  box-shadow: var(--shadow-xs);
+}
+
+.qIndexLegendItemBox.Answered {
+  background-color: var(--color-blue-50);
+  border-color: var(--color-blue-400);
+}
+
+.qIndexLegendItemBox.Unanswered {
+  background-color: var(--color-surface);
+  border-color: var(--color-slate-200);
+}
+
+.qIndexLegendItemBox.Error {
+  background-color: var(--color-red-50);
+  border-color: var(--color-red-400);
+}
+
+.qIndexLegendItemText {
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-default);
+}
+
+/* QINDEX LEGEND END */
+
+.questionHeader {
+  display: flex;
+  padding: 0.5rem 1rem;
+}
+
+.questionText {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.questionCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.questionCardDefault {
+  border-radius: 0.25rem;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.questionCardChild {
+  background-color: var(--color-surface);
+}
+
+/* TIMER */
+.timer {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-default);
+  background-color: var(--color-primary-600);
+  border-radius: 4px;
+  padding: 0 0.25rem;
+  color: var(--color-white);
+}
+
+.timerIcon {
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+}
+
+.timerText {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.timerNumber {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.timerColon {
+  font-weight: 500;
+}
+
+/* TIMER END */
+
+/* styles.model.css */
+.questionNavigationPanel {
+  /* styles for the main panel */
+  width: 100%;
+  /* sm:w-[300px] */
+  background-color: #f9fafb;
+  /* example: bg-surface */
+  border-left: 1px solid #e5e7eb;
+  /* example: border-l border-slate-200 */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  /* example: shadow-sm */
+  padding: 1rem;
+  /* example: p-4 */
+  overflow-y: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.panelHeader {
+  font-size: 1rem;
+  /* example: text-base */
+  font-weight: 600;
+  /* example: font-semibold */
+  margin-bottom: 0.75rem;
+  /* example: mb-3 */
+}
+
+.legendsContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 2rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* example: space-x-2 */
+}
+
+.legendIndicator {
+  width: 1.25rem;
+  /* example: w-5 */
+  height: 1.25rem;
+  /* example: h-5 */
+  border-radius: 9999px;
+  /* example: rounded-full */
+  border-width: 2px;
+  transition-property: background-color, border-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.legendIndicatorAnswered {
+  background-color: #dbeafe;
+  /* example: bg-blue-100 */
+  border-color: #93c5fd;
+  /* example: border-blue-300 */
+}
+
+.legendIndicatorAnswered:hover {
+  background-color: #bfdbfe;
+  /* example: hover:bg-blue-200 */
+}
+
+.legendIndicatorUnanswered {
+  background-color: #ffffff;
+  /* example: bg-white */
+  border-color: #d1d5db;
+  /* example: border-gray-300 */
+}
+
+.legendIndicatorUnanswered:hover {
+  background-color: #f3f4f6;
+  /* example: hover:bg-gray-100 */
+}
+
+.legendText {
+  font-size: 0.875rem;
+  /* example: text-sm */
+  font-weight: 500;
+  /* example: font-medium */
+  color: #374151;
+  /* example: text-gray-700 */
+}
+
+.viewModeToggleContainer {
+  margin-bottom: 1rem;
+  /* example: mb-4 */
+  display: flex;
+  gap: 0.5rem;
+  /* example: space-x-2 */
+}
+
+.viewModeButton {
+  padding: 0.375rem 0.75rem;
+  /* example: px-3 py-1.5 */
+  font-size: 0.75rem;
+  /* example: text-xs */
+  font-weight: 500;
+  /* example: font-medium */
+  border-radius: 0.375rem;
+  /* example: rounded-md */
+  border: 1px solid #d1d5db;
+  /* example: border-gray-300 */
+  background-color: #ffffff;
+  /* example: bg-white */
+  color: #374151;
+  /* example: text-gray-700 */
+  transition-property: background-color, border-color, color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  cursor: pointer;
+}
+
+.viewModeButton:hover {
+  background-color: #f9fafb;
+  /* example: hover:bg-gray-50 */
+}
+
+.viewModeButtonActive {
+  background-color: #3b82f6;
+  /* example: bg-blue-500 */
+  color: #ffffff;
+  /* example: text-white */
+  border-color: #3b82f6;
+  /* example: border-blue-500 */
+}
+
+.questionsDisplayArea {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.questionsGridContainer {
+  display: grid;
+  /* equivalent to: [grid-template-columns:repeat(auto-fit,minmax(48px,1fr))] */
+  grid-template-columns: repeat(auto-fit, minmax(48px, 1fr));
+  gap: 0.75rem;
+  /* example: gap-3 / sm:gap-4 */
+}
+
+.questionsListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* example: space-y-2 */
+}
+
+.questionItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.questionItemAsListItem {
+  /* Added for list view full width */
+  width: 100%;
+}
+
+.subQuestionsContainer {
+  margin-top: 0.25rem;
+  /* example: mt-1 */
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  /* example: space-y-1 */
+}
+
+.subQuestionsContainerGrid {
+  margin-left: 0.5rem;
+  /* example: ml-2 */
+}
+
+.subQuestionsContainerList {
+  margin-left: 1.5rem;
+  /* example: ml-6 */
+}
+
+.questionRow {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  /* example: px-2 py-2 or px-3 py-2 */
+  border-radius: 0.375rem;
+  /* example: rounded-md */
+  border: 1px solid;
+  font-size: 0.875rem;
+  /* example: text-sm */
+  transition-property: background-color, border-color, box-shadow;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02);
+  /* example: shadow-xs */
+}
+
+.questionRow:hover {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  /* example: hover:shadow */
+}
+
+.questionRowGrid {
+  justify-content: center;
+  /* example: justify-center */
+}
+
+.questionRowList {
+  justify-content: flex-start;
+  /* example: justify-start */
+  width: 100%;
+}
+
+.questionRowAnswered {
+  background-color: #dbeafe;
+  /* example: bg-blue-100 */
+  border-color: #bfdbfe;
+  /* example: border-blue-200 */
+}
+
+.questionRowAnswered:hover {
+  background-color: #bfdbfe;
+  /* example: hover:bg-blue-200 */
+}
+
+.questionRowUnanswered {
+  background-color: #ffffff;
+  /* example: bg-white */
+  border-color: #e5e7eb;
+  /* example: border-gray-200 */
+}
+
+.questionRowUnanswered:hover {
+  background-color: #f9fafb;
+  /* example: hover:bg-gray-100 */
+}
+
+.questionLabel {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  /* example: w-8 */
+  height: 2rem;
+  /* example: h-8 */
+  border-radius: 9999px;
+  /* example: rounded-full */
+  font-weight: 600;
+  /* example: font-semibold */
+  font-size: 0.75rem;
+  /* example: text-xs */
+  border: 1px solid;
+}
+
+.questionLabelList {
+  /* For list mode, if spacing is needed */
+  margin-right: 0.75rem;
+  /* example: mr-3 */
+}
+
+.questionLabelAnswered {
+  background-color: #ffffff;
+  /* example: bg-white */
+  color: #2563eb;
+  /* example: text-blue-600 */
+  border-color: #60a5fa;
+  /* example: border-blue-400 */
+}
+
+.questionLabelUnanswered {
+  background-color: #f3f4f6;
+  /* example: bg-gray-100 */
+  color: #374151;
+  /* example: text-gray-700 */
+  border-color: #d1d5db;
+  /* example: border-gray-300 */
+}
+
+/* Add specific SM breakpoint styles if needed, e.g. for questionNavigationPanel width */
+@media (min-width: 640px) {
+  .questionNavigationPanel {
+    width: 300px;
+  }
+
+  .questionsGridContainer {
+    gap: 1rem;
+    /* sm:gap-4 */
+  }
+}
+
+.mobileFooter {
+  width: 100%;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.questionsContainer {
+  scroll-padding-bottom: 5rem;
+}

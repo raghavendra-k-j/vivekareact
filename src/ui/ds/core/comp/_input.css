@@ -1,0 +1,78 @@
+/* ====== Input (text/number/email/etc.) ====== */
+.finput {
+  /* Size tokens (use kebab-case consistently) */
+  --input-px: var(--dimen-input-md-px);
+  --input-py: var(--dimen-input-md-py);
+  --input-font-size: var(--dimen-input-md-font-size);
+  --input-min-height: var(--dimen-input-md-min-height);
+  --input-radius: var(--dimen-input-radius);
+
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  padding: var(--input-py) var(--input-px);
+  font-size: var(--input-font-size);
+  min-height: var(--input-min-height);
+  border-radius: var(--input-radius);
+
+  /* One-time border declaration (don’t override with shorthand later) */
+  border: 1px solid var(--color-input-border);
+  background-color: var(--color-input-bg);
+  color: var(--color-input-text);
+  box-shadow: var(--shadow-input);
+  outline: none;
+
+  /* Only animate what we actually change */
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+}
+
+.finput::placeholder {
+  color: var(--color-input-placeholder);
+}
+
+.finput:hover {
+  border-color: var(--color-input-border-hover);
+}
+
+.finput:focus {
+  /* Keep it to color changes so the transition runs smoothly */
+  border-color: var(--color-input-border-focus);
+  box-shadow: var(--shadow-input-focused);
+}
+
+.finput:disabled,
+.finput.is-disabled {
+  background-color: var(--color-input-bg-disabled);
+  border-color: var(--color-input-border-disabled);
+  color: var(--color-input-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Optional: invalid state */
+.finput.is-invalid {
+  border-color: var(--color-danger-500);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-500) 20%, transparent);
+}
+
+/* Size variants */
+.finput--md {
+  --input-px: var(--dimen-input-md-px);
+  --input-py: var(--dimen-input-md-py);
+  --input-font-size: var(--dimen-input-md-font-size);
+  --input-min-height: var(--dimen-input-md-min-height);
+}
+
+.finput--sm {
+  --input-px: var(--dimen-input-sm-px);
+  --input-py: var(--dimen-input-sm-py);
+  --input-font-size: var(--dimen-input-sm-font-size);
+  --input-min-height: var(--dimen-input-sm-min-height);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .finput { transition: none; }
+}

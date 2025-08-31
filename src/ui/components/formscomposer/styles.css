@@ -1,0 +1,37 @@
+.richPmEditorContent {
+  padding: 0.5rem;
+  font-size: var(--text-base-m);
+  line-height: 1.5;
+  color: var(--color-text-default);
+  outline: none;
+  border: none;
+  position: relative;
+  max-height: 300px;
+  max-width: 100%;
+}
+
+.richPmEditorContent:hover {
+  outline: none;
+  border: none;
+}
+
+.richPmEditorContent:focus {
+  outline: none;
+  border: none;
+}
+
+.richPmPlaceholder {
+  position: absolute;
+  left: 0.5rem;
+  top: 0.5rem;
+  color: var(--color-input-placeholder);
+  pointer-events: none;
+}
+
+.latex-nodeview {
+  display: inline-block;
+  background-color: var(--color-slate-50);
+  padding: 0.25rem;
+  cursor: pointer;
+  border-radius: 0.25rem;
+}

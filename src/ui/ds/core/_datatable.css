@@ -1,0 +1,61 @@
+.datatable-scrollbar {
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-gray-300) var(--color-gray-50);
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+.datatable-scrollbar::-webkit-scrollbar {
+  height: 12px;
+}
+
+.datatable-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color-gray-300);
+  border-radius: 6px;
+}
+
+.datatable-scrollbar::-webkit-scrollbar-track {
+  background-color: var(--color-gray-50);
+  border-radius: 6px;
+}
+
+.datatable-scrollbar::-webkit-scrollbar-button {
+  display: none;
+  height: 0;
+  width: 0;
+}
+
+
+
+.datatable {}
+
+.datatable-head {
+  background-color: var(--color-gray-50);
+}
+
+.datatable-bordered {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.datatable-bordered th,
+.datatable-bordered td {
+  border: 1px solid var(--color-gray-200);
+}
+
+.datatable-bordered-h {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.datatable-bordered-h th,
+.datatable-bordered-h td {
+  border-top: 1px solid var(--color-gray-200);
+  border-bottom: 1px solid var(--color-gray-200);
+  border-left: none;
+  border-right: none;
+}
+
+.datatable-header-bordered th {
+  border: 1px solid var(--color-gray-200);
+}

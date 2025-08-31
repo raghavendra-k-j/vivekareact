@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@plugin "./plugins/hero.ts";
+
+
+/* Tell Tailwind where to scan for classes in your app */
+@source "../../**/*.{ts,tsx,js,jsx,md,mdx}";
+
+/* Make sure Tailwind sees HeroUI’s tokens/components in node_modules
+   NOTE: path is RELATIVE to this CSS file:
+   src/ui/ds/core/_tailwind.css  ->  ../../../../node_modules
+*/
+@source "../../../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
+@source "../../../../node_modules/@heroui/react/dist/**/*.{js,ts,jsx,tsx}";
+
+@theme {
+  --font-default: "Noto Sans", sans-serif;
+
+  /* Text Size */
+  --text-xs-m: 11px;
+  --text-sm-m: 13px;
+  --text-base-m: 15px;
+  --text-base-p: 17px;
+  --text-lg-p: 19px;
+
+  /* Primary Colors */
+  --color-primary: var(--color-primary);
+  --color-primary-50: var(--color-primary-50);
+  --color-primary-100: var(--color-primary-100);
+  --color-primary-200: var(--color-primary-200);
+  --color-primary-300: var(--color-primary-300);
+  --color-primary-400: var(--color-primary-400);
+  --color-primary-500: var(--color-primary-500);
+  --color-primary-600: var(--color-primary-600);
+  --color-primary-700: var(--color-primary-700);
+  --color-primary-800: var(--color-primary-800);
+  --color-primary-900: var(--color-primary-900);
+  --color-primary-950: var(--color-primary-950);
+}

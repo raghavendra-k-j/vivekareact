@@ -1,0 +1,52 @@
+:root {
+  --toastify-font-family: var(--font-default);
+
+  /* Text Colors */
+  --color-text-strong: var(--color-gray-900);
+  --color-text-default: var(--color-gray-800);
+  --color-text-secondary: var(--color-gray-600);
+  --color-text-tertiary: var(--color-gray-500);
+  --color-text-error: var(--color-red-500);
+  --color-text-success: var(--color-emerald-500);
+
+  /* Border Colors */
+  --color-border-strong: var(--color-slate-300);
+  --color-border-default: var(--color-slate-200);
+  --color-border-secondary: var(--color-slate-100);
+  --color-border-tertiary: var(--color-slate-50);
+  --color-border-error: var(--color-red-500);
+
+  --color-listbox-option-bg-hover: var(--color-slate-100);
+  --color-listbox-option-bg-selected: var(--color-primary);
+  --color-listbox-option-text-selected: var(--color-on-primary);
+
+  --color-input-border: var(--color-slate-300);
+  --color-input-border-error: var(--color-slate-300);
+  --color-input-border-hover: var(--color-slate-300);
+  --color-input-border-focus: var(--color-primary);
+  --color-input-placeholder: var(--color-gray-500);
+  --color-input-text: var(--color-text-default);
+  --color-input-text-disabled: var(--color-text-secondary);
+  --color-input-bg: var(--color-surface);
+  --color-input-bg-disabled: var(--color-slate-500);
+  --shadow-input: var(--shadow-xs);
+  --shadow-input-focused: 0 0 0 1px var(--color-input-border-focus);
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-default);
+  background-color: var(--color-background);
+}
+
+button {
+  cursor: pointer;
+}
