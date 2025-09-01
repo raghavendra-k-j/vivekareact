@@ -2,7 +2,6 @@ import { makeObservable, observable, runInAction } from "mobx";
 import type { AppEnv } from "~/core/config/AppEnv";
 import { AppError } from "~/core/error/AppError";
 import { logger } from "~/core/utils/logger";
-import { BaseAbsAuthRes } from "~/domain/auth/models/BaseAbsAuthRes";
 import { BaseAuthRes } from "~/domain/auth/models/BaseAuthRes";
 import { AuthService } from "~/domain/auth/services/AuthService";
 import { AbsUser } from "~/domain/common/models/AbsUser";

@@ -18,7 +18,7 @@ export class BaseAuthRes {
 
     static fromAuthUserRes(json: JsonObj): BaseAuthRes {
         const user = AuthUser.fromJson(json.user);
-        const planAndUsage = PlanAndUsage.fromJson(json);
+        const planAndUsage = PlanAndUsage.fromJson(json.planAndUsage);
         return new BaseAuthRes(user, planAndUsage);
     }
 }

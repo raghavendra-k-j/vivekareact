@@ -26,7 +26,7 @@ export default function AutoLoginPage() {
 
                     await appStore.authService.saveTokenLocally({
                         accessToken: autoLoginRes.authToken.accessToken,
-                        appUserType: autoLoginRes.user.appUserType,
+                        appUserType: autoLoginRes.baseAuthRes.user.appUserType,
                     });
 
                     navigate(redirect, { replace: true });

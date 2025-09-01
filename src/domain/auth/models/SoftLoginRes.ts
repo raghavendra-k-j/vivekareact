@@ -12,7 +12,7 @@ export class SoftLoginRes {
     ) { }
 
     static fromJson(json: JsonObj): SoftLoginRes {
-        const baseAuthRes = BaseAuthRes.fromAuthUserRes(json);
+        const baseAuthRes = BaseAuthRes.fromAuthUserRes(json.baseAuthRes);
         return new SoftLoginRes(baseAuthRes);
     }
 }

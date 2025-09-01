@@ -19,7 +19,7 @@ export class AuthRepo {
             const res = await this.apiClient.axios.post("/api/v1/auth/soft-login", {
                 [AuthConst.keyAccessToken]: accessToken,
             });
-            const authRes = SoftLoginRes.fromJson(res.data.user);
+            const authRes = SoftLoginRes.fromJson(res.data);
             return ResEither.data(authRes);
         }
         catch (error) {
@@ -30,7 +30,7 @@ export class AuthRepo {
 
     async checkAuthEmailOTPStatus(otpId: number): Promise<ResEither<ApiError, EmailOtpStatus | null>> {
         try {
-            const res = await this.apiClient.axios.get(`/auth/email-otp/${otpId}/status`);
+            const res = await this.apiClient.axios.get(`/api/v1/auth/email-otp/${otpId}/status`);
             if (!res.data || typeof res.data === "string") return ResEither.data(null);
             const resData = EmailOtpStatus.fromJson(res.data);
             return ResEither.data(resData);

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>CET Model Examination — 40 Marks</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --ink:#0a0a0a;
+    --muted:#666;
+    --bg:#ffffff;
+  }
+
+  /* ===== Global (clean, no borders) ===== */
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1.4}
+  .container{max-width:900px;margin:28px auto;padding:0 24px}
+  h1{font-size:28px;margin:0 0 6px 0;font-weight:800;letter-spacing:.2px}
+  h2{font-size:20px;margin:22px 0 8px 0;font-weight:700}
+  h3{font-size:16px;margin:14px 0 6px 0;font-weight:600}
+  p,ul,ol{margin:6px 0}
+  .muted{color:var(--muted);font-size:12px}
+
+  /* ===== Header ===== */
+  .topbar{
+    display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;
+    padding-top:4px;
+  }
+  .meta{color:var(--muted);font-size:12px}
+  .idlines{display:flex;gap:24px;flex-wrap:wrap;margin-top:6px}
+  .linefield{min-width:240px}
+  .linefield strong{font-weight:700}
+  .underline{display:inline-block;min-width:200px}
+  .underline::after{content:"__________________________________________________________________";letter-spacing:1px}
+
+  /* ===== Right-aligned marks table (no borders) ===== */
+  .marks-wrap{min-width:240px;text-align:right}
+  .marks-table{border-collapse:collapse;width:auto;margin-left:auto;font-size:14px}
+  .marks-table td,.marks-table th{padding:2px 0;white-space:nowrap}
+  .marks-table caption{caption-side:top;font-weight:700;margin-bottom:4px}
+
+  /* ===== Controls ===== */
+  .no-print{margin:14px 0}
+  .btn{appearance:none;border:none;background:#111;color:#fff;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
+  .btn:active{transform:translateY(1px)}
+
+  /* ===== Sections & Questions (single column) ===== */
+  .section{margin-top:8px}
+  .question{margin:12px 0;padding:6px 0;break-inside:avoid;page-break-inside:avoid}
+  .q-title{font-weight:600;margin-bottom:6px}
+  .options{padding-left:18px;margin-top:4px}
+  .marks{font-weight:600}
+
+  /* ===== Print ===== */
+  @media print{
+    @page{size:A4;margin:14mm}
+    .no-print{display:none !important}
+    .container{max-width:none;margin:0;padding:0}
+    .question{page-break-inside:avoid}
+    .page-break{break-before:page;page-break-before:always}
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Common Entrance Test (CET) — Question Paper</h1>
+      <div class="topbar">
+        <div>
+          <div class="meta">Academic Year: ____________ &nbsp;·&nbsp; Duration: <strong>60 minutes</strong> &nbsp;·&nbsp; Total Marks: <strong>40</strong></div>
+          <div class="idlines">
+            <div class="linefield"><strong>Register No:</strong> <span class="underline" aria-hidden="true"></span></div>
+            <div class="linefield"><strong>Name:</strong> <span class="underline" aria-hidden="true"></span></div>
+          </div>
+        </div>
+        <div class="marks-wrap" aria-label="Marks breakdown">
+          <table class="marks-table">
+            <caption>Marks Scheme</caption>
+            <tr><td>Objective</td><td>1 mark × 5</td><td>= 5</td></tr>
+            <tr><td>Objective</td><td>2 marks × 5</td><td>= 10</td></tr>
+            <tr><td>Subjective</td><td>5 marks × 5</td><td>= 25</td></tr>
+            <tr><th>Total</th><th></th><th>= 40</th></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="no-print">
+        <button class="btn" onclick="window.print()">Print / Save as PDF</button>
+      </div>
+
+      <section aria-label="Instructions">
+        <h3>General Instructions</h3>
+        <ul>
+          <li>This paper contains <strong>15 questions</strong> divided into three sections.</li>
+          <li><strong>Section A (Objective):</strong> 5 questions × <span class="marks">1 mark</span> each.</li>
+          <li><strong>Section B (Objective):</strong> 5 questions × <span class="marks">2 marks</span> each.</li>
+          <li><strong>Section C (Subjective):</strong> 5 questions × <span class="marks">5 marks</span> each.</li>
+          <li>All questions are compulsory. Use blue/black ink. Calculators not allowed unless permitted by the invigilator.</li>
+          <li>For MCQs, circle the correct option on the paper. Write all steps for subjective questions.</li>
+        </ul>
+      </section>
+    </header>
+
+    <!-- ===================== Section A (1 mark each) ===================== -->
+    <section class="section" id="section-a">
+      <h2>Section A — Objective (1 Mark each) &nbsp;|&nbsp; 5 × 1 = 5</h2>
+
+      <div class="question">
+        <div class="q-title">1. The SI unit of electric charge is:</div>
+        <ol type="A" class="options">
+          <li>Ampere</li>
+          <li>Coulomb</li>
+          <li>Volt</li>
+          <li>Ohm</li>
+        </ol>
+      </div>
+
+      <div class="question">
+        <div class="q-title">2. Which of the following is a scalar quantity?</div>
+        <ol type="A" class="options">
+          <li>Displacement</li>
+          <li>Velocity</li>
+          <li>Acceleration</li>
+          <li>Speed</li>
+        </ol>
+      </div>
+
+      <div class="question">
+        <div class="q-title">3. The approximate value of acceleration due to gravity near Earth is:</div>
+        <ol type="A" class="options">
+          <li>9.8 m s<sup>−2</sup></li>
+          <li>98 m s<sup>−2</sup></li>
+          <li>0.98 m s<sup>−2</sup></li>
+          <li>8.9 m s<sup>−2</sup></li>
+        </ol>
+      </div>
+
+      <div class="question">
+        <div class="q-title">4. Ohm’s law holds when:</div>
+        <ol type="A" class="options">
+          <li>Temperature of the conductor is constant</li>
+          <li>Voltage is zero</li>
+          <li>Power is constant</li>
+          <li>Resistance changes with current</li>
+        </ol>
+      </div>
+
+      <div class="question">
+        <div class="q-title">5. A convex lens of focal length 25&nbsp;cm has power:</div>
+        <ol type="A" class="options">
+          <li>−4 D</li>
+          <li>+4 D</li>
+          <li>+2.5 D</li>
+          <li>−2.5 D</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ===================== Section B (2 marks each) ===================== -->
+    <section class="section" id="section-b">
+      <h2>Section B — Objective (2 Marks each) &nbsp;|&nbsp; 5 × 2 = 10</h2>
+
+      <div class="question">
+        <div class="q-title">6. A 2&nbsp;kg object moves at 5&nbsp;m/s. Its kinetic energy is:</div>
+        <ol type="A" class="options">
+          <li>5 J</li>
+          <li>10 J</li>
+          <li>12.5 J</li>
+          <li>25 J</li>
+        </ol>
+      </div>
+
+      <div class="question">
+        <div class="q-title">7. The slope of a velocity–time graph represents:</div>
+        <ol type="A" class="options">
+          <li>Displacement</li>
+          <li>Acceleration</li>
+          <li>Jerk</li>
+          <li>Speed</li>
+        </ol>
+      </div>
+
+      <div class="question">
+        <div class="q-title">8. Resistors 6&nbsp;Ω and 3&nbsp;Ω are in series across 9&nbsp;V. The current in the circuit is:</div>
+        <ol type="A" class="options">
+          <li>0.5 A</li>
+          <li>1 A</li>
+          <li>1.5 A</li>
+          <li>3 A</li>
+        </ol>
+      </div>
+
+      <div class="question">
+        <div class="q-title">9. The magnification produced by a plane mirror is:</div>
+        <ol type="A" class="options">
+          <li>0</li>
+          <li>−1</li>
+          <li>+1</li>
+          <li>Depends on object distance</li>
+        </ol>
+      </div>
+
+      <div class="question">
+        <div class="q-title">10. A wave has frequency 500&nbsp;Hz and wavelength 0.68&nbsp;m. Its speed is approximately:</div>
+        <ol type="A" class="options">
+          <li>170 m/s</li>
+          <li>250 m/s</li>
+          <li>340 m/s</li>
+          <li>680 m/s</li>
+        </ol>
+      </div>
+    </section>
+
+    <div class="page-break"></div>
+
+    <!-- ===================== Section C (5 marks each) ===================== -->
+    <section class="section" id="section-c">
+      <h2>Section C — Subjective (5 Marks each) &nbsp;|&nbsp; 5 × 5 = 25</h2>
+
+      <div class="question">
+        <div class="q-title">11. A particle starts from rest and moves with uniform acceleration of 2&nbsp;m&nbsp;s<sup>−2</sup>. Determine its velocity after 8&nbsp;s and the distance covered in this interval. Show all steps and formulae.</div>
+        <p class="muted">[5 marks]</p>
+      </div>
+
+      <div class="question">
+        <div class="q-title">12. A 5&nbsp;kg block is lifted vertically through 3&nbsp;m at constant speed. Calculate the work done against gravity. If the lift takes 2&nbsp;s, compute the power developed. Take <em>g</em>=9.8&nbsp;m&nbsp;s<sup>−2</sup>.</div>
+        <p class="muted">[5 marks]</p>
+      </div>
+
+      <div class="question">
+        <div class="q-title">13. Two resistors, 4&nbsp;Ω and 12&nbsp;Ω, are connected (a) in series and (b) in parallel across 12&nbsp;V. For each case, find the equivalent resistance and the current drawn from the source.</div>
+        <p class="muted">[5 marks]</p>
+      </div>
+
+      <div class="question">
+        <div class="q-title">14. An object is placed 30&nbsp;cm in front of a convex lens of focal length 15&nbsp;cm. Using the lens formula, find the image position and magnification. State the nature of the image.</div>
+        <p class="muted">[5 marks]</p>
+      </div>
+
+      <div class="question">
+        <div class="q-title">15. A tuning fork of frequency 512&nbsp;Hz produces sound in air where the speed of sound is 340&nbsp;m/s. Calculate the wavelength. Explain how frequency and wavelength change (if at all) when the sound enters a medium where its speed is higher.</div>
+        <p class="muted">[5 marks]</p>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
