@@ -49,8 +49,10 @@ function MediaFilesList({ mediaFiles }: { mediaFiles: QMediaTile[] }) {
 
 export function ExplanationText(props: { text: string }) {
     return (
-        <div className="text-base-m text-default text-default" dangerouslySetInnerHTML={{ __html: MdQRenderer.explanation(props.text) }} />
+        <div
+            className="text-base-m text-default leading-loose"
+            dangerouslySetInnerHTML={{ __html: MdQRenderer.explanation(props.text) }}
+        />
     );
 }
-
 

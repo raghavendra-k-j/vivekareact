@@ -13,7 +13,7 @@ export function TextAnswerSection({
 }) {
     const html = isTextArea ? MdQRenderer.blockTextAnswer(text || "") : MdQRenderer.inlineTextAnswer(text || "");
     return (
-        <div className="bg-slate-50 rounded-sm px-3 py-2">
+        <div className="bg-slate-50 rounded-sm px-3 py-2 leading-loose">
             <div className={`text-sm font-semibold  ${colorClass}`}>{prefix}</div>
             {text && <div className="text-base-m" dangerouslySetInnerHTML={{ __html: html }} />}
         </div>

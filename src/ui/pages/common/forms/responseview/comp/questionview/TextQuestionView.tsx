@@ -12,7 +12,7 @@ export function TextQuestionView({ question }: TextQuestionViewProps) {
     const correctAnswer = question.answer as TextBoxAnswer | TextAreaAnswer | undefined;
 
     return (
-        <div className="text-default text-base-sm flex flex-col gap-2">
+        <div className="text-default text-base-sm flex flex-col gap-2 mb-4">
             {correctAnswer?.answer && (
                 <TextAnswerSection
                     prefix="Correct Answer:"
