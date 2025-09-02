@@ -1,21 +1,21 @@
 import React from "react";
 import { Observer } from "mobx-react-lite";
-import { FLabel } from "~/ui/widgets/form/FLabel";
-import { FValue } from "../FValue";
-import { FError } from "../FError";
-import { FReqMark } from "../FReqMark";
-import { FTextarea } from "./FTextArea";
+import { InputLabel } from "~/ui/widgets/form/InputLabel";
+import { InputValue } from "./InputValue";
+import { InputError } from "./InputError";
+import { ReqMark } from "./ReqMark";
+import { Textarea } from "./Textarea";
 
-type FTextAreaFieldProps = React.HTMLAttributes<HTMLDivElement> & {
+type TextareaFieldProps = React.HTMLAttributes<HTMLDivElement> & {
     id?: string;
     label?: React.ReactNode;
     required?: boolean;
     placeholder?: string;
     rows?: number;
-    field: FValue<string>;
+    field: InputValue<string>;
 };
 
-export function FTextareaField({
+export function TextareaField({
     id,
     label,
     required = false,
@@ -23,7 +23,7 @@ export function FTextareaField({
     rows = 4,
     field,
     ...divProps
-}: FTextAreaFieldProps) {
+}: TextareaFieldProps) {
     const handleChange = (newVal: string) => {
         field.set(newVal);
     };
@@ -31,14 +31,14 @@ export function FTextareaField({
     return (
         <div className="flex flex-col gap-1" {...divProps}>
             {label && (
-                <FLabel htmlFor={id}>
-                    {label} {required && <FReqMark />}
-                </FLabel>
+                <InputLabel htmlFor={id}>
+                    {label} {required && <ReqMark />}
+                </InputLabel>
             )}
 
             <Observer>
                 {() => (
-                    <FTextarea
+                    <Textarea
                         id={id}
                         placeholder={placeholder}
                         rows={rows}
@@ -49,7 +49,7 @@ export function FTextareaField({
             </Observer>
 
             <Observer>
-                {() => (field.error ? <FError>{field.error}</FError> : null)}
+                {() => (field.error ? <InputError>{field.error}</InputError> : null)}
             </Observer>
         </div>
     );

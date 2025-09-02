@@ -1,5 +1,5 @@
 import { observable } from "mobx";
 
-export function FCheckboxValue(initial: boolean) {
+export function CheckboxValue(initial: boolean) {
     return observable.box<boolean>(initial);
 }

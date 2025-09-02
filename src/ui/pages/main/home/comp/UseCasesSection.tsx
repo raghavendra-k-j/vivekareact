@@ -82,7 +82,11 @@ export function UseCasesSection() {
         <section id="use-cases" className="relative overflow-hidden">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-violet-50 via-white to-violet-50" />
             <div className="relative container px-4 py-16">
-                <SectionHeader title="Use Case" titleClassName="text-purple-600" />
+                <SectionHeader
+                    title="Use Case"
+                    titleClassName="text-purple-600"
+                    description="Flexible use cases for education, business, healthcare, and beyond"
+                />
                 <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
                     {useCases.map((u) => (
                         <HomeFeatureCard

@@ -3,7 +3,7 @@ import { AssmntDomain } from "~/domain/forms/models/AssmntDomain";
 import { FormType } from "~/domain/forms/models/FormType";
 import { Language } from "~/domain/forms/models/Language";
 import { FormsSTTResType } from "~/domain/forms/stt/FormsSTTRes";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 
 
 export type FormsSTTOptionsProps = {
@@ -18,7 +18,7 @@ export class FormsSTTOptions {
     isRespondent: boolean;
     formId: number;
     language: Language;
-    languageField: FValue<string>;
+    languageField: InputValue<string>;
     languages: Language[];
     type: FormsSTTResType;
 
@@ -26,7 +26,7 @@ export class FormsSTTOptions {
         this.isRespondent = params.isRespondent;
         this.formId = params.formId;
         this.language = params.language;
-        this.languageField = new FValue<string>(params.language.id);
+        this.languageField = new InputValue<string>(params.language.id);
         this.languages = params.languages;
         this.type = params.type;
 

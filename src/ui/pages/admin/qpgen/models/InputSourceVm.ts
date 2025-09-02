@@ -1,6 +1,6 @@
 import { makeObservable, observable } from "mobx";
 import { StrUtils } from "~/core/utils/StrUtils";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { InputSourceType } from "./InputSourceType";
 
 
@@ -23,7 +23,7 @@ export abstract class InputSourceVm {
 }
 
 export class PasteInputSourceVm extends InputSourceVm {
-    contentField = new FValue<string>("");
+    contentField = new InputValue<string>("");
     constructor() {
         super({type: InputSourceType.Paste});
     }

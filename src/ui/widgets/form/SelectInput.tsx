@@ -2,7 +2,7 @@ import clsx from "clsx";
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const fSelectVariants = cva(
+const SelectInputVariants = cva(
     "fselect",
     {
         variants: {
@@ -17,13 +17,13 @@ const fSelectVariants = cva(
     }
 );
 
-export interface FSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement>, VariantProps<typeof fSelectVariants> { }
+export interface SelectInputProps extends React.SelectHTMLAttributes<HTMLSelectElement>, VariantProps<typeof SelectInputVariants> { }
 
-const FSelect = React.forwardRef<HTMLSelectElement, FSelectProps>(
+const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
     ({ className, inputSize, children, ...props }, ref) => {
         return (
             <select
-                className={clsx(fSelectVariants({ inputSize }), className)}
+                className={clsx(SelectInputVariants({ inputSize }), className)}
                 ref={ref}
                 {...props}
             >
@@ -33,6 +33,6 @@ const FSelect = React.forwardRef<HTMLSelectElement, FSelectProps>(
     }
 );
 
-FSelect.displayName = "FSelect";
+SelectInput.displayName = "SelectInput";
 
-export { FSelect };
+export { SelectInput };

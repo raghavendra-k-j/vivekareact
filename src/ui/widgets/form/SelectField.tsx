@@ -1,11 +1,11 @@
-import React from "react";
 import { Observer } from "mobx-react-lite";
-import { FLabel } from "~/ui/widgets/form/FLabel";
-import { FValue } from "../FValue";
-import { FError } from "../FError";
-import { FSelect } from "./FSelect";
-import { FReqMark } from "../FReqMark";
-import { FInputSize } from "./FInputSize";
+import React from "react";
+import { InputLabel } from "~/ui/widgets/form/InputLabel";
+import { InputError } from "./InputError";
+import { InputSize } from "./InputSize";
+import { InputValue } from "./InputValue";
+import { ReqMark } from "./ReqMark";
+import { SelectInput } from "./SelectInput";
 
 export type FSelectOption<T = any> = {
     data: T;
@@ -17,9 +17,9 @@ type FSelectFieldProps<T = any> = React.HTMLAttributes<HTMLDivElement> & {
     id?: string;
     label?: React.ReactNode;
     required?: boolean;
-    field: FValue<string>;
+    field: InputValue<string>;
     options: FSelectOption<T>[];
-    inputSize?: FInputSize;
+    inputSize?: InputSize;
     placeholder?: string;
 };
 
@@ -40,15 +40,15 @@ export function FSelectField<T>({
     return (
         <div className="flex flex-col gap-1" {...divProps}>
             {label && (
-                <FLabel inputSize={inputSize} htmlFor={id}>
-                    {label} {required && <FReqMark />}
-                </FLabel>
+                <InputLabel inputSize={inputSize} htmlFor={id}>
+                    {label} {required && <ReqMark />}
+                </InputLabel>
             )}
 
             <Observer>
                 {() => {
                     return (
-                        <FSelect
+                        <SelectInput
                             id={id}
                             value={field.value}
                             onChange={(e) => handleChange(e.target.value)}
@@ -68,13 +68,13 @@ export function FSelectField<T>({
                                     </option>
                                 );
                             })}
-                        </FSelect>
+                        </SelectInput>
                     );
                 }}
             </Observer>
 
             <Observer>
-                {() => (field.error ? <FError>{field.error}</FError> : null)}
+                {() => (field.error ? <InputError>{field.error}</InputError> : null)}
             </Observer>
         </div>
     );

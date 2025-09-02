@@ -1,8 +1,8 @@
 import React from "react";
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from "@headlessui/react";
-import { FInputSize } from "./FInputSize";
+import { InputSize } from "./InputSize";
 
-export interface FListBoxProps<T> extends React.HTMLAttributes<HTMLDivElement> {
+export interface ListBoxProps<T> extends React.HTMLAttributes<HTMLDivElement> {
     items: T[] | ReadonlyArray<T>;
     itemRenderer: (item: T) => React.ReactNode | string;
     itemKey: (item: T) => string | number;
@@ -10,12 +10,12 @@ export interface FListBoxProps<T> extends React.HTMLAttributes<HTMLDivElement> {
     value: T | null;
     onValueChange?: (value: T | null) => void;
     disabled?: boolean;
-    inputSize?: FInputSize;
+    inputSize?: InputSize;
     placeholder?: string | React.ReactNode;
     allowEmpty?: boolean;
 }
 
-export function FListBox<T>({
+function ListBox<T>({
     items,
     itemRenderer,
     itemKey,
@@ -28,7 +28,7 @@ export function FListBox<T>({
     placeholder = "Select an option",
     allowEmpty = true,
     ...rest
-}: FListBoxProps<T>) {
+}: ListBoxProps<T>) {
     return (
         <Listbox value={value} onChange={onValueChange} disabled={disabled}>
             <div
@@ -64,3 +64,6 @@ export function FListBox<T>({
         </Listbox>
     );
 }
+
+
+export { ListBox };

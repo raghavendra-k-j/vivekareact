@@ -45,10 +45,6 @@ export function BaseIconLogo() {
 }
 
 
-
-
-
-
 export function BaseNamedLogo(
     {
         iconSize = 32,
@@ -57,7 +53,7 @@ export function BaseNamedLogo(
     }: {
         iconSize?: number;
         textSize?: number;
-        textClassName?: string; // e.g. "text-primary", "text-white", etc.
+        textClassName?: string;
     } = {}
 ) {
     const location = useLocation();

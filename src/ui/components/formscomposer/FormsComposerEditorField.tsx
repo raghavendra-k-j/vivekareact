@@ -1,18 +1,18 @@
 import React, { forwardRef, useEffect, useRef } from "react";
-import { FLabel } from "~/ui/widgets/form/FLabel";
+import { InputLabel } from "~/ui/widgets/form/InputLabel";
 import {
     FormsComposerEditor,
     FormsComposerProps,
     FormsComposerEditorRef
 } from "./FormsComposerEditor";
-import { FValue } from "~/ui/widgets/form/FValue";
-import { FError } from "~/ui/widgets/form/FError";
+import { InputValue } from "~/ui/widgets/form/InputValue";
+import { InputError } from "~/ui/widgets/form/InputError";
 import { Observer } from "mobx-react-lite";
 import { FormsComposerDoc } from "./core/FormsComposeDoc";
 
 export type FormsComposerFieldProps = FormsComposerProps & {
     label: React.ReactNode | string;
-    value: FValue<FormsComposerDoc | null>;
+    value: InputValue<FormsComposerDoc | null>;
     autoSync?: boolean;
 };
 
@@ -48,7 +48,7 @@ export const FormsComposerField = forwardRef<FormsComposerEditorRef, FormsCompos
 
         return (
             <div className="flex flex-col gap-1">
-                <FLabel>{label}</FLabel>
+                <InputLabel>{label}</InputLabel>
                 <FormsComposerEditor
                     ref={ref}
                     initialContent={value.value}
@@ -56,7 +56,7 @@ export const FormsComposerField = forwardRef<FormsComposerEditorRef, FormsCompos
                 />
                 <Observer>
                     {() =>
-                        value.error ? <FError>{value.error}</FError> : null
+                        value.error ? <InputError>{value.error}</InputError> : null
                     }
                 </Observer>
             </div>

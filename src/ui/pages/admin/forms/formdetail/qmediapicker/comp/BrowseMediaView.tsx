@@ -14,7 +14,7 @@ import { observer } from "mobx-react-lite";
 import { DialogFooter } from "~/ui/components/dialogs/DialogHeaderAndFooter";
 import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import FilledButton from "~/ui/widgets/button/FilledButton";
-import { FInput } from "~/ui/widgets/form/input/FInput";
+import { Input } from "~/ui/widgets/form/Input";
 
 export function BrowseMediaView() {
     const store = useQMediaPickerStore();
@@ -114,7 +114,7 @@ function SearchBar() {
     return (
         <div className="p-4 bg-surface border-b border-default">
             <Observer>
-                {() => (<FInput
+                {() => (<Input
                     maxLength={100}
                     placeholder="Search media files..."
                     value={store.searchQuery}

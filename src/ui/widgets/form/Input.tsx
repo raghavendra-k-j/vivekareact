@@ -1,8 +1,8 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import React from "react";
-import { cva, type VariantProps } from "class-variance-authority";
 
-const fInputVariants = cva("finput", {
+const InputVariants = cva("finput", {
     variants: {
         inputSize: {
             sm: "finput--sm",
@@ -14,15 +14,15 @@ const fInputVariants = cva("finput", {
     },
 });
 
-export interface FInputProps extends React.InputHTMLAttributes<HTMLInputElement>, VariantProps<typeof fInputVariants> { }
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement>, VariantProps<typeof InputVariants> { }
 
 
-const FInput = React.forwardRef<HTMLInputElement, FInputProps>(
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ({ className, inputSize, type = "text", ...props }, ref) => {
         return (
             <input
                 type={type}
-                className={clsx(fInputVariants({ inputSize }), className)}
+                className={clsx(InputVariants({ inputSize }), className)}
                 ref={ref}
                 {...props}
             />
@@ -30,6 +30,6 @@ const FInput = React.forwardRef<HTMLInputElement, FInputProps>(
     }
 );
 
-FInput.displayName = "FInput";
+Input.displayName = "Input";
 
-export { FInput };
+export { Input };

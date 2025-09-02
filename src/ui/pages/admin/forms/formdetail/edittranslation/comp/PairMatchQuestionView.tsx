@@ -1,10 +1,10 @@
 import { Observer } from "mobx-react-lite";
-import { FInput } from "~/ui/widgets/form/input/FInput";
+import { Input } from "~/ui/widgets/form/Input";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { PairMatchItemVm, PairMatchQuestionVm } from "../models/PairMatchQuestionVm";
 import { QuestionCard } from "./QuestionCard";
-import { QuestionHeader } from "./QuestionHeader";
 import { QuestionFooter } from "./QuestionFooter";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { QuestionHeader } from "./QuestionHeader";
 
 export type PairMatchQuestionViewProps = {
     vm: PairMatchQuestionVm;
@@ -115,7 +115,7 @@ function TableHeader() {
 
 type PairMatchInputProps = {
     placeholder: string;
-    field: FValue<string>;
+    field: InputValue<string>;
 };
 
 const PairMatchInput = ({ placeholder, field }: PairMatchInputProps) => {
@@ -123,7 +123,7 @@ const PairMatchInput = ({ placeholder, field }: PairMatchInputProps) => {
         <Observer>
             {() => (
                 <div>
-                    <FInput
+                    <Input
                         placeholder={placeholder}
                         value={field.value}
                         onChange={(e) => field.set(e.target.value)}

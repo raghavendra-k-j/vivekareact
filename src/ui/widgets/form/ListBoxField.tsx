@@ -1,30 +1,31 @@
 import React from "react";
 import { Observer } from "mobx-react-lite";
-import { FLabel } from "~/ui/widgets/form/FLabel";
-import { FValue } from "../FValue";
-import { FError } from "../FError";
-import { FReqMark } from "../FReqMark";
-import { FInputSize } from "./FInputSize";
-import { FListBox } from "./FListBox";
+import { InputLabel } from "~/ui/widgets/form/InputLabel";
+import { InputValue } from "./InputValue";
+import { InputError } from "./InputError";
+import { ReqMark } from "./ReqMark";
+import { InputSize } from "./InputSize";
+import { ListBox } from "./ListBox";
 import clsx from "clsx";
 
-export type FListBoxFieldProps<T> = React.HTMLAttributes<HTMLDivElement> & {
+export type ListBoxFieldProps<T> = React.HTMLAttributes<HTMLDivElement> & {
     id?: string;
     label?: React.ReactNode;
     required?: boolean;
-    field: FValue<T | null>;
+    field: InputValue<T | null>;
     items: T[] | ReadonlyArray<T>;
     itemRenderer: (item: T) => React.ReactNode | string;
     itemKey: (item: T) => string | number;
     buttonRenderer?: (item: T) => React.ReactNode | string;
-    inputSize?: FInputSize;
+    inputSize?: InputSize;
     placeholder?: string | React.ReactNode;
     disabled?: boolean;
     onValueChange: (value: T | null) => void;
     className?: string;
 };
 
-export function FListBoxField<T>({
+
+function ListBoxField<T>({
     id,
     label,
     required = false,
@@ -39,7 +40,7 @@ export function FListBoxField<T>({
     onValueChange,
     className = "",
     ...divProps
-}: FListBoxFieldProps<T>) {
+}: ListBoxFieldProps<T>) {
     const handleChange = (val: T | null) => {
         onValueChange(val);
     };
@@ -47,14 +48,14 @@ export function FListBoxField<T>({
     return (
         <div className={clsx("flex flex-col gap-1", className)} {...divProps}>
             {label && (
-                <FLabel inputSize={inputSize} htmlFor={id}>
-                    {label} {required && <FReqMark />}
-                </FLabel>
+                <InputLabel inputSize={inputSize} htmlFor={id}>
+                    {label} {required && <ReqMark />}
+                </InputLabel>
             )}
 
             <Observer>
                 {() => (
-                    <FListBox
+                    <ListBox
                         items={items}
                         itemRenderer={itemRenderer}
                         itemKey={itemKey}
@@ -70,8 +71,11 @@ export function FListBoxField<T>({
             </Observer>
 
             <Observer>
-                {() => (field.error ? <FError>{field.error}</FError> : null)}
+                {() => (field.error ? <InputError>{field.error}</InputError> : null)}
             </Observer>
         </div>
     );
 }
+
+
+export { ListBoxField };

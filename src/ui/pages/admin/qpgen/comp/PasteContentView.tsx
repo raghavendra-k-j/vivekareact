@@ -1,11 +1,11 @@
-import { FTextareaField } from "~/ui/widgets/form/input/FTextareaField";
+import { TextareaField } from "~/ui/widgets/form/TextareaField";
 import { useQPGenPageStore } from "../QPGenPageContext";
 
 export function PasteTextView() {
   const store = useQPGenPageStore();
   return (
     <div className="px-6 h-48">
-      <FTextareaField
+      <TextareaField
         label="Paste Text"
         placeholder="Paste your content here..."
         rows={7}

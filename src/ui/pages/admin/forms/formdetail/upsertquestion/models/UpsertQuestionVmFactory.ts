@@ -1,7 +1,7 @@
 import { QuestionType } from "~/domain/forms/models/question/QuestionType";
 import { UpsertQuestionStore } from "../UpsertQuestionStore";
 import { UpsertQuestionVm } from "./UpsertQuestionVm";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { EnAVmFactory } from "../ena/EnAVmFactory";
 import { Bool3 } from "~/core/utils/Bool3";
 import { QuestionOptions } from "../ena/QuestionOptions";
@@ -18,7 +18,7 @@ export class UpsertQuestionVmFactory {
         const formType = props.storeRef.formType;
         const questionType = props.type;
 
-        const typeField = new FValue<QuestionType | null>(props.type);
+        const typeField = new InputValue<QuestionType | null>(props.type);
         const enaVm = EnAVmFactory.empty({
             type: typeField.value!,
             storeRef: props.storeRef,
@@ -28,12 +28,12 @@ export class UpsertQuestionVmFactory {
             type: typeField.value!,
         });
 
-        const requiredField = new FValue<Bool3>(props.type.isGroup ? Bool3.N : Bool3.F);
-        const level = new FValue<QuestionLevel | null>(null);
-        const marks = new FValue<string>("");
+        const requiredField = new InputValue<Bool3>(props.type.isGroup ? Bool3.N : Bool3.F);
+        const level = new InputValue<QuestionLevel | null>(null);
+        const marks = new InputValue<string>("");
         const ansHintNode = null;
         const ansExplanationNode = null;
-        const scorable = new FValue<Bool3>(Bool3.N);
+        const scorable = new InputValue<Bool3>(Bool3.N);
 
         if (formType.isAssessment) {
             const marksPolicy = questionType.assmntMarksPolicy;
@@ -64,7 +64,7 @@ export class UpsertQuestionVmFactory {
         const formType = props.storeRef.formType;
         const questionType = props.question.type;
 
-        const typeField = new FValue<QuestionType | null>(questionType);
+        const typeField = new InputValue<QuestionType | null>(questionType);
         const enaVm = EnAVmFactory.fromQuestion({
             question: props.question,
             storeRef: props.storeRef,
@@ -81,9 +81,9 @@ export class UpsertQuestionVmFactory {
         });
         const mediaFiles = props.question.mediaFiles.map(m => m.toTile());
 
-        const scorable = new FValue<Bool3>(Bool3.N);
-        const marksField = new FValue<string>("");
-        const level = new FValue<QuestionLevel | null>(null);
+        const scorable = new InputValue<Bool3>(Bool3.N);
+        const marksField = new InputValue<string>("");
+        const level = new InputValue<QuestionLevel | null>(null);
         let ansHintNode: ProseMirrorNode | null = null;
         let ansExplanationNode: ProseMirrorNode | null = null;
 
@@ -108,7 +108,7 @@ export class UpsertQuestionVmFactory {
                 scorable.set(Bool3.N);
             }
         }
-        const isRequired = new FValue<Bool3>(props.question.isRequired);
+        const isRequired = new InputValue<Bool3>(props.question.isRequired);
         return new UpsertQuestionVm({
             id: props.question.id,
             storeRef: props.storeRef,

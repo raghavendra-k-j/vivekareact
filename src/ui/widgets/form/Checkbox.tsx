@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-export type FCheckboxInputProps = {
+export type CheckboxInputProps = {
     value: boolean;
     id?: string;
     className?: string;
@@ -8,7 +8,7 @@ export type FCheckboxInputProps = {
     onChange?: (checked: boolean) => void;
 };
 
-export const FCheckboxInput = ({ value, id, className = '', disabled, onChange }: FCheckboxInputProps) => {
+export const CheckboxInput = ({ value, id, className = '', disabled, onChange }: CheckboxInputProps) => {
     return (
         <input
             id={id}
@@ -21,17 +21,17 @@ export const FCheckboxInput = ({ value, id, className = '', disabled, onChange }
     );
 };
 
-export type FCheckboxProps = {
+export type CheckboxProps = {
     value: boolean;
     onChange: (checked: boolean) => void;
     label?: string | ReactNode;
     id?: string;
     labelPosition?: "left" | "right";
     className?: string;
-    inputProps?: Omit<FCheckboxInputProps, "value" | "onChange">;
+    inputProps?: Omit<CheckboxInputProps, "value" | "onChange">;
 };
 
-export const FCheckbox = ({
+export const Checkbox = ({
     value,
     onChange,
     label,
@@ -39,7 +39,7 @@ export const FCheckbox = ({
     labelPosition = "right",
     className = "",
     inputProps = {}
-}: FCheckboxProps) => {
+}: CheckboxProps) => {
     const labelContent = label ? (
         <span className="text-sm text-default select-none">{label}</span>
     ) : null;
@@ -47,7 +47,7 @@ export const FCheckbox = ({
     return (
         <label htmlFor={id} className={`inline-flex items-center space-x-2 cursor-pointer ${className}`}>
             {labelPosition === "left" && labelContent}
-            <FCheckboxInput
+            <CheckboxInput
                 value={value}
                 id={id}
                 onChange={onChange}

@@ -1,5 +1,5 @@
 import { action, makeObservable, observable, runInAction } from "mobx";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { InputSourceType } from "./models/InputSourceType";
 import { FileInputSourceVm, InputSourceFile, InputSourceVm, PasteInputSourceVm } from "./models/InputSourceVm";
 import { QPGenPageStore } from "./QPGenPageStore";
@@ -17,7 +17,7 @@ export class InputSourceStore {
     sourceType: InputSourceType = InputSourceType.FileUpload;
     pasteSource: PasteInputSourceVm = new PasteInputSourceVm();
     fileSource: FileInputSourceVm = new FileInputSourceVm();
-    descriptionField = new FValue<string>("");
+    descriptionField = new InputValue<string>("");
     filePipeline: FileProcessingPipeline | null = null;
 
     constructor({ storeRef }: InputSourceStoreProps) {

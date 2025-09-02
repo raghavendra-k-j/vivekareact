@@ -18,7 +18,7 @@ import {
 import { inlineSchema } from "~/ui/components/formscomposer/core/schema";
 import { FormsComposerEditorRef } from "~/ui/components/formscomposer/FormsComposerEditor";
 import { FormsComposerUtil } from "~/ui/components/formscomposer/utils/FormsComposerUtil";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { ObjectiveQuestionView } from "../comp/ObjectiveQuestionView";
 import { EditTranslationStore } from "../EditTranslationStore";
 import { QuestionVm, QuestionVmProps } from "./QuestionVm";
@@ -154,7 +154,7 @@ export type ChoiceItemVmProps = {
 
 export class ChoiceItemVm {
     readonly id: number;
-    readonly value: FValue<FormsComposerDoc | null>;
+    readonly value: InputValue<FormsComposerDoc | null>;
     readonly ref = React.createRef<FormsComposerEditorRef | null>();
     readonly isCorrect: boolean | null;
     readonly isMultiSelect: boolean;
@@ -171,7 +171,7 @@ export class ChoiceItemVm {
         this.errorFieldName = props.errorFieldName;
 
 
-        this.value = new FValue<FormsComposerDoc | null>(props.value, {
+        this.value = new InputValue<FormsComposerDoc | null>(props.value, {
             validator: (val) => {
                 let text = FormsComposerUtil.toText({
                     doc: val,

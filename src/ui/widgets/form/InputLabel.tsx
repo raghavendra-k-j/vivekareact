@@ -1,7 +1,7 @@
 import React from "react";
 import { cva, VariantProps } from "class-variance-authority";
 
-const fLabelVariants = cva("text-default", {
+const InputLabelVariants = cva("text-default", {
     variants: {
         inputSize: {
             sm: "text-xs",
@@ -13,17 +13,17 @@ const fLabelVariants = cva("text-default", {
     },
 });
 
-export type FLabelProps = React.LabelHTMLAttributes<HTMLLabelElement> &
-    VariantProps<typeof fLabelVariants>;
+export type LabelProps = React.LabelHTMLAttributes<HTMLLabelElement> &
+    VariantProps<typeof InputLabelVariants>;
 
-export function FLabel({
+export function InputLabel({
     inputSize,
     className,
     children,
     ...props
-}: FLabelProps) {
+}: LabelProps) {
     return (
-        <label {...props} className={fLabelVariants({ inputSize: inputSize, className })}>
+        <label {...props} className={InputLabelVariants({ inputSize: inputSize, className })}>
             {children}
         </label>
     );

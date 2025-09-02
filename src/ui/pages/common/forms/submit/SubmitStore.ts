@@ -8,7 +8,7 @@ import { CurrentFragment } from "./models/CurrentFragment";
 import type { FormDetail } from "~/domain/forms/models/FormDetail";
 import type { Language } from "~/domain/forms/models/Language";
 import { logger } from "~/core/utils/logger";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { AppStore } from "~/ui/pages/_layout/AppStore";
 import { AppEnv } from "~/core/config/AppEnv";
 
@@ -27,7 +27,7 @@ export class SubmitStore {
     formDetailState: DataState<FormDetail> = DataState.init();
     appStore: AppStore;
     startFormImmediatelyAfterLoadForm = false;
-    selectedLanguageField = new FValue<string>("");
+    selectedLanguageField = new InputValue<string>("");
 
     constructor(props: SubmitStoreProps) {
         this.permalink = props.permalink;

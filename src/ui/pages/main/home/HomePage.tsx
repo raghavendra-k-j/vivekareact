@@ -7,6 +7,7 @@ import { FeaturesSection } from "./comp/FeaturesSection";
 import { Footer } from "./comp/Footer";
 import { HeroSection } from "./comp/HeroSection";
 import { UseCasesSection } from "./comp/UseCasesSection";
+import { PricingSection } from "./comp/PricingSection";
 
 export function HomePageProvider({ children }: { children: React.ReactNode }) {
     const storeRef = useRef<HomePageStore | null>(null);
@@ -41,6 +42,9 @@ function HomePageInner() {
                 </BaseSection>
                 <BaseSection id="use-cases">
                     <UseCasesSection />
+                </BaseSection>
+                <BaseSection id="pricing">
+                    <PricingSection />
                 </BaseSection>
                 <Footer />
             </main>

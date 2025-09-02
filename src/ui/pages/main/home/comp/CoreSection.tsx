@@ -41,16 +41,35 @@ export function HomeFeatureCard({
 
 export function SectionHeader({
     title,
+    description,
     titleClassName = "text-gray-900",
+    descriptionClassName = "text-gray-600",
 }: {
     title: string;
+    description?: string;
     titleClassName?: string;
+    descriptionClassName?: string;
 }) {
     return (
         <div className="mb-10 text-center">
-            <h2 className={["text-3xl lg:text-4xl font-bold", titleClassName].join(" ")}>
+            <h2
+                className={[
+                    "text-3xl lg:text-4xl font-bold",
+                    titleClassName,
+                ].join(" ")}
+            >
                 {title}
             </h2>
+            {description && (
+                <p
+                    className={[
+                        "mt-2 text-lg lg:text-xl max-w-2xl mx-auto",
+                        descriptionClassName,
+                    ].join(" ")}
+                >
+                    {description}
+                </p>
+            )}
         </div>
     );
 }

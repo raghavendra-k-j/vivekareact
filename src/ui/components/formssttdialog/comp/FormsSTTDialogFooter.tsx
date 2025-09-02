@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { Language } from "~/domain/forms/models/Language";
 import FilledButton from "~/ui/widgets/button/FilledButton";
 import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
-import { FSelectField, FSelectOption } from "~/ui/widgets/form/input/FSelectField";
+import { FSelectField, FSelectOption } from "~/ui/widgets/form/SelectField";
 import { useFormsSTTDialogStore } from "../FormSTTDialogContext";
 import { IconButton } from "~/ui/widgets/button/IconButton";
 import { ChevronDown, ChevronUp } from "lucide-react";

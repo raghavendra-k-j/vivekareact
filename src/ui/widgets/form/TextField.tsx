@@ -1,11 +1,11 @@
-import React from "react";
 import { Observer } from "mobx-react-lite";
-import { FLabel } from "~/ui/widgets/form/FLabel";
-import { FValue } from "../FValue";
-import { FError } from "../FError";
-import { FReqMark } from "../FReqMark";
-import { FInput } from "./FInput";
-import { FInputSize } from "./FInputSize";
+import React from "react";
+import { InputLabel } from "~/ui/widgets/form/InputLabel";
+import { InputError } from "./InputError";
+import { ReqMark } from "./ReqMark";
+import { InputValue } from "./InputValue";
+import { InputSize } from "./InputSize";
+import { Input } from "./Input";
 
 type FTextFieldProps = React.HTMLAttributes<HTMLDivElement> & {
     id?: string;
@@ -13,8 +13,8 @@ type FTextFieldProps = React.HTMLAttributes<HTMLDivElement> & {
     required?: boolean;
     type?: string;
     placeholder?: string;
-    field: FValue<string>;
-    inputSize?: FInputSize;
+    field: InputValue<string>;
+    inputSize?: InputSize;
     maxLength?: number;
 };
 
@@ -36,14 +36,14 @@ export function FTextField({
     return (
         <div className="flex flex-col gap-1" {...divProps}>
             {label && (
-                <FLabel inputSize={inputSize} htmlFor={id}>
-                    {label} {required && <FReqMark />}
-                </FLabel>
+                <InputLabel inputSize={inputSize} htmlFor={id}>
+                    {label} {required && <ReqMark />}
+                </InputLabel>
             )}
 
             <Observer>
                 {() => (
-                    <FInput
+                    <Input
                         id={id}
                         type={type}
                         maxLength={maxLength}
@@ -56,7 +56,7 @@ export function FTextField({
             </Observer>
 
             <Observer>
-                {() => (field.error ? <FError>{field.error}</FError> : null)}
+                {() => (field.error ? <InputError>{field.error}</InputError> : null)}
             </Observer>
         </div>
     );

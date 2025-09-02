@@ -7,8 +7,8 @@ import { Fragment, useEffect } from "react";
 import { Observer } from "mobx-react-lite";
 import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
-import { FTextField } from "~/ui/widgets/form/input/FTextField";
-import { FTextareaField } from "~/ui/widgets/form/input/FTextareaField";
+import { FTextField } from "~/ui/widgets/form/TextField";
+import { TextareaField } from "~/ui/widgets/form/TextareaField";
 
 export default function EditTranslationView() {
     return (
@@ -75,7 +75,7 @@ function FormDetails() {
                 field={store.data.title}
                 placeholder={`Enter ${store.formType.name.toLowerCase()} title`}
             />
-            {store.data.hasDescription && (<FTextareaField
+            {store.data.hasDescription && (<TextareaField
                 label="Description"
                 placeholder={`Enter ${store.formType.name.toLowerCase()} description`}
                 rows={2}

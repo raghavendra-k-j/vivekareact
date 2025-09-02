@@ -7,7 +7,7 @@ import { blockSchema, FormsComposerSchema } from "~/ui/components/formscomposer/
 import { FormsComposerEditorRef } from "~/ui/components/formscomposer/FormsComposerEditor";
 import { FormsComposerField } from "~/ui/components/formscomposer/FormsComposerEditorField";
 import { FormsComposerUtil } from "~/ui/components/formscomposer/utils/FormsComposerUtil";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { EditTranslationStore } from "../EditTranslationStore";
 import { QuestionVm } from "../models/QuestionVm";
 
@@ -86,7 +86,7 @@ type ReusableRichEditorFieldProps = {
     store: EditTranslationStore;
     label: string;
     placeholder: string;
-    value: FValue<FormsComposerDoc | null>;
+    value: InputValue<FormsComposerDoc | null>;
     refObj: React.RefObject<FormsComposerEditorRef | null>;
     schema: FormsComposerSchema;
     onChange: (node: FormsComposerDoc) => void;

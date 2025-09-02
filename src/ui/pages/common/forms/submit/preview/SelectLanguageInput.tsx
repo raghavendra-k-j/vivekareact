@@ -1,4 +1,4 @@
-import { FSelectField, FSelectOption } from "~/ui/widgets/form/input/FSelectField";
+import { FSelectField, FSelectOption } from "~/ui/widgets/form/SelectField";
 import { useSubmitStore } from "../SubmitContext";
 import { Language } from "~/domain/forms/models/Language";
 import { useMemo } from "react";

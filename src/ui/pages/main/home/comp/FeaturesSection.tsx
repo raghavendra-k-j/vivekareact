@@ -92,7 +92,12 @@ export function FeaturesSection() {
         <section id="features" className="relative overflow-hidden">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-amber-50 via-white to-amber-50" />
             <div className="relative container px-4 py-16">
-                <SectionHeader title="Features" titleClassName="text-amber-600" />
+                <SectionHeader
+                    title="Features"
+                    titleClassName="text-amber-600"
+                    description="Features designed to solve real challenges and save you valuable time"
+                />
+
                 <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
                     {features.map((f) => (
                         <HomeFeatureCard

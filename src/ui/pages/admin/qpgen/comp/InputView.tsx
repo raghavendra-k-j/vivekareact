@@ -1,4 +1,4 @@
-import { FTextareaField } from "~/ui/widgets/form/input/FTextareaField";
+import { TextareaField } from "~/ui/widgets/form/TextareaField";
 import { useQPGenPageStore } from "../QPGenPageContext";
 import FilledButton from "~/ui/widgets/button/FilledButton";
 import { Observer } from "mobx-react-lite";
@@ -108,7 +108,7 @@ function OptionsView() {
 
     return (
         <div className="px-6 space-y-1">
-            <FTextareaField
+            <TextareaField
                 required
                 label="Describe your question paper pattern"
                 placeholder="e.g. 1 mark – 5 questions, 2 marks – 5 questions..."

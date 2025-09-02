@@ -1,4 +1,4 @@
-import { FTextField } from "~/ui/widgets/form/input/FTextField";
+import { FTextField } from "~/ui/widgets/form/TextField";
 import { FormAuthCard } from "./FormAuthCard";
 import { useFormAuthStore } from "./FormAuthContext";
 import FilledButton from "~/ui/widgets/button/FilledButton";

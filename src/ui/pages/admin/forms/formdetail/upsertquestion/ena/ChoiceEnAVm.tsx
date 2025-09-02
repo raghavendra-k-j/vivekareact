@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from "mobx";
-import { FFieldContainer } from "~/ui/widgets/form/input/FFieldContainer";
-import { FError } from "~/ui/widgets/form/FError";
+import { InputFieldContainer } from "~/ui/widgets/form/FFieldContainer";
+import { InputError } from "~/ui/widgets/form/InputError";
 import React, { createRef, useEffect } from "react";
 import { Node as ProseMirrorNode } from "prosemirror-model";
 import { Observer } from "mobx-react-lite";
@@ -94,7 +94,7 @@ export function ChoiceEnAView(props: ChoiceEnAViewProps) {
     }, [props.vm]);
 
     return (
-        <FFieldContainer>
+        <InputFieldContainer>
             <div className="flex flex-row items-center gap-2">
 
                 {/* Control */}
@@ -130,8 +130,8 @@ export function ChoiceEnAView(props: ChoiceEnAViewProps) {
                 )}
 
             </div>
-            <FError />
-        </FFieldContainer>
+            <InputError />
+        </InputFieldContainer>
     );
 }
 

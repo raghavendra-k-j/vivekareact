@@ -8,8 +8,8 @@ import { QuestionType } from "~/domain/forms/models/question/QuestionType";
 import { blockSchema } from "~/ui/components/formscomposer/core/schema";
 import { FormsComposerEditorRef } from "~/ui/components/formscomposer/FormsComposerEditor";
 import { FormsComposerUtil } from "~/ui/components/formscomposer/utils/FormsComposerUtil";
-import { FValue } from "~/ui/widgets/form/FValue";
-import { FValueUtil } from "~/ui/widgets/form/FValueUtil";
+import { InputValue } from "~/ui/widgets/form/InputValue";
+import { InputValuesUtil } from "~/ui/widgets/form/InputValueUtil";
 import { EditTranslationStore } from "../EditTranslationStore";
 import { FormsComposerFieldVm } from "./FormsComposerFieldVm";
 import { FormsComposerDoc } from "~/ui/components/formscomposer/core/FormsComposeDoc";
@@ -85,7 +85,7 @@ export abstract class QuestionVm {
             schema: blockSchema,
         });
 
-        const value = new FValue<FormsComposerDoc | null>(node, {
+        const value = new InputValue<FormsComposerDoc | null>(node, {
             validator: (val) => {
                 if (FormsComposerUtil.isEmpty(val, blockSchema)) {
                     return "Question is required.";
@@ -113,7 +113,7 @@ export abstract class QuestionVm {
             schema: blockSchema,
         });
 
-        const value = new FValue<FormsComposerDoc | null>(node, {
+        const value = new InputValue<FormsComposerDoc | null>(node, {
             validator: (val) => {
                 const isRequired = props.question.ansHint != null;
                 if (isRequired && FormsComposerUtil.isEmpty(val, blockSchema)) {
@@ -142,7 +142,7 @@ export abstract class QuestionVm {
             schema: blockSchema,
         });
 
-        const value = new FValue<FormsComposerDoc | null>(node, {
+        const value = new InputValue<FormsComposerDoc | null>(node, {
             validator: (val) => {
                 const isRequired = props.question.ansExplanation != null;
                 if (isRequired && FormsComposerUtil.isEmpty(val, blockSchema)) {
@@ -199,7 +199,7 @@ export abstract class QuestionVm {
         }
         
         // Validate all fields
-        const commonFieldsHasError = FValueUtil.hasError(commonFields.map((f) => f.value));
+        const commonFieldsHasError = InputValuesUtil.hasError(commonFields.map((f) => f.value));
 
         // Validate QExtras
         let qExtrasHasError = false;

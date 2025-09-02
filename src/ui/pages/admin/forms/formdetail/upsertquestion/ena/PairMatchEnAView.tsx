@@ -2,8 +2,8 @@ import { Observer } from "mobx-react-lite";
 import { PairMatchEnAVm } from "./PairMatchEnAVm";
 import { PairMatchItemVm } from "./PairMatchItemVm";
 import React from "react";
-import { FInput } from "~/ui/widgets/form/input/FInput";
-import { FSelect } from "~/ui/widgets/form/input/FSelect";
+import { Input } from "~/ui/widgets/form/Input";
+import { SelectInput } from "~/ui/widgets/form/SelectInput";
 import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { Trash2 } from "lucide-react";
 
@@ -97,7 +97,7 @@ type ColumnInputCellProps = {
 function ColumnInputCell({ value, refObj, onChange }: ColumnInputCellProps) {
     return (
         <td className="px-3 py-2 border border-default">
-            <FInput
+            <Input
                 inputSize="sm"
                 placeholder="Enter Text"
                 value={value}
@@ -118,7 +118,7 @@ function CorrectMatchSelect({ vm, item }: CorrectMatchSelectProps) {
         <td className="px-3 py-2 border border-default">
             <Observer>
                 {() => (
-                    <FSelect
+                    <SelectInput
                         inputSize="sm"
                         value={item.correctRowUid ?? ""}
                         onChange={(e) => item.setCorrectRowUid(e.target.value)}
@@ -129,7 +129,7 @@ function CorrectMatchSelect({ vm, item }: CorrectMatchSelectProps) {
                                 {optItem.colBText?.trim() || `Row ${idx + 1}`}
                             </option>
                         ))}
-                    </FSelect>
+                    </SelectInput>
                 )}
             </Observer>
         </td>

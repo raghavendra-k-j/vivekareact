@@ -1,16 +1,16 @@
 import { useEffect } from "react";
 import { Observer } from "mobx-react-lite";
 import { useUpsertQuestionStore } from "./UpsertQuestionContext";
-import { FListBoxField } from "~/ui/widgets/form/input/FListBoxField";
-import { FCheckbox } from "~/ui/widgets/form/checkbox/FCheckbox";
-import { FTextField } from "~/ui/widgets/form/input/FTextField";
-import { FLabel } from "~/ui/widgets/form/FLabel";
-import { FFieldContainer } from "~/ui/widgets/form/input/FFieldContainer";
-import { FError } from "~/ui/widgets/form/FError";
+import { ListBoxField } from "~/ui/widgets/form/ListBoxField";
+import { Checkbox } from "~/ui/widgets/form/Checkbox";
+import { FTextField } from "~/ui/widgets/form/TextField";
+import { InputLabel } from "~/ui/widgets/form/InputLabel";
+import { InputFieldContainer } from "~/ui/widgets/form/FFieldContainer";
+import { InputError } from "~/ui/widgets/form/InputError";
 import { QuestionType } from "~/domain/forms/models/question/QuestionType";
 import { QuestionLevel } from "~/domain/forms/models/question/QuestionLevel";
 import { Node as ProseMirrorNode } from "prosemirror-model";
-import { FReqMark } from "~/ui/widgets/form/FReqMark";
+import { ReqMark } from "~/ui/widgets/form/ReqMark";
 import { QuestionTextOptions } from "./QuestionTextOptions";
 import { FormsComposerEditor } from "~/ui/components/formscomposer/FormsComposerEditor";
 import { blockSchema } from "~/ui/components/formscomposer/core/schema";
@@ -29,7 +29,7 @@ export function UpsertQuestionForm() {
 function QuestionTypeSelector() {
     const store = useUpsertQuestionStore();
     return (
-        <FListBoxField<QuestionType | null>
+        <ListBoxField<QuestionType | null>
             required={true}
             label="Question Type"
             placeholder="Select Question Type"
@@ -65,7 +65,7 @@ function ScorableCheckbox() {
         <div>
             <Observer>
                 {() => (
-                    <FCheckbox
+                    <Checkbox
                         onChange={(v) => store.vm.onChangeScorable(v)}
                         label="Scorable"
                         value={store.vm.scorable.value.boolValue!}
@@ -93,8 +93,8 @@ function QuestionSection() {
 
     return (
         <div className="flex flex-col gap-2">
-            <FFieldContainer>
-                <FLabel>Question <FReqMark /></FLabel>
+            <InputFieldContainer>
+                <InputLabel>Question <ReqMark /></InputLabel>
                 <FormsComposerEditor
                     ref={vm.questionTextRef}
                     placeholder="Enter Question"
@@ -104,9 +104,9 @@ function QuestionSection() {
                     maxHeight="120px"
                     options={store.blockComposerOptions}
                 />
-                <FError />
+                <InputError />
                 <QuestionTextOptions />
-            </FFieldContainer>
+            </InputFieldContainer>
 
         </div>
     );
@@ -120,7 +120,7 @@ function MarksAndLevelSection() {
             {() =>
                 store.vm.scorable.value.isNotTrue ? null : (
                     <div className="flex flex-row gap-4">
-                        <FListBoxField<QuestionLevel | null>
+                        <ListBoxField<QuestionLevel | null>
                             required
                             className="flex-1"
                             label="Level"
@@ -181,8 +181,8 @@ function HintAndExplanationSection() {
                 if (store.vm.scorable.value.isNotTrue) return null;
                 return (
                     <>
-                        <FFieldContainer>
-                            <FLabel>Answer Hint</FLabel>
+                        <InputFieldContainer>
+                            <InputLabel>Answer Hint</InputLabel>
                             <FormsComposerEditor
                                 ref={store.vm.ansHintRef}
                                 placeholder="Enter Answer Hint"
@@ -191,10 +191,10 @@ function HintAndExplanationSection() {
                                 maxHeight="100px"
                                 options={store.blockComposerOptions}
                             />
-                            <FError />
-                        </FFieldContainer>
-                        <FFieldContainer>
-                            <FLabel>Answer Explanation</FLabel>
+                            <InputError />
+                        </InputFieldContainer>
+                        <InputFieldContainer>
+                            <InputLabel>Answer Explanation</InputLabel>
                             <FormsComposerEditor
                                 ref={store.vm.ansExplanationRef}
                                 placeholder="Enter Answer Explanation"
@@ -204,8 +204,8 @@ function HintAndExplanationSection() {
                                 maxHeight="120px"
                                 options={store.blockComposerOptions}
                             />
-                            <FError />
-                        </FFieldContainer>
+                            <InputError />
+                        </InputFieldContainer>
                     </>
                 );
             }}
@@ -219,7 +219,7 @@ function RequiredCheckbox() {
         <div className="bg-surface mt-5 rounded-sm border border-default px-3 py-2 shadow-xs">
             <Observer>
                 {() => (
-                    <FCheckbox
+                    <Checkbox
                         onChange={(value) => store.vm.onRequiredChange(value)}
                         label={<div className="ms-1">
                             <div>Make this question required</div>

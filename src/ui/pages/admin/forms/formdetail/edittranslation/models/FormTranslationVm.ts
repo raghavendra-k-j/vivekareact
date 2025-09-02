@@ -1,6 +1,6 @@
 import { Language } from "~/domain/forms/models/Language";
 import { FormTranslation } from "~/domain/forms/admin/models/translation/FormTranslation";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { QuestionVm } from "./QuestionVm";
 import { QuestionVmUtil } from "./QuestionVmFactory";
 import { EditTranslationStore } from "../EditTranslationStore";
@@ -24,8 +24,8 @@ export class FormTranslationVm {
     formId: number;
     translationId: number;
 
-    title: FValue<string>;
-    description: FValue<string>;
+    title: InputValue<string>;
+    description: InputValue<string>;
     hasDescription: boolean;
 
     language: Language;
@@ -43,7 +43,7 @@ export class FormTranslationVm {
 
         this.hasDescription = props.description !== null;
 
-        this.title = new FValue<string>(props.title, {
+        this.title = new InputValue<string>(props.title, {
             validator: (value) => {
                 const trimmedValue = StrUtils.trimToNull(value);
                 if (trimmedValue == null) return "Title is required.";
@@ -53,7 +53,7 @@ export class FormTranslationVm {
             }
         });
 
-        this.description = new FValue<string>(props.description || "", {
+        this.description = new InputValue<string>(props.description || "", {
             validator: (value) => {
                 const trimmedValue = StrUtils.trimToNull(value);
                 if (trimmedValue == null) return "Description is required.";

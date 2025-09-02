@@ -3,7 +3,7 @@ import { observer } from "mobx-react-lite";
 import { QuestionHeaderView } from "./QuestionHeaderView";
 import { QuestionCardView } from "./QuestionCardView";
 import { MdQRenderer } from "~/ui/components/form/commons/questionmarkit";
-import { FSelect } from "~/ui/widgets/form/input/FSelect";
+import { SelectInput } from "~/ui/widgets/form/SelectInput";
 import { PairMatchQuestionVm } from "../models/PairMatchQuestionVm";
 import { GroupQuestionVm } from "../models/GroupQuestionVm";
 
@@ -75,7 +75,7 @@ const PairMatchSelect: React.FC<{ vm: PairMatchQuestionVm; index: number }> = ob
                     __html: MdQRenderer.pairMatchText(item.colBText),
                 }}
             />
-            <FSelect
+            <SelectInput
                 className="w-full"
                 value={item.selectedRowId ?? ""}
                 onChange={handleChange}
@@ -86,7 +86,7 @@ const PairMatchSelect: React.FC<{ vm: PairMatchQuestionVm; index: number }> = ob
                         {option.colBText}
                     </option>
                 ))}
-            </FSelect>
+            </SelectInput>
         </div>
     );
 });

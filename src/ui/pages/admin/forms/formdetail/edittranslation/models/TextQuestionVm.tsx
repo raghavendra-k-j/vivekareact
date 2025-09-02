@@ -4,7 +4,7 @@ import { FormTranslationQuestion } from "~/domain/forms/admin/models/translation
 import { FormQuestionConst } from "~/domain/forms/const/FormQuestionConst";
 import { Answer, TextAreaAnswer, TextBoxAnswer } from "~/domain/forms/models/answer/Answer";
 import { QExtras } from "~/domain/forms/models/question/QExtras";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { TextQuestionView } from "../comp/TextQuestionView";
 import { EditTranslationStore } from "../EditTranslationStore";
 import { QuestionVm, QuestionVmProps } from "./QuestionVm";
@@ -45,7 +45,7 @@ export class TextQuestionVm extends QuestionVm {
         const ansMaxLength = isTextArea ? FormQuestionConst.textareaAnswerMaxLength : FormQuestionConst.textboxAnswerMaxLength;
 
         const node = FormsComposerUtil.toNodeOrEmpty({ text, schema });
-        const value = new FValue<FormsComposerDoc | null>(node, {
+        const value = new InputValue<FormsComposerDoc | null>(node, {
             validator: (val) => {
                 let text = FormsComposerUtil.toText({doc: val, schema});
                 text = StrUtils.trimToNull(text);

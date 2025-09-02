@@ -2,7 +2,7 @@ import FilledButton from "~/ui/widgets/button/FilledButton";
 import { useFormAuthStore } from "./FormAuthContext";
 import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { FormAuthCard } from "./FormAuthCard";
-import { FTextField } from "~/ui/widgets/form/input/FTextField";
+import { FTextField } from "~/ui/widgets/form/TextField";
 import { HeaderView } from "./HeaderView";
 import { Observer } from "mobx-react-lite";
 import { useDialogManager } from "~/ui/widgets/dialogmanager";

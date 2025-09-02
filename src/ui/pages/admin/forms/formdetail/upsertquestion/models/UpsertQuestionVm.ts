@@ -1,6 +1,6 @@
 import { UpsertQuestionStore } from "../UpsertQuestionStore";
 import { QuestionType } from "~/domain/forms/models/question/QuestionType";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { action, computed, makeObservable, observable } from "mobx";
 import { createRef } from "react";
 import { Bool3 } from "~/core/utils/Bool3";
@@ -17,16 +17,16 @@ import { blockSchema } from "~/ui/components/formscomposer/core/schema";
 export type UpsertQuestionVmProps = {
   id: number | null;
   storeRef: UpsertQuestionStore;
-  type: FValue<QuestionType | null>;
+  type: InputValue<QuestionType | null>;
   questionNode: ProseMirrorNode | null;
   enaVm: EnAVm | null;
   questionOptions: QuestionOptions | null;
-  scorable: FValue<Bool3>;
-  level: FValue<QuestionLevel | null>;
-  marks: FValue<string>;
+  scorable: InputValue<Bool3>;
+  level: InputValue<QuestionLevel | null>;
+  marks: InputValue<string>;
   ansHintNode: ProseMirrorNode | null;
   ansExplanationNode: ProseMirrorNode | null;
-  isRequired: FValue<Bool3>;
+  isRequired: InputValue<Bool3>;
   mediaFiles?: QMediaTile[];
 }
 
@@ -36,19 +36,19 @@ export class UpsertQuestionVm {
   readonly instanceId = ThingId.generate();
   readonly id: number | null;
   readonly storeRef: UpsertQuestionStore;
-  readonly type: FValue<QuestionType | null>;
+  readonly type: InputValue<QuestionType | null>;
   questionTextRef: React.RefObject<FormsComposerEditorRef | null>;
   questionNode: ProseMirrorNode | null = null;
   questionOptionsVm: QuestionOptions | null;
   enaVm: EnAVm | null;
-  scorable: FValue<Bool3>;
-  level: FValue<QuestionLevel | null>;
-  marks: FValue<string>;
+  scorable: InputValue<Bool3>;
+  level: InputValue<QuestionLevel | null>;
+  marks: InputValue<string>;
   ansHintRef: React.RefObject<FormsComposerEditorRef | null>;
   ansHintNode: ProseMirrorNode | null = null;
   ansExplanationRef: React.RefObject<FormsComposerEditorRef | null>;
   ansExplanationNode: ProseMirrorNode | null = null;
-  isRequired: FValue<Bool3>;
+  isRequired: InputValue<Bool3>;
   mediaFiles: QMediaTile[] = [];
 
   constructor(props: UpsertQuestionVmProps) {

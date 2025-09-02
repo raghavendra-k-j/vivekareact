@@ -2,7 +2,7 @@ import { makeObservable, observable, reaction, runInAction } from "mobx";
 import { SingleValue } from "react-select";
 import { BillingAddress } from "~/domain/billing/common/models/BillingAddress";
 import { Subdivision } from "~/domain/common/models/Subdivision";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { CheckoutPageStore } from "../CheckoutPageStore";
 
 export class BillingAddressFormVm {
@@ -10,19 +10,19 @@ export class BillingAddressFormVm {
 
     checkoutStore: CheckoutPageStore;
 
-    fullNameField = new FValue<string>("");
-    emailField = new FValue<string>("");
-    mobileField = new FValue<string>("");
-    line1Field = new FValue<string>("");
-    line2Field = new FValue<string>("");
-    cityField = new FValue<string>("");
-    postalCodeField = new FValue<string>("");
-    countryField = new FValue<string>("");
-    companyNameField = new FValue<string>("");
-    companyTaxIdField = new FValue<string>("");
+    fullNameField = new InputValue<string>("");
+    emailField = new InputValue<string>("");
+    mobileField = new InputValue<string>("");
+    line1Field = new InputValue<string>("");
+    line2Field = new InputValue<string>("");
+    cityField = new InputValue<string>("");
+    postalCodeField = new InputValue<string>("");
+    countryField = new InputValue<string>("");
+    companyNameField = new InputValue<string>("");
+    companyTaxIdField = new InputValue<string>("");
 
     subdivision: Subdivision | null = null;
-    subdivisionField = new FValue<string>("");
+    subdivisionField = new InputValue<string>("");
     isBusiness: boolean = false;
 
     constructor({ checkoutStore }: { checkoutStore: CheckoutPageStore }) {

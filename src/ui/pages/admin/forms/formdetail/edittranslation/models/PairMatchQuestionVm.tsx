@@ -1,7 +1,7 @@
 import { FormTranslationQuestion } from "~/domain/forms/admin/models/translation/FormTranslationQuestion";
 import { QuestionVm, QuestionVmProps } from "./QuestionVm";
 import { EditTranslationStore } from "../EditTranslationStore";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { Answer, PairMatchAnswer } from "~/domain/forms/models/answer/Answer";
 import { PairMatchItem, PairMatchQExtras, QExtras } from "~/domain/forms/models/question/QExtras";
 import { PairMatchQuestionView } from "../comp/PairMatchQuestionView";
@@ -91,8 +91,8 @@ export type PairMatchItemVmProps = {
 
 export class PairMatchItemVm {
     readonly id: number;
-    readonly colAField: FValue<string>;
-    readonly colBField: FValue<string>;
+    readonly colAField: InputValue<string>;
+    readonly colBField: InputValue<string>;
     readonly correctId: number;
 
     get hasError(): boolean {
@@ -103,11 +103,11 @@ export class PairMatchItemVm {
         this.id = id;
         this.correctId = correctId;
 
-        this.colAField = new FValue<string>(colAText, {
+        this.colAField = new InputValue<string>(colAText, {
             validator: this.buildValidator("Column A")
         });
 
-        this.colBField = new FValue<string>(colBText, {
+        this.colBField = new InputValue<string>(colBText, {
             validator: this.buildValidator("Column B")
         });
     }

@@ -2,16 +2,16 @@ import { makeObservable, observable, action } from "mobx";
 
 type ValidatorFn<T> = (value: T) => string | null;
 
-type FValueOptions<T> = {
+type InputValueOptions<T> = {
     validator?: ValidatorFn<T>;
 };
 
-export class FValue<T> {
+export class InputValue<T> {
     value: T;
     error?: string;
     validator?: ValidatorFn<T>;
 
-    constructor(initialValue: T, options?: FValueOptions<T>) {
+    constructor(initialValue: T, options?: InputValueOptions<T>) {
         this.value = initialValue;
         this.validator = options?.validator;
 

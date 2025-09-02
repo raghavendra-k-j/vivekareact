@@ -7,7 +7,7 @@ import { FillBlanksQExtras, QExtras } from "~/domain/forms/models/question/QExtr
 import { inlineSchema } from "~/ui/components/formscomposer/core/schema";
 import { FormsComposerEditorRef } from "~/ui/components/formscomposer/FormsComposerEditor";
 import { FormsComposerUtil } from "~/ui/components/formscomposer/utils/FormsComposerUtil";
-import { FValue } from "~/ui/widgets/form/FValue";
+import { InputValue } from "~/ui/widgets/form/InputValue";
 import { FillBlankQuestionView } from "../comp/FillBlankQuestionView";
 import { EditTranslationStore } from "../EditTranslationStore";
 import { QuestionVm, QuestionVmProps } from "./QuestionVm";
@@ -100,7 +100,7 @@ export class FillBlankItemVm {
 
 
     constructor(props: FillBlankItemVmProps) {
-        const value = new FValue<FormsComposerDoc | null>(props.value, {
+        const value = new InputValue<FormsComposerDoc | null>(props.value, {
             validator: (val) => {
                 let text = FormsComposerUtil.toText({
                     doc: val,

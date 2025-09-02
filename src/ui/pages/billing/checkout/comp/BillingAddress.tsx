@@ -3,9 +3,9 @@ import Select from "react-select";
 import { Country } from "~/domain/common/models/Country";
 import { Subdivision } from "~/domain/common/models/Subdivision";
 import { PortalSelect } from "~/ui/components/PortalSelect";
-import { FLabel } from "~/ui/widgets/form/FLabel";
-import { FReqMark } from "~/ui/widgets/form/FReqMark";
-import { FTextField } from "~/ui/widgets/form/input/FTextField";
+import { InputLabel } from "~/ui/widgets/form/InputLabel";
+import { ReqMark } from "~/ui/widgets/form/ReqMark";
+import { FTextField } from "~/ui/widgets/form/TextField";
 import { useCheckoutPageStore } from "../CheckoutPageContext";
 import { CheckoutCard, CheckoutCardHeader } from "./CheckoutCard";
 
@@ -57,7 +57,7 @@ function AddressInformation() {
                 </div>
 
                 <div>
-                    <FLabel>Country <FReqMark /></FLabel>
+                    <InputLabel>Country <ReqMark /></InputLabel>
                     <Select<Country>
                         className="mt-1"
                         options={[store.pcd.country]}
@@ -110,7 +110,7 @@ function SubdivisionField() {
     if (store.pcd.country.metadata?.subdivisionInputType == "select") {
         return (
             <div>
-                <FLabel>{store.pcd.country.metadata?.subdivisionLabel} <FReqMark /></FLabel>
+                <InputLabel>{store.pcd.country.metadata?.subdivisionLabel} <ReqMark /></InputLabel>
                 <Observer>
                     {() => (<PortalSelect<Subdivision>
                         className="mt-1"

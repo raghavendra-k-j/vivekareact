@@ -1,16 +1,20 @@
 import React, { ReactNode } from "react";
 
-type FFieldContainerProps = React.HTMLAttributes<HTMLDivElement> & {
+type InputFieldContainerProps = React.HTMLAttributes<HTMLDivElement> & {
     children?: ReactNode;
 };
 
-export function FFieldContainer({
+
+function InputFieldContainer({
     children,
     ...divProps
-}: FFieldContainerProps) {
+}: InputFieldContainerProps) {
     return (
         <div className="flex flex-col gap-1" {...divProps}>
             {children}
         </div>
     );
 }
+
+
+export { InputFieldContainer };
