@@ -1,7 +1,8 @@
+import clsx from "clsx";
 import { useRef } from "react";
+import { MainHomeAppBar } from "~/ui/components/logo/MainHomeAppBar";
 import { HomePageContext } from "./HomePageContext";
 import { HomePageStore } from "./HomePageStore";
-import { AppBar } from "./comp/AppBar";
 import { FeaturesSection } from "./comp/FeaturesSection";
 import { Footer } from "./comp/Footer";
 import { HeroSection } from "./comp/HeroSection";
@@ -12,9 +13,11 @@ export function HomePageProvider({ children }: { children: React.ReactNode }) {
     if (!storeRef.current) {
         storeRef.current = new HomePageStore();
     }
-    return <HomePageContext.Provider value={storeRef.current}>
-        {children}
-    </HomePageContext.Provider>;
+    return (
+        <HomePageContext.Provider value={storeRef.current}>
+            {children}
+        </HomePageContext.Provider>
+    );
 }
 
 export default function HomePage() {
@@ -27,12 +30,32 @@ export default function HomePage() {
 
 function HomePageInner() {
     return (
-        <div className="h-screen overflow-y-auto">
-            <AppBar />
-            <HeroSection />
-            <FeaturesSection />
-            <UseCasesSection />
-            <Footer />
+        <div className="h-screen overflow-y-auto scroll-smooth">
+            <MainHomeAppBar />
+            <main>
+                <BaseSection id="home">
+                    <HeroSection />
+                </BaseSection>
+                <BaseSection id="features">
+                    <FeaturesSection />
+                </BaseSection>
+                <BaseSection id="use-cases">
+                    <UseCasesSection />
+                </BaseSection>
+                <Footer />
+            </main>
         </div>
+    );
+}
+
+
+function BaseSection({ id, children, className }: { id: string, children?: React.ReactNode, className?: string }) {
+    return (
+        <section
+            id={id}
+            className={clsx("scroll-mt-[56px]", className)}
+        >
+            {children ? children : (id).toUpperCase()}
+        </section>
     );
 }

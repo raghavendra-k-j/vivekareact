@@ -1,57 +1,108 @@
-import { BarChart3, BookOpen, FileText, Zap } from "lucide-react";
+import {
+    ArrowLeftRight,
+    BadgeCheck,
+    BarChart3,
+    BookOpen,
+    FileText,
+    Languages,
+    Mic,
+    Sigma,
+    Zap
+} from "lucide-react";
+import { HomeFeatureCard, SectionHeader } from "./CoreSection";
 
-interface Feature {
-    icon: React.ReactNode;
-    title: string;
-    description: string;
-    color: string;
-}
-
-const features: Feature[] = [
-    {
-        icon: <Zap className="w-6 h-6" />,
-        title: "AI-Powered Assessment Generation",
-        description: "Transform any document into customized assessments and surveys effortlessly. Upload documents or paste content and watch AI generate tailored questions.",
-        color: "text-blue-600"
-    },
-    {
-        icon: <BarChart3 className="w-6 h-6" />,
-        title: "Detailed User Analytics",
-        description: "Deep insights into user engagement and performance with comprehensive analytics. Monitor response rates, trends, scores, and detailed performance insights.",
-        color: "text-emerald-600"
-    },
-    {
-        icon: <FileText className="w-6 h-6" />,
-        title: "Document Summarization",
-        description: "Effortlessly summarize documents in multiple languages. Receive concise summaries highlighting key points for quick understanding of lengthy documents.",
-        color: "text-purple-600"
-    },
-    {
-        icon: <BookOpen className="w-6 h-6" />,
-        title: "Learning Resources Management",
-        description: "Organize and access a comprehensive library of learning resources. Interact with content, summarize information, and enhance learning experiences.",
-        color: "text-orange-600"
-    }
-];
 
 export function FeaturesSection() {
-    return (
-        <section id="features" className="py-16 bg-amber-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                        Powerful Features
-                    </h2>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Comprehensive tools for modern assessment creation, document summarization and analytics
-                    </p>
-                </div>
+    const features = [
+        {
+            icon: <Zap className="w-6 h-6" />,
+            title: "AI-powered Assessment & Survey Generation",
+            description:
+                "Generate tailored Assessments or Surveys from a prompt or document — in minutes.",
+            iconBgClass: "bg-amber-50",
+            iconColorClass: "text-amber-600",
+        },
+        {
+            icon: <BadgeCheck className="w-6 h-6" />,
+            title: "AI-powered Evaluation (Assessments)",
+            description:
+                "Automatic grading, rubric-aligned scoring, and instant feedback for Assessments.",
+            iconBgClass: "bg-amber-50",
+            iconColorClass: "text-amber-600",
+        },
+        {
+            icon: <BarChart3 className="w-6 h-6" />,
+            title: "Detailed Reports & Analytics",
+            description:
+                "Clear score breakdowns, trends, and cohort insights you can act on.",
+            iconBgClass: "bg-amber-50",
+            iconColorClass: "text-amber-600",
+        },
+        {
+            icon: <Sigma className="w-6 h-6" />,
+            title: "Support for Equations",
+            description:
+                "Type math & science using our equation keyboard — or speak equations by voice.",
+            iconBgClass: "bg-amber-50",
+            iconColorClass: "text-amber-600",
+        },
+        {
+            icon: <ArrowLeftRight className="w-6 h-6" />,
+            title: "Compare Assessments",
+            description:
+                "Compare results across Assessments to track progress and spot knowledge gaps.",
+            iconBgClass: "bg-amber-50",
+            iconColorClass: "text-amber-600",
+        },
+        {
+            icon: <Languages className="w-6 h-6" />,
+            title: "AI-based Auto Translation",
+            description:
+                "Translate Assessments & Surveys into multiple languages with a single click.",
+            iconBgClass: "bg-amber-50",
+            iconColorClass: "text-amber-600",
+        },
+        {
+            icon: <Mic className="w-6 h-6" />,
+            title: "Voice-based Answering",
+            description:
+                "Let respondents answer by voice for faster, more accessible submissions.",
+            iconBgClass: "bg-amber-50",
+            iconColorClass: "text-amber-600",
+        },
+        {
+            icon: <FileText className="w-6 h-6" />,
+            title: "Summarization",
+            description:
+                "Condense long content into precise, multi-language summaries.",
+            iconBgClass: "bg-amber-50",
+            iconColorClass: "text-amber-600",
+        },
+        {
+            icon: <BookOpen className="w-6 h-6" />,
+            title: "Learning Resources",
+            description:
+                "Organize materials and convert content into study-ready nuggets.",
+            iconBgClass: "bg-amber-50",
+            iconColorClass: "text-amber-600",
+        },
+    ];
 
-                {/* Features Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    {features.map((feature, index) => (
-                        <FeatureCard key={index} feature={feature} />
+    return (
+        <section id="features" className="relative overflow-hidden">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-amber-50 via-white to-amber-50" />
+            <div className="relative container px-4 py-16">
+                <SectionHeader title="Features" titleClassName="text-amber-600" />
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    {features.map((f) => (
+                        <HomeFeatureCard
+                            key={f.title}
+                            icon={f.icon}
+                            title={f.title}
+                            description={f.description}
+                            iconBgClass={f.iconBgClass}
+                            iconColorClass={f.iconColorClass}
+                        />
                     ))}
                 </div>
             </div>
@@ -59,25 +110,5 @@ export function FeaturesSection() {
     );
 }
 
-interface FeatureCardProps {
-    feature: Feature;
-}
 
-function FeatureCard({ feature }: FeatureCardProps) {
-    return (
-        <div className="text-center bg-surface shadow-md rounded-md p-4">
-            {/* Icon Container */}
-            <div className={`inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gray-50 ${feature.color} mb-4`}>
-                {feature.icon}
-            </div>
 
-            {/* Content */}
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                {feature.title}
-            </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-                {feature.description}
-            </p>
-        </div>
-    );
-}

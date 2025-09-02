@@ -1,107 +1,101 @@
-import { BookOpen, Building2, GraduationCap, Heart, MessageSquare, ShoppingCart, TrendingUp, Users } from "lucide-react";
-
-interface UseCase {
-    icon: React.ReactNode;
-    title: string;
-    description: string;
-    color: string;
-}
-
-const useCases: UseCase[] = [
-    {
-        icon: <Building2 className="w-5 h-5" />,
-        title: "Employee Training",
-        description: "Design tailored assessments to evaluate employee learning and measure training effectiveness.",
-        color: "text-blue-600"
-    },
-    {
-        icon: <GraduationCap className="w-5 h-5" />,
-        title: "Classroom Exams",
-        description: "Generate quizzes and exams from course materials for effective student evaluation.",
-        color: "text-emerald-600"
-    },
-    {
-        icon: <Heart className="w-5 h-5" />,
-        title: "Healthcare Assessment",
-        description: "Ensure staff compliance with latest medical guidelines and procedures.",
-        color: "text-rose-600"
-    },
-    {
-        icon: <Users className="w-5 h-5" />,
-        title: "Recruitment",
-        description: "Create assessments for candidate evaluation during recruitment processes.",
-        color: "text-purple-600"
-    },
-    {
-        icon: <ShoppingCart className="w-5 h-5" />,
-        title: "Product Surveys",
-        description: "Gather customer feedback about products to enhance development and satisfaction.",
-        color: "text-orange-600"
-    },
-    {
-        icon: <MessageSquare className="w-5 h-5" />,
-        title: "Corporate Surveys",
-        description: "Collect feedback on organizational policies and initiatives from stakeholders.",
-        color: "text-yellow-600"
-    },
-    {
-        icon: <BookOpen className="w-5 h-5" />,
-        title: "Customer Feedback",
-        description: "Understand customer satisfaction levels to improve products and services.",
-        color: "text-cyan-600"
-    },
-    {
-        icon: <TrendingUp className="w-5 h-5" />,
-        title: "Market Research",
-        description: "Gather insights on market trends and customer preferences for strategic decisions.",
-        color: "text-indigo-600"
-    }
-];
+import {
+    BookOpen,
+    Building2,
+    GraduationCap,
+    Heart,
+    MessageSquare,
+    ShoppingCart,
+    TrendingUp,
+    Users,
+} from "lucide-react";
+import { HomeFeatureCard, SectionHeader } from "./CoreSection";
 
 export function UseCasesSection() {
-    return (
-        <section id="use-cases" className="py-16 bg-violet-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                        Use Cases
-                    </h2>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        From education to corporate training, healthcare to market research
-                    </p>
-                </div>
+    const useCases = [
+        {
+            icon: <Building2 className="w-5 h-5" />,
+            title: "Customized Employee Training Assessments",
+            description:
+                "Design tailored assessments and surveys to evaluate employee learning and development. Identify knowledge gaps and measure training effectiveness using detailed analytics.",
+            iconBgClass: "bg-purple-50",
+            iconColorClass: "text-purple-600",
+        },
+        {
+            icon: <GraduationCap className="w-5 h-5" />,
+            title: "Classroom Quizzes and Exams",
+            description:
+                "Generate quizzes and exams from course materials, tailored to different learning levels. Save time and ensure a diverse set of questions for effective student evaluation.",
+            iconBgClass: "bg-purple-50",
+            iconColorClass: "text-purple-600",
+        },
+        {
+            icon: <Heart className="w-5 h-5" />,
+            title: "Staff Knowledge Assessment in Healthcare",
+            description:
+                "Develop assessments to ensure healthcare staff are up-to-date with the latest medical guidelines and procedures. Monitor compliance and identify training needs through detailed reports.",
+            iconBgClass: "bg-purple-50",
+            iconColorClass: "text-purple-600",
+        },
+        {
+            icon: <Users className="w-5 h-5" />,
+            title: "Recruitment Assessments",
+            description:
+                "Create assessments for candidate evaluation during recruitment processes. Improve hiring decisions and ensure a thorough evaluation of candidates' qualifications.",
+            iconBgClass: "bg-purple-50",
+            iconColorClass: "text-purple-600",
+        },
+        {
+            icon: <ShoppingCart className="w-5 h-5" />,
+            title: "Product Surveys",
+            description:
+                "Conduct surveys to gather feedback and insights from customers about your products or services. Analyze responses to enhance product development and customer satisfaction.",
+            iconBgClass: "bg-purple-50",
+            iconColorClass: "text-purple-600",
+        },
+        {
+            icon: <MessageSquare className="w-5 h-5" />,
+            title: "Corporate Surveys",
+            description:
+                "Create surveys to collect feedback from employees or stakeholders on organizational policies, initiatives, or events. Gain insights to improve corporate culture and decision-making.",
+            iconBgClass: "bg-purple-50",
+            iconColorClass: "text-purple-600",
+        },
+        {
+            icon: <BookOpen className="w-5 h-5" />,
+            title: "Customer Feedback",
+            description:
+                "Collect feedback from customers to understand their satisfaction levels and improve products or services accordingly. Enhance customer retention and loyalty through actionable insights.",
+            iconBgClass: "bg-purple-50",
+            iconColorClass: "text-purple-600",
+        },
+        {
+            icon: <TrendingUp className="w-5 h-5" />,
+            title: "Market Research Surveys",
+            description:
+                "Conduct comprehensive surveys to gather insights on market trends, customer preferences, and competitive landscape. Analyze survey data to make informed business decisions and strategize effectively in dynamic markets.",
+            iconBgClass: "bg-purple-50",
+            iconColorClass: "text-purple-600",
+        },
+    ];
 
-                {/* Use Cases Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {useCases.map((useCase, index) => (
-                        <UseCaseCard key={index} useCase={useCase} />
+    return (
+        <section id="use-cases" className="relative overflow-hidden">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-violet-50 via-white to-violet-50" />
+            <div className="relative container px-4 py-16">
+                <SectionHeader title="Use Case" titleClassName="text-purple-600" />
+                <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+                    {useCases.map((u) => (
+                        <HomeFeatureCard
+                            key={u.title}
+                            icon={u.icon}
+                            title={u.title}
+                            description={u.description}
+                            iconBgClass={u.iconBgClass}
+                            iconColorClass={u.iconColorClass}
+                        />
                     ))}
                 </div>
             </div>
         </section>
-    );
-}
-
-interface UseCaseCardProps {
-    useCase: UseCase;
-}
-
-function UseCaseCard({ useCase }: UseCaseCardProps) {
-    return (
-        <div className="bg-surface rounded-lg p-6 border border-gray-200 shadow-md">
-            {/* Icon */}
-            <div className={`inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gray-50 ${useCase.color} mb-4`}>
-                {useCase.icon}
-            </div>
-
-            {/* Content */}
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {useCase.title}
-            </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
-                {useCase.description}
-            </p>
-        </div>
     );
 }

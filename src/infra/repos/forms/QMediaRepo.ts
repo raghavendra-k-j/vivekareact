@@ -42,7 +42,7 @@ export class QMediaRepo {
         if (types) data['types'] = types.map((type) => type.type);
 
         try {
-            const response = await this.axios.post('/api/v1/admin/qmedia/', data);
+            const response = await this.axios.post('/api/v1/admin/qmedia', data);
             return ResEither.data(QueryQMediaResponse.fromMap(response.data));
         }
         catch (error) {

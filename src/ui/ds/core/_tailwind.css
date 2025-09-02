@@ -14,7 +14,7 @@
 @source "../../../../node_modules/@heroui/react/dist/**/*.{js,ts,jsx,tsx}";
 
 @theme {
-  --font-default: "Noto Sans", sans-serif;
+  --font-default: "Geist", sans-serif;
 
   /* Text Size */
   --text-xs-m: 11px;

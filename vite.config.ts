@@ -12,7 +12,7 @@ export default defineConfig({
     tailwindcss(),
     visualizer({ open: true }),
   ],
-  base: "/web/",
+  base: "/web",
   resolve: {
     alias: {
       '~': path.resolve(__dirname, './src'),

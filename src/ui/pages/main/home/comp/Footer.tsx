@@ -1,152 +1,164 @@
-import { Heart, Mail } from "lucide-react";
+import React from "react";
+import { Mail } from "lucide-react";
+import { BaseNamedLogo } from "~/ui/components/logo/BaseLogo";
+
+const SENTIACARE_URL = "https://www.sentiacare.com/";
+const SENTIACARE_SM_LOGO = "https://www.sentiacare.com/images/logo-sentiacare-sm.png";
 
 export function Footer() {
-    const currentYear = new Date().getFullYear();
+    const year = new Date().getFullYear();
+    const email = "askus@sentiacare.com";
 
-    const handleEmailClick = (subject: string) => {
-        const email = "contact@viveka.ai";
-        const encodedSubject = encodeURIComponent(subject);
-        window.open(`mailto:${email}?subject=${encodedSubject}`, '_blank');
+    const openMail = (subject: string) => {
+        const s = encodeURIComponent(subject);
+        window.open(`mailto:${email}?subject=${s}`, "_blank");
+    };
+
+    const openChat = () => {
+        (window as any)?.Tawk_API?.toggle?.();
     };
 
     return (
-        <footer className="bg-gray-900 text-white">
-            {/* CTA Section */}
-            <div className="bg-blue-600">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                    <div className="text-center">
-                        <h3 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-                            Ready to Transform Your Assessments?
-                        </h3>
-                        <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-                            Join thousands of professionals who trust VIVEKA.AI for creating engaging assessments.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold transition-colors">
-                                Start Free Trial
-                            </button>
-                            <button 
-                                onClick={() => handleEmailClick("Demo Request")}
-                                className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
-                            >
-                                Request Demo
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Footer Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
-                    {/* Brand Column */}
-                    <div>
-                        <div className="flex items-center gap-3 mb-4">
-                            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">V</span>
-                            </div>
-                            <span className="text-xl font-bold">VIVEKA.AI</span>
-                        </div>
-                        <p className="text-gray-300 mb-4 text-sm">
-                            AI-powered assessment creation and analytics platform for modern education and training.
-                        </p>
-                        <div className="flex items-center gap-2 text-gray-300">
-                            <Mail className="w-4 h-4" />
-                            <button 
-                                onClick={() => handleEmailClick("General Inquiry")}
-                                className="hover:text-blue-400 transition-colors text-sm"
-                            >
-                                contact@viveka.ai
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Quick Links */}
-                    <div>
-                        <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <button 
-                                    onClick={() => handleEmailClick("About Us Inquiry")}
-                                    className="text-gray-300 hover:text-blue-400 transition-colors"
-                                >
-                                    About Us
-                                </button>
-                            </li>
-                            <li>
-                                <button 
-                                    onClick={() => handleEmailClick("Terms of Service Inquiry")}
-                                    className="text-gray-300 hover:text-blue-400 transition-colors"
-                                >
-                                    Terms of Service
-                                </button>
-                            </li>
-                            <li>
-                                <button 
-                                    onClick={() => handleEmailClick("Privacy Policy Inquiry")}
-                                    className="text-gray-300 hover:text-blue-400 transition-colors"
-                                >
-                                    Privacy Policy
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Support */}
-                    <div>
-                        <h3 className="text-lg font-semibold mb-4">Support</h3>
-                        <ul className="space-y-2 text-sm">
-                            <li>
-                                <button 
-                                    onClick={() => handleEmailClick("Help Center - Documentation Request")}
-                                    className="text-gray-300 hover:text-blue-400 transition-colors"
-                                >
-                                    Documentation
-                                </button>
-                            </li>
-                            <li>
-                                <button 
-                                    onClick={() => handleEmailClick("Technical Support Request")}
-                                    className="text-gray-300 hover:text-blue-400 transition-colors"
-                                >
-                                    Technical Support
-                                </button>
-                            </li>
-                            <li>
-                                <button 
-                                    onClick={() => handleEmailClick("Contact Us")}
-                                    className="text-gray-300 hover:text-blue-400 transition-colors"
-                                >
-                                    Contact Us
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
+        <footer className="text-white bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
+            <div className="container px-4 py-10">
+                <div className="grid items-start gap-10 md:grid-cols-2">
+                    <FooterBrand email={email} onEmailClick={() => openMail("General Inquiry")} />
+                    <FooterLinks
+                        items={[
+                            { label: "About Us", href: "/about" },
+                            { label: "Terms of Service", href: "/terms" },
+                            { label: "Privacy Policy", href: "/privacy" },
+                            { label: "Contact Us", onClick: openChat },
+                        ]}
+                    />
                 </div>
 
-                {/* Bottom Section */}
-                <div className="border-t border-gray-800 mt-8 pt-6">
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-                        <div className="flex items-center gap-2 text-gray-400">
-                            <span>© {currentYear} VIVEKA.AI. All rights reserved.</span>
-                            <span>•</span>
-                            <span>Designed by</span>
-                            <button 
-                                onClick={() => handleEmailClick("Sentiacare Partnership Inquiry")}
-                                className="text-blue-400 hover:text-blue-300 transition-colors"
-                            >
-                                Sentiacare
-                            </button>
-                        </div>
-                        
-                        <div className="flex items-center gap-2 text-gray-400 text-sm">
-                            <span>Made with</span>
-                            <Heart className="w-4 h-4 text-red-400 fill-current" />
-                            <span>for better assessments</span>
-                        </div>
-                    </div>
-                </div>
+                <FooterBottom year={year} />
             </div>
         </footer>
+    );
+}
+
+function FooterBrand({
+    email,
+    onEmailClick,
+}: {
+    email: string;
+    onEmailClick: () => void;
+}) {
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center">
+                <BaseNamedLogo iconSize={28} textSize={20} textClassName="text-white" />
+            </div>
+            <p className="text-base text-gray-300">
+                AI-powered platform to create Assessments & Surveys, auto-evaluate
+                responses, and deliver actionable analytics.
+            </p>
+            <FooterEmail email={email} onClick={onEmailClick} />
+        </div>
+    );
+}
+
+function FooterEmail({
+    email,
+    onClick,
+}: {
+    email: string;
+    onClick: () => void;
+}) {
+    return (
+        <button
+            type="button"
+            onClick={onClick}
+            className="inline-flex items-center gap-2 text-base text-gray-300 hover:text-white"
+        >
+            <Mail className="h-4 w-4" />
+            {email}
+        </button>
+    );
+}
+
+type FooterLinkItem =
+    | { label: string; href: string; onClick?: never }
+    | { label: string; href?: never; onClick: () => void };
+
+function FooterLinks({ items }: { items: FooterLinkItem[] }) {
+    return (
+        <nav aria-label="Footer" className="grid gap-3 md:justify-end text-base">
+            <div className="flex flex-wrap gap-6">
+                {items.map((item) => (
+                    <FooterNavLink
+                        key={item.label}
+                        href={"href" in item ? item.href : undefined}
+                        onClick={"onClick" in item ? item.onClick : undefined}
+                    >
+                        {item.label}
+                    </FooterNavLink>
+                ))}
+            </div>
+        </nav>
+    );
+}
+
+function FooterNavLink({
+    href,
+    onClick,
+    children,
+}: {
+    href?: string;
+    onClick?: () => void;
+    children: React.ReactNode;
+}) {
+    const cls =
+        "text-gray-300 hover:text-white transition-colors underline-offset-4 decoration-transparent hover:decoration-gray-600/60";
+
+    if (href) {
+        return (
+            <a href={href} className={cls}>
+                {children}
+            </a>
+        );
+    }
+    return (
+        <button type="button" onClick={onClick} className={cls}>
+            {children}
+        </button>
+    );
+}
+
+function FooterBottom({ year }: { year: number }) {
+    return (
+        <div className="mt-10 border-t border-gray-800 pt-6">
+            <div className="flex flex-col gap-3 text-sm text-gray-400 md:flex-row md:items-center md:justify-between">
+                <span>© {year} VIVEKA · All rights reserved.</span>
+                <span className="inline-flex items-center gap-2">
+                    <span>Designed & developed by</span>
+                    <SentiaCareLogo />
+                </span>
+            </div>
+        </div>
+    );
+}
+
+function SentiaCareLogo() {
+    return (
+        <a
+            href={SENTIACARE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit Sensiacare Website"
+            title="Sentiacare"
+            className="inline-flex items-center"
+        >
+            <span className="inline-flex items-center rounded-full bg-white">
+                <img
+                    src={SENTIACARE_SM_LOGO}
+                    alt="Sensiacare Logo"
+                    className="h-8 w-auto object-contain"
+                    loading="lazy"
+                />
+            </span>
+        </a>
     );
 }

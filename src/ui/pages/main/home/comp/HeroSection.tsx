@@ -1,87 +1,168 @@
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "~/ui/components/buttons/button";
+import { useEffect, useMemo, useState } from "react";
 
 export function HeroSection() {
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    useEffect(() => {
+        const onResize = () => setIsDesktop(window.innerWidth > 1026);
+        onResize();
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
+
     return (
-        <section className="pt-24 pb-16 bg-gradient-to-br from-gray-50 to-blue-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid lg:grid-cols-2 gap-12 items-center">
-                    {/* Left Content */}
-                    <div className="text-center lg:text-left">
-                        {/* Main Heading */}
-                        <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-                            Create Assessments & Surveys
-                            <span className="block text-blue-600">with AI Power</span>
-                        </h1>
-
-                        {/* Subtitle */}
-                        <p className="text-lg text-gray-600 mb-8 max-w-xl">
-                            Transform documents into customized assessments, analyze performance with AI, 
-                            and summarize content effortlessly.
-                        </p>
-
-                        {/* Features List */}
-                        <div className="flex flex-wrap gap-6 mb-8 text-gray-700">
-                            <div className="flex items-center gap-2">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                                <span>AI-Generated Questions</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                                <span>Real-time Analytics</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                                <span>Multi-language Support</span>
-                            </div>
-                        </div>
-
-                        {/* CTA Button */}
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold text-lg transition-colors inline-flex items-center gap-2">
-                            Start Free Trial
-                            <ArrowRight className="w-5 h-5" />
-                        </button>
-                    </div>
-
-                    {/* Right Content - Simple Illustration */}
-                    <div className="relative">
-                        <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-                            {/* Mock Dashboard */}
-                            <div className="space-y-6">
-                                {/* Header */}
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 bg-blue-600 rounded-lg"></div>
-                                        <span className="text-gray-900 font-semibold">Assessment Dashboard</span>
-                                    </div>
-                                </div>
-
-                                {/* Content */}
-                                <div className="space-y-4">
-                                    <div className="bg-gray-50 rounded-lg p-4">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-gray-700 font-medium">Assessment Generation</span>
-                                            <span className="text-blue-600 text-sm">75%</span>
-                                        </div>
-                                        <div className="h-2 bg-gray-200 rounded-full">
-                                            <div className="w-3/4 h-full bg-blue-600 rounded-full"></div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="bg-gray-50 rounded-lg p-4">
-                                        <span className="text-gray-700 font-medium">Performance Analytics</span>
-                                        <div className="flex gap-2 mt-3">
-                                            <div className="flex-1 h-6 bg-blue-200 rounded"></div>
-                                            <div className="flex-1 h-8 bg-blue-400 rounded"></div>
-                                            <div className="flex-1 h-5 bg-blue-300 rounded"></div>
-                                            <div className="flex-1 h-7 bg-blue-500 rounded"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <section className="relative overflow-hidden">
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary-50 via-white to-white" />
+            <div className="relative container px-4">
+                <div
+                    className={[
+                        "grid items-start gap-12 pt-8 pb-16",
+                        isDesktop ? "grid-cols-2" : "grid-cols-1",
+                    ].join(" ")}
+                >
+                    <HeroIntro isDesktop={isDesktop} />
+                    <HeroFeatures />
                 </div>
             </div>
         </section>
+    );
+}
+
+function HeroIntro({ isDesktop }: { isDesktop: boolean }) {
+    return (
+        <div className={isDesktop ? "text-left" : "text-center"}>
+            <div className="mb-4 inline-flex items-center rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-medium text-primary">
+                VIVEKA — Assessments and Surveys, powered by AI
+            </div>
+
+            <h1
+                className={[
+                    "mb-5 font-bold leading-tight text-gray-900",
+                    isDesktop ? "text-5xl" : "text-4xl",
+                ].join(" ")}
+            >
+                Create <span className="text-purple-600">Assessments</span> &{" "}
+                <span className="text-pink-600">Surveys</span>
+                <span className="block">in Minutes</span>
+            </h1>
+
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600">
+                Turn your prompts, documents, or books into tailored Assessments & Surveys.
+                Save time, generate high-quality questions, auto-evaluate responses,
+                and get detailed reports effortlessly.
+            </p>
+
+            <div
+                className={[
+                    "flex gap-3",
+                    isDesktop ? "justify-start" : "justify-center",
+                ].join(" ")}
+            >
+                <Button size="lg">
+                    Start Free Trial
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+            </div>
+        </div>
+    );
+}
+
+function HeroFeatures() {
+    const items = useMemo(
+        () => [
+            {
+                text: "AI-powered Assessment & Survey Generation",
+                description:
+                    "Create Assessments or Surveys instantly from a prompt, document, or book.",
+            },
+            {
+                text: "AI-powered Evaluation",
+                description:
+                    "Automatically grade and evaluate responses with AI to save time and reduce bias.",
+            },
+            {
+                text: "Detailed Reports & Analytics",
+                description: "Get performance insights, trends, and summaries at a glance.",
+            },
+            {
+                text: "Support for Equations",
+                description:
+                    "Handle mathematical and scientific equations seamlessly in Assessments.",
+            },
+            {
+                text: "AI-based Auto Translation",
+                description:
+                    "Translate your Assessments and Surveys into multiple languages with just one click using AI.",
+            },
+            { text: "…and many more", description: undefined },
+        ],
+        []
+    );
+
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+    const handleToggle = (idx: number) =>
+        setOpenIndex((cur) => (cur === idx ? null : idx));
+
+    return (
+        <div className="relative">
+            <div className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-lg">
+                <h3 className="mb-4 text-lg font-semibold text-gray-900">
+                    AI-powered tools for Assessments & Surveys
+                </h3>
+                <ul className="space-y-3 text-gray-800">
+                    {items.map((item, idx) => (
+                        <HeroFeatureItem
+                            key={item.text}
+                            text={item.text}
+                            description={item.description}
+                            open={openIndex === idx}
+                            onToggle={() => handleToggle(idx)}
+                        />
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+}
+
+function HeroFeatureItem({
+    text,
+    description,
+    open,
+    onToggle,
+}: {
+    text: string;
+    description?: string;
+    open: boolean;
+    onToggle: () => void;
+}) {
+    return (
+        <li
+            className={[
+                "flex flex-col rounded-md",
+                open ? "bg-primary-50/60" : "",
+            ].join(" ")}
+        >
+            <button
+                type="button"
+                aria-expanded={open}
+                className="flex items-start gap-2 px-2 py-2 text-left"
+                onClick={onToggle}
+            >
+                <CheckCircle className="mt-0.5 h-5 w-5 shrink-0 text-green-600" />
+                <span className="flex-1 font-medium">{text}</span>
+                {description ? (
+                    <span className="ml-1 text-gray-400">
+                        {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </span>
+                ) : null}
+            </button>
+
+            {description && open && (
+                <p className="ml-9 pr-2 text-sm text-gray-600">{description}</p>
+            )}
+        </li>
     );
 }

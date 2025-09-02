@@ -6,6 +6,7 @@ export type BaseEnvProps = {
     apiHost: string;
     apiPort: string;
     pyBackendUrl: string;
+    mainUrl: string;
 }
 
 export class BaseEnv {
@@ -18,6 +19,7 @@ export class BaseEnv {
     readonly apiHost: string;
     readonly apiPort: string;
     readonly pyBackendUrl: string;
+    readonly mainUrl: string;
 
     private static _instance: BaseEnv | null = null;
 
@@ -27,6 +29,7 @@ export class BaseEnv {
         this.apiHost = props.apiHost;
         this.apiPort = props.apiPort;
         this.pyBackendUrl = props.pyBackendUrl;
+        this.mainUrl = props.mainUrl;
     }
 
     get apiBase(): string {
@@ -86,6 +89,7 @@ export class BaseEnv {
             apiHost: json.apiHost,
             apiPort: json.apiPort,
             pyBackendUrl: json.pyBackendUrl,
+            mainUrl: json.mainUrl,
         });
 
         return BaseEnv._instance!;
