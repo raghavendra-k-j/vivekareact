@@ -11,6 +11,6 @@ export class ActiveSignUpFragment {
     }
 
     static INIT = new ActiveSignUpFragment('init');
-    static ORG_DETAILS = new ActiveSignUpFragment('orgDetails');
+    static VERIFY_CODE = new ActiveSignUpFragment('verifyCode');
     static FINISH_SETUP = new ActiveSignUpFragment('finishSetup');
 }

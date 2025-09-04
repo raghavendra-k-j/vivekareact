@@ -2,11 +2,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import clsx from "clsx";
 import * as React from "react";
 
-const TextareaVariants = cva("finput", {
+const TextareaVariants = cva("input", {
     variants: {
         inputSize: {
-            sm: "finput--sm",
-            md: "finput--md",
+            sm: "input--sm",
+            md: "input--md",
         },
     },
     defaultVariants: {
@@ -14,7 +14,9 @@ const TextareaVariants = cva("finput", {
     },
 });
 
-export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement>, VariantProps<typeof TextareaVariants> { }
+export interface TextareaProps
+    extends React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+    VariantProps<typeof TextareaVariants> { }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     ({ className, inputSize, ...props }, ref) => {

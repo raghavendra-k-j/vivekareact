@@ -37,3 +37,10 @@
   --color-primary-900: var(--color-primary-900);
   --color-primary-950: var(--color-primary-950);
 }
+
+
+@layer utilities {
+  .bg-brand-gradient {
+    @apply bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100;
+  }
+}

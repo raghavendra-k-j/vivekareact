@@ -18,9 +18,6 @@ export async function bootApp(): Promise<void> {
     logger.debug("Booting app...");
 
     const appEnv = AppEnv.fromBaseEnv(BaseEnv.instance);
-
-    // Create Api Clients
-    BaseApiClient.createInstace({ baseURL: appEnv.apiBase });
     ApiClient.createInstace({ baseURL: appEnv.apiBase });
 
     configService = new ConfigService();

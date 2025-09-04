@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { AppContext } from "./AppContext";
-import { AppStore } from "./AppStore";
 import type { AppEnv } from "~/core/config/AppEnv";
 import type { OrgConfig } from "~/domain/common/models/OrgConfig";
-import { DialogManagerProvider } from "~/ui/widgets/dialogmanager";
-import { ToastContainer } from "react-toastify";
 import { PageLoader } from "~/ui/components/loaders/PageLoader";
 import { getAuthService, getConfigService } from "../bootApp";
+import { AppContext } from "./AppContext";
+import { AppStore } from "./AppStore";
 
 export type AppProviderProps = {
     children: React.ReactNode;
@@ -49,10 +47,7 @@ export function AppProvider(props: AppProviderProps) {
 
     return (
         <AppContext.Provider value={appStoreRef.current}>
-            <DialogManagerProvider>
-                {props.children}
-            </DialogManagerProvider>
-            <ToastContainer position="bottom-right" />
+            {props.children}
         </AppContext.Provider>
     );
 }

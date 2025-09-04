@@ -1,0 +1,102 @@
+/* Container + size tokens (reuse your input/select tokens) */
+.combo {
+  --combo-px: var(--dimen-input-md-px);
+  --combo-py: var(--dimen-input-md-py);
+  --combo-font-size: var(--dimen-input-md-font-size);
+  --combo-min-height: var(--dimen-input-md-min-height);
+  --combo-radius: var(--dimen-input-radius);
+  position: relative;
+}
+
+/* Size variants */
+.combo--sm {
+  --combo-px: var(--dimen-input-sm-px);
+  --combo-py: var(--dimen-input-sm-py);
+  --combo-font-size: var(--dimen-input-sm-font-size);
+  --combo-min-height: var(--dimen-input-sm-min-height);
+}
+.combo--md {
+  --combo-px: var(--dimen-input-md-px);
+  --combo-py: var(--dimen-input-md-py);
+  --combo-font-size: var(--dimen-input-md-font-size);
+  --combo-min-height: var(--dimen-input-md-min-height);
+}
+
+/* react-select parts (with classNamePrefix="combo") */
+.combo__control {
+  min-height: var(--combo-min-height);
+  padding: 0 var(--combo-px);
+  font-size: var(--combo-font-size);
+  border-radius: var(--combo-radius);
+  border: 1px solid var(--color-input-border);
+  background-color: var(--color-input-bg);
+  color: var(--color-input-text);
+  box-shadow: var(--shadow-input);
+  cursor: text;
+}
+.combo__control:hover {
+  border-color: var(--color-input-border-hover);
+}
+.combo__control--is-focused {
+  border-color: var(--color-input-border-focus);
+  box-shadow: var(--shadow-input-focused);
+}
+.combo__control--is-disabled {
+  background-color: var(--color-input-bg-disabled);
+  border-color: var(--color-input-border);
+  color: var(--color-input-text-disabled);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Value/placeholder/input text */
+.combo__single-value { color: var(--color-input-text); }
+.combo__placeholder { color: var(--color-input-placeholder); }
+.combo__input-container { color: var(--color-input-text); }
+
+/* Indicators (dropdown arrow / clear) */
+.combo__indicators { gap: 4px; }
+.combo__indicator-separator { display: none; }
+.combo__dropdown-indicator,
+.combo__clear-indicator { color: var(--color-input-placeholder); }
+.combo__dropdown-indicator:hover,
+.combo__clear-indicator:hover { color: var(--color-input-text); }
+
+/* Menu */
+.combo__menu {
+  margin-top: 6px;
+  background: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--combo-radius);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+.combo__menu-list {
+  max-height: 260px; /* scroll area */
+  padding: 0;
+}
+
+/* Options */
+.combo__option {
+  padding: var(--combo-py) var(--combo-px);
+  font-size: var(--combo-font-size);
+  color: var(--color-input-text);
+  cursor: pointer;
+}
+.combo__option--is-focused {
+  background-color: var(--color-listbox-option-bg-hover);
+}
+.combo__option--is-selected {
+  background-color: var(--color-listbox-option-bg-selected);
+  color: var(--color-listbox-option-text-selected);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Multi value chips (if you enable isMulti) */
+.combo__multi-value {
+  background: var(--color-chip-bg, rgba(0,0,0,0.05));
+  border-radius: calc(var(--combo-radius) - 2px);
+}
+.combo__multi-value__label { color: var(--color-input-text); }
+.combo__multi-value__remove { color: var(--color-input-placeholder); }
+.combo__multi-value__remove:hover { color: var(--color-input-text); }

@@ -5,6 +5,9 @@ import AppRouter from "./AppRouter";
 import { BaseEnv } from "./core/config/BaseEnv";
 import { ServiceURL } from "./infra/datasources/ServiceURL";
 import MainRouter from "./MainRouter";
+import { BaseApiClient } from "./infra/datasources/BaseApiClient";
+import { DialogManagerProvider } from "./ui/widgets/dialogmanager";
+import { ToastContainer } from "react-toastify";
 
 async function bootstrap() {
   const baseEnv = await BaseEnv.loadFromFile();
@@ -14,16 +17,23 @@ async function bootstrap() {
   if (!basename || basename === "/") basename = "/";
   else basename = basename.replace(/\/+$/, "");
 
+  // Create Api Clients
+  BaseApiClient.createInstace({ baseURL: baseEnv.apiBase });
+
   const ResolvedRouter = baseEnv.isMainSite ? MainRouter : AppRouter;
   ServiceURL.createInstance({ baseUrl: baseEnv.apiBase });
 
   const rootElement = document.getElementById("root");
   if (!rootElement) throw new Error("Root element not found");
 
+
   createRoot(rootElement).render(
     <StrictMode>
       <BrowserRouter basename={basename}>
-        <ResolvedRouter />
+        <DialogManagerProvider>
+          <ResolvedRouter />
+        </DialogManagerProvider>
+        <ToastContainer position="bottom-right" />
       </BrowserRouter>
     </StrictMode>
   );

@@ -1,6 +1,7 @@
 import { ArrowRight, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "~/ui/components/buttons/button";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router";
 
 export function HeroSection() {
     const [isDesktop, setIsDesktop] = useState(false);
@@ -60,10 +61,12 @@ function HeroIntro({ isDesktop }: { isDesktop: boolean }) {
                     isDesktop ? "justify-start" : "justify-center",
                 ].join(" ")}
             >
-                <Button size="lg">
-                    Start Free Trial
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+                <Link to="/signup">
+                    <Button size="lg">
+                        Start Free Trial
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                </Link>
             </div>
         </div>
     );

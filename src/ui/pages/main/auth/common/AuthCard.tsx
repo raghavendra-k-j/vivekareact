@@ -1,8 +1,12 @@
-import Card, { CardBody, CardFooter } from "~/ui/components/card";
+import clsx from "clsx";
+import { AppError } from "~/core/error/AppError";
+import Card, { CardBody, CardFooter, CardHeader } from "~/ui/components/card";
+import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
+import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 
 export function AuthCard({ children }: { children: React.ReactNode }) {
     return (
-        <div className="container mx-auto my-12 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 my-4 sm:my-6 lg:my-8">
             <Card className="max-w-lg mx-auto" radius="lg" shadow="lg" >
                 {children}
             </Card>
@@ -13,10 +17,20 @@ export function AuthCard({ children }: { children: React.ReactNode }) {
 
 export function AuthHeader({ title, subtitle }: { title: string | React.ReactNode, subtitle?: string | React.ReactNode }) {
     return (
-        <div className="px-4 sm:px-6 py-4 sm:py-6">
-            <h2 className="text-xl font-bold">{title}</h2>
-            {subtitle && <p className="text-secondary">{subtitle}</p>}
-        </div>
+        <CardHeader>
+            <div className="px-4 sm:px-6 py-4 sm:py-6">
+                <h2 className="text-xl font-bold">{title}</h2>
+                {subtitle && <p className="text-secondary">{subtitle}</p>}
+            </div>
+        </CardHeader>
+    );
+}
+
+export function AuthFooter({ children, className }: { children: React.ReactNode, className?: string }) {
+    return (
+        <CardFooter className={clsx("px-4 sm:px-6 py-4 sm:py-6 border-t border-default", className)}>
+            {children}
+        </CardFooter>
     );
 }
 
@@ -29,10 +43,24 @@ export function AuthFormContainer({ children, className = "" }: { children: Reac
 }
 
 
-export function AuthCardFooter({ children }: { children: React.ReactNode }) {
+export function AuthLoader({ message }: { message?: string }) {
     return (
-        <CardFooter className="flex justify-between">
-            {children}
-        </CardFooter>
+        <AuthCard>
+            <CardBody className="p-6 flex justify-center">
+                <LoaderView />
+                {message && <p className="ml-2 text-default">{message}</p>}
+            </CardBody>
+        </AuthCard>
+    );
+}
+
+
+export function AuthError({ error, onClickRetry }: { error: AppError, onClickRetry: () => void }) {
+    return (
+        <AuthCard>
+            <CardBody className="p-6 flex justify-center">
+                <SimpleRetryableAppView appError={error} onRetry={onClickRetry} />
+            </CardBody>
+        </AuthCard>
     );
 }

@@ -1,120 +1,81 @@
-
-
-import { useState } from "react";
-import { InputValue } from "~/ui/widgets/form/InputValue";
-import { CardHeader } from "~/ui/components/card";
+import { Observer } from "mobx-react-lite";
 import { Button } from "~/ui/widgets/button/Button";
+import { MobileField } from "~/ui/widgets/form/MobileField";
+import { PasswordField } from "~/ui/widgets/form/PasswordField";
+import { PasswordOkView } from "~/ui/widgets/form/PasswordOkView";
 import { FTextField } from "~/ui/widgets/form/TextField";
-import { AuthCard, AuthCardFooter, AuthFormContainer, AuthHeader } from "../../common/AuthCard";
+import { AuthCard, AuthFooter, AuthFormContainer, AuthHeader } from "../../common/AuthCard";
 import { useSignUpPageStore } from "../SignUpPageContext";
-
+import { ArrowRightIcon } from "lucide-react";
+import { Link } from "react-router";
 
 export function SignUpInitView() {
     const store = useSignUpPageStore();
-    const [otpSent, setOtpSent] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [info, setInfo] = useState("");
-    // Use a local FValue for OTP input
-    const [otpField] = useState(() => new InputValue<string>(""));
-
-    // Dummy send OTP handler (replace with real API call)
-    const handleSendOtp = async () => {
-        setLoading(true);
-        setTimeout(() => {
-            setOtpSent(true);
-            setInfo(`We sent a 6-digit code to ${store.emailField.value}. Use 123456 in this demo.`);
-            setLoading(false);
-        }, 800);
-    };
-
-    // Dummy verify OTP handler (replace with real API call)
-    const handleVerifyOtp = async () => {
-        setLoading(true);
-        setTimeout(() => {
-            if (otpField.value === "123456") {
-                otpField.error = "";
-                store.gotoFinishSetup();
-            } else {
-                otpField.error = "Invalid OTP";
-            }
-            setLoading(false);
-        }, 800);
-    };
-
     return (
         <AuthCard>
-            <CardHeader>
-                <AuthHeader
-                    title="Sign Up"
-                    subtitle="Create your account to get started"
+            <AuthHeader
+                title="Create your organization"
+                subtitle="Please enter your details to continue"
+            />
+            <AuthFormContainer className="flex flex-col gap-3">
+                <FTextField
+                    required
+                    label="Full name"
+                    placeholder="Enter your full name"
+                    field={store.nameField}
                 />
-                <AuthFormContainer className="flex flex-col gap-8">
-                    <div className="flex flex-col gap-6">
-                        <FTextField
-                            required
-                            label="Name"
-                            placeholder="Enter your name"
-                            field={store.nameField}
-                        />
-                        <FTextField
-                            required
-                            label="Password"
-                            placeholder="Enter your password"
-                            field={store.nameField}
-                        />
-                        <FTextField
-                            required
-                            label="Email"
-                            placeholder="Enter your email"
-                            field={store.emailField}
-                        />
-                        <FTextField
-                            required
-                            label="Mobile Number"
-                            placeholder="Enter your mobile number"
-                            field={store.mobileField}
-                        />
-                    </div>
-                    {!otpSent ? (
-                        <AuthCardFooter>
-                            <Button
-                                onClick={handleSendOtp}
-                                className="rounded-md"
-                                color="primary"
-                            >
-                                {loading ? "Sending..." : "Send Verification Code"}
-                            </Button>
-                        </AuthCardFooter>
-                    ) : (
-                        <div className="flex flex-col gap-4 mt-4">
-                            {info && <div className="text-blue-700 text-sm">{info}</div>}
-                            <FTextField
+                <FTextField
+                    required
+                    label="Email"
+                    placeholder="Enter your email address"
+                    field={store.emailField}
+                />
+                <MobileField
+                    required
+                    label="Mobile Number"
+                    placeholder="Enter your mobile number"
+                    callingCodes={store.initData.callingCodes.map(e => ({
+                        code: e.callingCode,
+                        label: e.callingCode
+                    }))}
+                    field={store.mobileField}
+                />
+                <div className="flex flex-col gap-2">
+                    <Observer>
+                        {() => <>
+                            <PasswordField
                                 required
-                                label="Enter OTP"
-                                placeholder="6-digit code"
-                                field={otpField}
-                                maxLength={6}
+                                label="Password"
+                                placeholder="Create a password"
+                                field={store.passwordField}
+                                passwordVisible={store.isPasswordVisible}
+                                onClickEye={store.togglePasswordVisibility}
                             />
-                            <div className="flex gap-2">
-                                <Button
-                                    onClick={handleVerifyOtp}
-                                    color="primary"
-                                >
-                                    {loading ? "Verifying..." : "Verify & Continue"}
-                                </Button>
-                                <Button
-                                    onClick={handleSendOtp}
-                                    variant="outline"
-                                    color="secondary"
-                                    disabled={loading}
-                                >
-                                    Resend OTP
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-                </AuthFormContainer>
-            </CardHeader>
+                            <PasswordOkView passwordOk={store.passwordOk} />
+                        </>}
+                    </Observer>
+
+
+                </div>
+            </AuthFormContainer>
+            <AuthFooter>
+                <Observer>
+                    {() => (<Button loading={store.requestState.isLoading} className="w-full" onClick={() => store.onClickInitSignUp()}>
+                        Start Setup
+                        <ArrowRightIcon className="ml-2 w-4 h-4" />
+                    </Button>)}
+                </Observer>
+                <p className="mt-3 text-xs text-gray-500 text-center">
+                    By clicking Sign Up, you agree to our{" "}
+                    <Link to="/terms">
+                        <span className="underline">Terms &amp; Conditions</span>
+                    </Link>{" "}
+                    and{" "}
+                    <Link to="/privacy">
+                        <span className="underline">Privacy Policy</span>.
+                    </Link>
+                </p>
+            </AuthFooter>
         </AuthCard>
     );
 }

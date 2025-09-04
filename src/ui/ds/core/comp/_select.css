@@ -1,4 +1,4 @@
-.fselect {
+.select {
   --select-px: var(--dimen-input-md-px);
   --select-py: var(--dimen-input-md-py);
   --select-font-size: var(--dimen-input-md-font-size);
@@ -15,13 +15,13 @@
   background-color: var(--color-input-bg);
   color: var(--color-input-text);
   outline: none;
-  width: 100%;
+  width: auto;
+  white-space: nowrap;
 
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 
-  /* Custom arrow on right */
   background-image: url('data:image/svg+xml;utf8,<svg fill="%23777" height="8" width="12" xmlns="http://www.w3.org/2000/svg"><polygon points="0,0 12,0 6,7"/></svg>');
   background-repeat: no-repeat;
   background-position: right 12px center;
@@ -33,17 +33,17 @@
   box-shadow: var(--shadow-input);
 }
 
-.fselect:focus {
+.select:focus {
   border-color: var(--color-input-border-focus);
   box-shadow: var(--shadow-input-focused);
 }
 
-.fselect:hover {
+.select:hover {
   border-color: var(--color-input-border-hover);
 }
 
-.fselect:disabled,
-.fselect.is-disabled {
+.select:disabled,
+.select.is-disabled {
   background-color: var(--color-input-bg-disabled);
   border-color: var(--color-input-border);
   color: var(--color-input-text-disabled);
@@ -51,14 +51,14 @@
   background-image: none;
 }
 
-.fselect--md {
+.select--md {
   --select-px: var(--dimen-input-md-px);
   --select-py: var(--dimen-input-md-py);
   --select-font-size: var(--dimen-input-md-font-size);
   --select-min-height: var(--dimen-input-md-min-height);
 }
 
-.fselect--sm {
+.select--sm {
   --select-px: var(--dimen-input-sm-px);
   --select-py: var(--dimen-input-sm-py);
   --select-font-size: var(--dimen-input-sm-font-size);
