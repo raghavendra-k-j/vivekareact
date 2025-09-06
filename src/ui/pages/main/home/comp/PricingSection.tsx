@@ -1,61 +1,61 @@
-import { ArrowRight, BadgeCheck, MessageCircle } from "lucide-react";
-import { Button } from "~/ui/components/buttons/button";
-import { SectionHeader } from "./CoreSection";
+import { ArrowRight, MessageCircle } from "lucide-react";
+import { SectionHeader, SectionWrapper } from "./CoreSection";
+import { Button } from "~/ui/widgets/button/Button";
+import { getTawkApi } from "~/infra/tawkto/types";
+import { showSuccessToast } from "~/ui/widgets/toast/toast";
 
 export function PricingSection() {
-    function openChat() {
-        window.Tawk_API?.toggle?.();
-    }
-
     return (
-        <section id="pricing" className="relative overflow-hidden">
-            {/* Emerald / green background gradient */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-emerald-50 via-white to-emerald-50" />
+        <SectionWrapper gradientClasses="from-emerald-50 via-white to-emerald-50">
+            <SectionHeader
+                title="Pricing"
+                titleClassName="text-emerald-600"
+                description="Fair and transparent—built to fit your needs."
+            />
+            <PricingCard />
+        </SectionWrapper>
+    );
+}
 
-            <div className="relative container px-4 py-20 text-center">
-                <SectionHeader
-                    title="Pricing"
-                    titleClassName="text-primary-600"
-                    description="Affordable, fair pricing — we value your money."
-                />
+function PricingCard() {
+    function toggleChat() {
+        if (!getTawkApi()) return;
+        if(getTawkApi()?.isChatMaximized?.() === true) {
+            showSuccessToast({
+                message: "Chat is already open",
+                description: "Feel free to ask us any questions you have!",
+                position: "top-center",
+            });
+        }
+        getTawkApi()?.maximize?.();
+    }
+    return (
+        <div className="mt-12 flex justify-center">
+            <div className="max-w-lg w-full bg-white shadow-lg rounded-2xl p-10 border border-default">
+                <h3 className="mt-4 text-2xl text-center font-bold text-default">
+                    Simple pricing that scales
+                </h3>
 
-                <div className="mt-12 flex justify-center">
-                    <div className="max-w-lg w-full bg-white shadow-lg rounded-2xl p-10 border border-primary-100">
-                        {/* Subtle value badge */}
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-sm font-medium">
-                            <BadgeCheck size={16} />
-                            Best value for your money
-                        </div>
+                <p className="mt-2 text-secondary text-center">
+                    Skip the confusing tiers. Tell us what you need and we’ll shape a plan around it.
+                </p>
 
-                        <h3 className="mt-4 text-2xl font-bold text-gray-900">
-                            Simple price to scale
-                        </h3>
+                <Button
+                    onClick={toggleChat}
+                    size="lg"
+                    shadow="lg"
+                    className="w-full mt-6"
+                    aria-label="Open chat to discuss pricing"
+                >
+                    <MessageCircle size={18} />
+                    Chat about pricing
+                    <ArrowRight size={18} />
+                </Button>
 
-                        <p className="mt-2 text-gray-600">
-                            No confusing tiers, just transparent, fair pricing.
-                            Reach out and we’ll tailor the plan to your needs.
-                        </p>
-
-                        <Button
-                            onClick={openChat}
-                            size="lg"
-                            className="mt-8 w-full flex items-center justify-center gap-2
-                                bg-gradient-to-r from-primary-500 to-primary-700
-                                text-white shadow-md hover:shadow-lg active:scale-[0.99] transition-all"
-                            aria-label="Contact us for pricing"
-                        >
-                            Contact Us
-                            <MessageCircle size={18} />
-                            <ArrowRight size={18} />
-                        </Button>
-
-                        {/* Tiny reassurance line */}
-                        <p className="mt-4 text-xs text-gray-500">
-                            Fast response. No obligations.
-                        </p>
-                    </div>
-                </div>
+                <p className="mt-3 text-tertiary text-center text-xs">
+                    Fast response. No pressure.
+                </p>
             </div>
-        </section>
+        </div>
     );
 }

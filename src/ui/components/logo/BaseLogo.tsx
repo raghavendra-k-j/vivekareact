@@ -12,8 +12,9 @@
 // );
 
 import { useCallback } from "react";
-import { Link, useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 import { BaseEnv } from "~/core/config/BaseEnv";
+import { AppUrl } from "~/infra/utils/AppUrl";
 
 export const LogoSvg = (props: React.SVGProps<SVGSVGElement>) => (
     <svg
@@ -45,35 +46,52 @@ export function BaseIconLogo() {
 }
 
 
-export function BaseNamedLogo(
-    {
-        iconSize = 32,
-        textSize = 24,
-        textClassName = "text-default",
-    }: {
-        iconSize?: number;
-        textSize?: number;
-        textClassName?: string;
-    } = {}
-) {
+
+
+export function BaseNamedLogo({
+    iconSize = 32,
+    textSize = 24,
+    textClassName = "text-default",
+}: {
+    iconSize?: number;
+    textSize?: number;
+    textClassName?: string;
+} = {}) {
     const location = useLocation();
-    const navigate = useNavigate();
 
     const handleClick = useCallback(
         (e: React.MouseEvent<HTMLAnchorElement>) => {
-            if (location.pathname === BaseEnv.instance.mainUrl) {
+            const base = AppUrl.getBaseUrl();
+            const onHome = AppUrl.isHomePage(location.pathname);
+
+            // Try to use your main scroll container if present
+            const scroller = document.querySelector<HTMLElement>("[data-scroll-root]");
+
+            if (onHome) {
+                // Stay on the same page
                 e.preventDefault();
-                window.location.reload();
-            } else {
-                navigate(BaseEnv.instance.mainUrl);
+
+                // Clean any hash in the URL
+                if (window.location.hash) {
+                    history.replaceState(null, "", base);
+                }
+
+                // Smooth scroll to the very top
+                if (scroller) {
+                    scroller.scrollTo({ top: 0, behavior: "smooth" });
+                } else {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
             }
+            // If NOT on home: let the anchor navigate to base (no SPA confusion or bad URLs)
+            // No preventDefault here—native navigation will go to the correct absolute URL.
         },
-        [location.pathname, navigate]
+        [location.pathname]
     );
 
     return (
-        <Link
-            to={BaseEnv.instance.mainUrl}
+        <a
+            href={AppUrl.getBaseUrl()}
             onClick={handleClick}
             className="flex flex-row items-center gap-2 select-none"
         >
@@ -87,8 +105,8 @@ export function BaseNamedLogo(
                 className={`font-bold ${textClassName}`}
                 style={{ fontSize: `${textSize}px`, letterSpacing: "1px" }}
             >
-                VIVEKA
+                {BaseEnv.instance.logoText}
             </span>
-        </Link>
+        </a>
     );
 }

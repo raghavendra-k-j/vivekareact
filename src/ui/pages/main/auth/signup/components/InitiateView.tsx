@@ -1,4 +1,7 @@
+import { ArrowRightIcon } from "lucide-react";
 import { Observer } from "mobx-react-lite";
+import { BaseEnv } from "~/core/config/BaseEnv";
+import { AppUrl } from "~/infra/utils/AppUrl";
 import { Button } from "~/ui/widgets/button/Button";
 import { MobileField } from "~/ui/widgets/form/MobileField";
 import { PasswordField } from "~/ui/widgets/form/PasswordField";
@@ -6,8 +9,6 @@ import { PasswordOkView } from "~/ui/widgets/form/PasswordOkView";
 import { FTextField } from "~/ui/widgets/form/TextField";
 import { AuthCard, AuthFooter, AuthFormContainer, AuthHeader } from "../../common/AuthCard";
 import { useSignUpPageStore } from "../SignUpPageContext";
-import { ArrowRightIcon } from "lucide-react";
-import { Link } from "react-router";
 
 export function SignUpInitView() {
     const store = useSignUpPageStore();
@@ -67,13 +68,13 @@ export function SignUpInitView() {
                 </Observer>
                 <p className="mt-3 text-xs text-gray-500 text-center">
                     By clicking Sign Up, you agree to our{" "}
-                    <Link to="/terms">
+                    <a href={AppUrl.autoTo({ path: BaseEnv.instance.termsOfServiceUrl })} target="_blank">
                         <span className="underline">Terms &amp; Conditions</span>
-                    </Link>{" "}
+                    </a>{" "}
                     and{" "}
-                    <Link to="/privacy">
+                    <a href={AppUrl.autoTo({ path: BaseEnv.instance.privacyPolicyUrl })} target="_blank">
                         <span className="underline">Privacy Policy</span>.
-                    </Link>
+                    </a>
                 </p>
             </AuthFooter>
         </AuthCard>

@@ -6,7 +6,7 @@ import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 
 export function AuthCard({ children }: { children: React.ReactNode }) {
     return (
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 my-4 sm:my-6 lg:my-8">
+        <div className="container mx-auto p-6">
             <Card className="max-w-lg mx-auto" radius="lg" shadow="lg" >
                 {children}
             </Card>
@@ -18,7 +18,7 @@ export function AuthCard({ children }: { children: React.ReactNode }) {
 export function AuthHeader({ title, subtitle }: { title: string | React.ReactNode, subtitle?: string | React.ReactNode }) {
     return (
         <CardHeader>
-            <div className="px-4 sm:px-6 py-4 sm:py-6">
+            <div className="p-6">
                 <h2 className="text-xl font-bold">{title}</h2>
                 {subtitle && <p className="text-secondary">{subtitle}</p>}
             </div>
@@ -28,7 +28,7 @@ export function AuthHeader({ title, subtitle }: { title: string | React.ReactNod
 
 export function AuthFooter({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <CardFooter className={clsx("px-4 sm:px-6 py-4 sm:py-6 border-t border-default", className)}>
+        <CardFooter className={clsx("px-6 py-6 border-t border-default", className)}>
             {children}
         </CardFooter>
     );
@@ -36,7 +36,7 @@ export function AuthFooter({ children, className }: { children: React.ReactNode,
 
 export function AuthFormContainer({ children, className = "" }: { children: React.ReactNode, className?: string }) {
     return (
-        <CardBody className={`px-4 sm:px-6 w-full pb-4 sm:pb-6 ${className}`}>
+        <CardBody className={`px-6 w-full pb-6 ${className}`}>
             {children}
         </CardBody>
     );

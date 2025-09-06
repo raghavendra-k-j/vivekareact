@@ -1,5 +1,6 @@
 import { ServiceURL } from "~/infra/datasources/ServiceURL";
 import { useAppStore } from "../pages/_layout/AppContext";
+import { BaseEnv } from "~/core/config/BaseEnv";
 
 function AppBarLogo() {
     return (<a href="/" onClick={(e) => e.preventDefault()}>
@@ -28,11 +29,16 @@ function PngLogo() {
 
 function LogoPng() {
     const appStore = useAppStore();
-    const finalLogoUrl = appStore.orgConfig.org.hasLogoUrl ? ServiceURL.getUrl(`/${appStore.orgConfig.org.logoUrl!}`) : "logo_sidebar.png";
+    let logoUrl = "logo_sidebar.png";
+    let altText = `${BaseEnv.instance.productName} Logo`;
+    if (appStore.orgConfig.org.hasLogoUrl) {
+        logoUrl = ServiceURL.getUrl(`/${appStore.orgConfig.org.logoUrl!}`);
+        altText = `${appStore.orgConfig.org.name} Logo`;
+    }
     return (
         <img
-            src={finalLogoUrl}
-            alt="Viveka Logo"
+            src={logoUrl}
+            alt={altText}
             className="w-full h-[32px] object-contain"
             style={{ maxHeight: "32px" }}
         />

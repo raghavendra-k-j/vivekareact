@@ -14,7 +14,7 @@ export class QPGenService {
     }
 
     get baseUrl(): string {
-        return this.baseEnv.pyBackendUrl;
+        return this.baseEnv.pyApiUrl;
     }
 
     async generateQuestionPaper({ userPrompt }: { userPrompt: string }): Promise<ResEither<PyApiError, QuestionPaper>> {

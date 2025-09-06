@@ -12,6 +12,7 @@ export type ToastViewProps = {
         text: string;
         onClick: () => void;
     };
+    position?: "top-left" | "top-right" | "top-center" | "bottom-left" | "bottom-right" | "bottom-center";
 };
 
 export function ToastView({

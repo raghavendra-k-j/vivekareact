@@ -5,8 +5,8 @@ export function showErrorToast(props: ToastViewProps) {
     toast.dismiss();
     toast.error(
         <ToastView {...props} />, {
-            icon: false,
-        }
+        icon: false,
+    }
     );
 }
 
@@ -14,7 +14,8 @@ export function showSuccessToast(props: ToastViewProps) {
     toast.dismiss();
     toast.success(
         <ToastView {...props} />, {
-            icon: false,
-        }
+        icon: false,
+        position: props.position ?? "bottom-right",
+    }
     );
 }

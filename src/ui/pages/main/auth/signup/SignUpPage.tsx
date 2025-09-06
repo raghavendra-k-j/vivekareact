@@ -3,7 +3,8 @@ import { useRef } from "react";
 import { OrgAuthService } from "~/domain/main/auth/services/OrgAuthService";
 import { BaseApiClient } from "~/infra/datasources/BaseApiClient";
 import { OrgAuthRepo } from "~/infra/repos/OrgAuthRepo";
-import { MainAuthAppBar } from "~/ui/components/logo/AuthAppBar";
+import { MainLayoutContainer } from "../../home/comp/MainLayoutContainer";
+import { MainAppBar } from "../../layout/compoents/MainAppBar";
 import { AuthError, AuthLoader } from "../common/AuthCard";
 import { SignUpPageContext, useSignUpPageStore } from "./SignUpPageContext";
 import { SignUpPageStore } from "./SignUpPageStore";
@@ -37,16 +38,13 @@ export default function SignUpPage() {
 
 function SignUpPageInner() {
     return (
-        <div className="flex flex-col h-full overflow-y-hidden bg-brand-gradient ">
-            <MainAuthAppBar />
+        <MainLayoutContainer header={<MainAppBar showSignup={false} />}>
             <div className="h-full overflow-y-auto">
                 <MainAuthContent />
             </div>
-        </div>
+        </MainLayoutContainer>
     );
 }
-
-
 
 function MainAuthContent() {
     const store = useSignUpPageStore();

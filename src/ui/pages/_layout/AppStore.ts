@@ -37,7 +37,7 @@ export class AppStore {
     }
 
     get apiBaseUrl(): string {
-        return this._appEnv.apiBase;
+        return this._appEnv.apiUrl;
     }
 
     get hasUser(): boolean {

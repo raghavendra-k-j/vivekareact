@@ -5,7 +5,6 @@ import { AuthService } from "~/domain/auth/services/AuthService";
 import { OrgConfig } from "~/domain/common/models/OrgConfig";
 import { ConfigService } from "~/domain/common/services/ConfigService";
 import { ApiClient } from "~/infra/datasources/ApiClient";
-import { BaseApiClient } from "~/infra/datasources/BaseApiClient";
 import { AuthRepo } from "~/infra/repos/AuthRepo";
 
 let hasBooted = false;
@@ -18,7 +17,7 @@ export async function bootApp(): Promise<void> {
     logger.debug("Booting app...");
 
     const appEnv = AppEnv.fromBaseEnv(BaseEnv.instance);
-    ApiClient.createInstace({ baseURL: appEnv.apiBase });
+    ApiClient.createInstace({ baseURL: appEnv.apiUrl });
 
     configService = new ConfigService();
     orgConfigData = (await configService.getOrgConfig(appEnv.tenant)).data;

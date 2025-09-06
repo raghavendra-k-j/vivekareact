@@ -15,7 +15,7 @@ export class AiContextService {
     }
 
     get baseUrl(): string {
-        return this.baseEnv.pyBackendUrl;
+        return this.baseEnv.pyApiUrl;
     }
 
     async extractAIContext(fileUrl: string): Promise<ResEither<PyApiError, string>> {

@@ -1,7 +1,8 @@
 import { makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
 import { PasswordOk, validateEmail, validateEmailOtp, validateMobile, validatePassword, validatePersonName } from "~/domain/common/services/CommonIdentityValidator";
-import { SignUpFinishSetupRes } from "~/domain/main/auth/models/FinishSetupModels";
+import { validateOrgCustomType, validateOrgName, validateSubdomain } from "~/domain/common/services/OrgDetailsValidator";
+import { SignUpFinishSetupReq, SignUpFinishSetupRes } from "~/domain/main/auth/models/FinishSetupModels";
 import { PreSignUpData } from "~/domain/main/auth/models/PreSignUpData";
 import { SignUpInitReq, SignUpInitRes } from "~/domain/main/auth/models/SignUpInitModels";
 import { SignUpSendCodeReq, SignUpSendCodeRes } from "~/domain/main/auth/models/SignUpSendCodeModels";
@@ -32,6 +33,8 @@ export class SignUpPageStore {
         symbol: false,
     };
     confirmPasswordField = new InputValue<string>("");
+    orgTypeField = new InputValue<string>("");
+    orgCustomTypeField = new InputValue<string>("");
     isPasswordVisible = false;
     requestState: DataState<SignUpInitRes | null> = DataState.init();
     sendCodeState: DataState<SignUpSendCodeRes | null> = DataState.init();
@@ -51,7 +54,6 @@ export class SignUpPageStore {
             finishSetupState: observable.ref,
         });
         this.loadInitData();
-        this.addValidations();
     }
 
     get isInitFragment() {
@@ -95,6 +97,7 @@ export class SignUpPageStore {
                 const firstCallingCode = res.callingCodes[0];
                 this.mobileField.set(new MobileFieldValue(firstCallingCode.callingCode, null));
             });
+            this.addValidations();
         } catch (e) {
             const appError = AppError.fromAny(e);
             runInAction(() => {
@@ -134,13 +137,41 @@ export class SignUpPageStore {
             return validateEmailOtp(value, { length: this.validationData.otpLength });
         };
 
+
+        // Organization Name Validation
+        this.orgNameField.validator = (value) => {
+            return validateOrgName(value, { minLength: this.validationData.orgNameMinLength, maxLength: this.validationData.orgNameMaxLength });
+        };
+
+        // Subdomain Validation
+        this.subDomainField.validator = (value) => {
+            return validateSubdomain(value, { minLength: this.validationData.subdomainMinLength, maxLength: this.validationData.subdomainMaxLength });
+        };
+
+        // Organization Type
+        this.orgTypeField.validator = (value) => {
+            value = value.trim();
+            if (!value) {
+                return "Please select organization type";
+            }
+            return null;
+        };
+
+        // Custom Organization Type
+        this.orgCustomTypeField.validator = (value) => {
+            value = value?.trim() ?? "";
+            if (this.orgTypeField.value !== this.initData.otherOrgType) {
+                return null;
+            }
+            return validateOrgCustomType(value, { maxLength: this.validationData.customOrgTypeMaxLength, minLength: this.validationData.customOrgTypeMinLength });
+        };
     }
 
     async onClickInitSignUp() {
-        const hasAnyError = InputValuesUtil.hasError([
+        const isValid = InputValuesUtil.validateAll([
             this.nameField, this.emailField, this.mobileField, this.passwordField
         ]);
-        if (hasAnyError) {
+        if (!isValid) {
             showErrorToast({
                 message: "Please fix the errors in the form"
             });
@@ -160,10 +191,15 @@ export class SignUpPageStore {
             const res = (await this.authService.signUpInit(req)).getOrError();
             runInAction(() => {
                 this.requestState = DataState.data(res);
-                this.activeFragment = ActiveSignUpFragment.VERIFY_CODE;
             });
-            this.sendCode({ isResend: false });
-        } catch (e) {
+            const sendCodeRes = await this.sendCode({ isResend: false });
+            if (sendCodeRes) {
+                runInAction(() => {
+                    this.activeFragment = ActiveSignUpFragment.VERIFY_CODE;
+                });
+            }
+        }
+        catch (e) {
             console.error("SignUpPageStore.onClickInitSignUp error", e);
             const appError = AppError.fromAny(e);
             runInAction(() => {
@@ -176,7 +212,7 @@ export class SignUpPageStore {
         }
     }
 
-    async sendCode({ isResend }: { isResend: boolean }) {
+    async sendCode({ isResend }: { isResend: boolean }): Promise<SignUpSendCodeRes | undefined> {
         if (!this.requestState.isData) {
             return;
         }
@@ -196,7 +232,9 @@ export class SignUpPageStore {
                     message: "Verification code resent successfully"
                 });
             }
-        } catch (e) {
+            return res;
+        }
+        catch (e) {
             console.error("SignUpPageStore.sendCode error", e);
             const appError = AppError.fromAny(e);
             runInAction(() => {
@@ -233,7 +271,8 @@ export class SignUpPageStore {
                 this.verifyCodeState = DataState.data(res);
                 this.activeFragment = ActiveSignUpFragment.FINISH_SETUP;
             });
-        } catch (e) {
+        }
+        catch (e) {
             console.error("SignUpPageStore.verifyCode error", e);
             const appError = AppError.fromAny(e);
             runInAction(() => {
@@ -247,17 +286,6 @@ export class SignUpPageStore {
     }
 
 
-
-    // For compatibility with previous code
-    gotoFinishSetup() {
-        runInAction(() => {
-            this.activeFragment = ActiveSignUpFragment.FINISH_SETUP;
-        });
-    }
-
-
-
-
     onClickChangeEmail() {
         runInAction(() => {
             this.activeFragment = ActiveSignUpFragment.INIT;
@@ -266,11 +294,47 @@ export class SignUpPageStore {
         });
     }
 
-    onClickFinishSetup(): void {
-        runInAction(() => {
-            this.activeFragment = ActiveSignUpFragment.FINISH_SETUP;
-        });
+    async finishSetup() {
+        const isValid = InputValuesUtil.validateAll([
+            this.orgNameField, this.subDomainField, this.orgTypeField, this.orgCustomTypeField
+        ]);
+        if (!isValid) {
+            showErrorToast({
+                message: "Please fix the errors in the form"
+            });
+            return;
+        }
+        try {
+            runInAction(() => {
+                this.finishSetupState = DataState.loading();
+            });
+            const req = new SignUpFinishSetupReq({
+                requestUid: this.requestData.requestUid,
+                orgName: this.orgNameField.value,
+                subdomain: this.subDomainField.value,
+                orgType: this.orgTypeField.value,
+                orgTypeCustom: this.orgCustomTypeField.value,
+            });
+            const res = (await this.authService.signUpFinishSetup(req)).getOrError();
+            showSuccessToast({
+                message: "Organization setup completed successfully. Redirecting..."
+            });
+            window.location.assign(res.redirectUrl);
+            runInAction(() => {
+                this.finishSetupState = DataState.data(res);
+            });
+        }
+        catch (e) {
+            console.error("SignUpPageStore.finishSetup error", e);
+            const appError = AppError.fromAny(e);
+            runInAction(() => {
+                this.finishSetupState = DataState.error(appError);
+            });
+            showErrorToast({
+                message: appError.message,
+                description: appError.description
+            });
+        }
     }
-
 
 }

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Outlet } from "react-router";
+import { BaseEnv } from "~/core/config/BaseEnv";
 
 export default function MainLayout() {
     useEffect(() => {
@@ -7,8 +8,7 @@ export default function MainLayout() {
         const s1 = document.createElement("script");
         s1.id = "tawk-script";
         s1.async = true;
-        s1.src = "https://embed.tawk.to/68b65573144231243cf8f20a/1j443rjrg";
-        s1.charset = "UTF-8";
+        s1.src = `${BaseEnv.instance.tawkToPropertyUrl}`
         s1.setAttribute("crossorigin", "*");
         const s0 = document.getElementsByTagName("script")[0];
         s0.parentNode?.insertBefore(s1, s0);
@@ -18,5 +18,5 @@ export default function MainLayout() {
         };
     }, []);
 
-    return <>{<Outlet />}</>;
+    return <div className="bg-brand-gradient h-full overflow-y-hidden"><Outlet /></div>
 }

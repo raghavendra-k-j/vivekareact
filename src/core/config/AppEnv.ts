@@ -1,12 +1,12 @@
-import { logger } from "../utils/logger";
 import type { BaseEnv } from "./BaseEnv";
 import { CurrentURL } from "./CurrentURL";
 
+// Environment Configuration related to tenant application
+
 export type AppEnvProps = {
     tenant: string;
-    apiSchema: string;
-    apiHost: string;
-    apiPort: string;
+    apiUrl: string;
+    pyApiUrl: string;
     webBase: string;
 };
 
@@ -14,31 +14,25 @@ export type AppEnvJson = AppEnvProps;
 
 export class AppEnv {
     readonly tenant: string;
-    readonly apiSchema: string;
-    readonly apiHost: string;
-    readonly apiPort: string;
-    readonly apiBase: string;
+    readonly apiUrl: string;
+    readonly pyApiUrl: string;
     readonly webBase: string;
 
     public static instance: AppEnv;
 
     constructor(props: AppEnvProps) {
         this.tenant = props.tenant;
-        this.apiSchema = props.apiSchema;
-        this.apiHost = props.apiHost;
-        this.apiPort = props.apiPort;
-        this.apiBase = `${props.apiSchema}://${props.apiHost}:${props.apiPort}`;
+        this.apiUrl = props.apiUrl;
+        this.pyApiUrl = props.pyApiUrl;
         this.webBase = props.webBase;
-        logger.debug("AppEnv", this.webBase);
     }
 
     static fromBaseEnv(baseEnv: BaseEnv): AppEnv {
         const currentURL = CurrentURL.fromURL(window.location.href);
         const instance = new AppEnv({
-            tenant: baseEnv.tenant || currentURL.subdomain || "test",
-            apiSchema: baseEnv.apiSchema,
-            apiHost: baseEnv.apiHost,
-            apiPort: baseEnv.apiPort,
+            tenant: baseEnv.tenant!,
+            apiUrl: baseEnv.apiUrl,
+            pyApiUrl: baseEnv.pyApiUrl,
             webBase: currentURL.webBase
         });
         this.instance = instance;

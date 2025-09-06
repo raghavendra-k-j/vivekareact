@@ -16,34 +16,34 @@ export function HomeFeatureCard({
     className = "",
 }: HomeFeatureCardProps) {
     return (
-        <article
+        <section
             className={[
-                "rounded-xl border border-gray-200 bg-white p-5 shadow-sm",
+                "rounded-xl border border-default bg-white p-5 shadow-sm",
                 className,
             ].join(" ")}
         >
             <div
                 className={[
-                    "inline-flex h-12 w-12 items-center justify-center rounded-lg",
+                    "inline-flex h-12 w-12 items-center justify-center rounded-xl",
                     iconBgClass,
                     iconColorClass,
                 ].join(" ")}
             >
                 {icon}
             </div>
-            <h3 className="mt-4 text-lg font-semibold text-gray-900">{title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-gray-600">
+            <h3 className="mt-4 text-lg font-semibold text-default">{title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-secondary">
                 {description}
             </p>
-        </article>
+        </section>
     );
 }
 
 export function SectionHeader({
     title,
     description,
-    titleClassName = "text-gray-900",
-    descriptionClassName = "text-gray-600",
+    titleClassName = "text-default",
+    descriptionClassName = "text-secondary",
 }: {
     title: string;
     description?: string;
@@ -71,5 +71,21 @@ export function SectionHeader({
                 </p>
             )}
         </div>
+    );
+}
+
+type SectionWrapperProps = {
+    gradientClasses: string;
+    children: React.ReactNode;
+}
+
+export function SectionWrapper(props: SectionWrapperProps) {
+    return (
+        <section className="relative overflow-hidden">
+            <div className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${props.gradientClasses}`} />
+            <div className="relative container px-4 py-16">
+                {props.children}
+            </div>
+        </section>
     );
 }

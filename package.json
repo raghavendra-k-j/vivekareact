@@ -4,11 +4,15 @@
   "version": "3.0.6-rc",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
+    "dev:main": "vite --host --mode main",
+    "dev:tenant": "vite --host --mode tenant",
     "dev-domain": "vite --host test.rkjsystems.com",
-    "build": "tsc -b && vite build",
+    "build:main": "tsc -b && vite build --mode main",
+    "build:tenant": "tsc -b && vite build --mode tenant",
+    "build": "npm run build:main && npm run build:tenant",
     "lint": "eslint .",
-    "preview": "vite preview --host"
+    "preview:main": "vite preview --host --outDir dist/main",
+    "preview:tenant": "vite preview --host --outDir dist/tenant"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.4",

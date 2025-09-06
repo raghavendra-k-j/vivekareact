@@ -6,4 +6,9 @@ export class InputValuesUtil {
         return fields.some(field => field.error !== undefined);
     }
 
+    static validateAll(fields: InputValue<any>[]): boolean {
+        fields.forEach(field => field.validate());
+        return !this.hasError(fields);
+    }
+
 }

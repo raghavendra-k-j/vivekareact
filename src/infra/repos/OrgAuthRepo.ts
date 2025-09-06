@@ -33,7 +33,7 @@ export class OrgAuthRepo {
     public async getPreSignUpData(): Promise<ResEither<ApiError, PreSignUpData>> {
         try {
             const response = await this.apiClient.axios.get(this.baseUrl("/signup/pre-signup-data"));
-            return ResEither.data(response.data as PreSignUpData);
+            return ResEither.data(PreSignUpData.fromJson(response.data));
         } catch (error) {
             const apiError = ApiError.fromAny(error);
             return ResEither.error(apiError);

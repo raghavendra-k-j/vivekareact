@@ -1,13 +1,13 @@
 import clsx from "clsx";
 import { useRef } from "react";
-import { MainHomeAppBar } from "~/ui/components/logo/MainHomeAppBar";
+import { HomeHashScrollManager } from "./HomeHashScrollManager";
 import { HomePageContext } from "./HomePageContext";
 import { HomePageStore } from "./HomePageStore";
 import { FeaturesSection } from "./comp/FeaturesSection";
-import { Footer } from "./comp/Footer";
 import { HeroSection } from "./comp/HeroSection";
-import { UseCasesSection } from "./comp/UseCasesSection";
+import { MainLayoutContainer } from "./comp/MainLayoutContainer";
 import { PricingSection } from "./comp/PricingSection";
+import { UseCasesSection } from "./comp/UseCasesSection";
 
 export function HomePageProvider({ children }: { children: React.ReactNode }) {
     const storeRef = useRef<HomePageStore | null>(null);
@@ -30,26 +30,27 @@ export default function HomePage() {
 }
 
 function HomePageInner() {
-    return (
-        <div className="h-screen overflow-y-auto scroll-smooth">
-            <MainHomeAppBar />
-            <main>
-                <BaseSection id="home">
-                    <HeroSection />
-                </BaseSection>
-                <BaseSection id="features">
-                    <FeaturesSection />
-                </BaseSection>
-                <BaseSection id="use-cases">
-                    <UseCasesSection />
-                </BaseSection>
-                <BaseSection id="pricing">
-                    <PricingSection />
-                </BaseSection>
-                <Footer />
-            </main>
-        </div>
-    );
+    return (<MainLayoutContainer>
+        <HomeHashScrollManager />
+        <HomeContent />
+    </MainLayoutContainer>);
+}
+
+function HomeContent() {
+    return (<main>
+        <BaseSection id="home">
+            <HeroSection />
+        </BaseSection>
+        <BaseSection id="features">
+            <FeaturesSection />
+        </BaseSection>
+        <BaseSection id="use-cases">
+            <UseCasesSection />
+        </BaseSection>
+        <BaseSection id="pricing">
+            <PricingSection />
+        </BaseSection>
+    </main>);
 }
 
 

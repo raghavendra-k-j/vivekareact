@@ -8,6 +8,7 @@ import MainRouter from "./MainRouter";
 import { BaseApiClient } from "./infra/datasources/BaseApiClient";
 import { DialogManagerProvider } from "./ui/widgets/dialogmanager";
 import { ToastContainer } from "react-toastify";
+import { AppUrl } from "./infra/utils/AppUrl";
 
 async function bootstrap() {
   const baseEnv = await BaseEnv.loadFromFile();
@@ -18,10 +19,11 @@ async function bootstrap() {
   else basename = basename.replace(/\/+$/, "");
 
   // Create Api Clients
-  BaseApiClient.createInstace({ baseURL: baseEnv.apiBase });
+  BaseApiClient.createInstace({ baseURL: baseEnv.apiUrl });
 
   const ResolvedRouter = baseEnv.isMainSite ? MainRouter : AppRouter;
-  ServiceURL.createInstance({ baseUrl: baseEnv.apiBase });
+  ServiceURL.createInstance({ baseUrl: baseEnv.apiUrl });
+  AppUrl.createInstance({ baseUrl: baseEnv.websiteBaseUrl });
 
   const rootElement = document.getElementById("root");
   if (!rootElement) throw new Error("Root element not found");

@@ -1,7 +1,7 @@
 import { ArrowRight, CheckCircle, ChevronDown, ChevronUp } from "lucide-react";
-import { Button } from "~/ui/components/buttons/button";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router";
+import { Button } from "~/ui/widgets/button/Button";
 
 export function HeroSection() {
     const [isDesktop, setIsDesktop] = useState(false);
@@ -16,7 +16,7 @@ export function HeroSection() {
     return (
         <section className="relative overflow-hidden">
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-primary-50 via-white to-white" />
-            <div className="relative container px-4">
+            <div className="relative container px-4 py-4">
                 <div
                     className={[
                         "grid items-start gap-12 pt-8 pb-16",
@@ -34,10 +34,6 @@ export function HeroSection() {
 function HeroIntro({ isDesktop }: { isDesktop: boolean }) {
     return (
         <div className={isDesktop ? "text-left" : "text-center"}>
-            <div className="mb-4 inline-flex items-center rounded-full border border-primary-100 bg-primary-50 px-3 py-1 text-xs font-medium text-primary">
-                VIVEKA — Assessments and Surveys, powered by AI
-            </div>
-
             <h1
                 className={[
                     "mb-5 font-bold leading-tight text-gray-900",
@@ -62,7 +58,7 @@ function HeroIntro({ isDesktop }: { isDesktop: boolean }) {
                 ].join(" ")}
             >
                 <Link to="/signup">
-                    <Button size="lg">
+                    <Button size="lg" shadow="xl" aria-label="Start Free Trial">
                         Start Free Trial
                         <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -87,7 +83,8 @@ function HeroFeatures() {
             },
             {
                 text: "Detailed Reports & Analytics",
-                description: "Get performance insights, trends, and summaries at a glance.",
+                description:
+                    "Get performance insights, trends, and summaries at a glance — including the ability to compare assessments side by side.",
             },
             {
                 text: "Support for Equations",
@@ -99,7 +96,11 @@ function HeroFeatures() {
                 description:
                     "Translate your Assessments and Surveys into multiple languages with just one click using AI.",
             },
-            { text: "…and many more", description: undefined },
+            {
+                text: "…and many more",
+                description:
+                    "Explore tools like PDF Splitter, Summarizer, and Learning Resources — and if you need something beyond that, we’ll customize it to fit your needs.",
+            },
         ],
         []
     );

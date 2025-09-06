@@ -1,19 +1,19 @@
 import { JsonObj } from "~/core/types/Json";
 
-export class SignUpFinishSetupReq̥ {
+export class SignUpFinishSetupReq {
 
     requestUid: string;
     orgName: string;
     subdomain: string;
     orgType: string;
-    orgCustomType: string | null;
+    orgTypeCustom: string | null;
 
-    constructor(props: { requestUid: string; orgName: string; subdomain: string; orgType: string; orgCustomType: string | null }) {
+    constructor(props: { requestUid: string; orgName: string; subdomain: string; orgType: string; orgTypeCustom: string | null }) {
         this.requestUid = props.requestUid;
         this.orgName = props.orgName;
         this.subdomain = props.subdomain;
         this.orgType = props.orgType;
-        this.orgCustomType = props.orgCustomType ?? null;
+        this.orgTypeCustom = props.orgTypeCustom ?? null;
     }
 
     toJson() {
@@ -22,7 +22,7 @@ export class SignUpFinishSetupReq̥ {
             orgName: this.orgName,
             subdomain: this.subdomain,
             orgType: this.orgType,
-            orgCustomType: this.orgCustomType,
+            orgTypeCustom: this.orgTypeCustom,
         };
     }
 

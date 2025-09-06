@@ -1,12 +1,12 @@
 import React from "react";
+import { NotFoundView } from "~/ui/components/error/NotFoundView";
 
-const NotFoundPage: React.FC = () => (
-    <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
-        <h1 className="text-4xl font-bold text-default mb-4">404 - Page Not Found</h1>
-        <p className="text-lg text-secondary">
-            The page you are looking for does not exist.
-        </p>
-    </div>
-);
+const NotFoundPage: React.FC = () => {
+    return (
+        <div className="flex items-center justify-center min-h-screen bg-brand-gradient p-6">
+            <NotFoundView />
+        </div>
+    );
+};
 
 export default NotFoundPage;

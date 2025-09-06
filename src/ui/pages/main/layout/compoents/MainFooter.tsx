@@ -1,34 +1,30 @@
 import React from "react";
 import { Mail } from "lucide-react";
 import { BaseNamedLogo } from "~/ui/components/logo/BaseLogo";
-
-const SENTIACARE_URL = "https://www.sentiacare.com/";
-const SENTIACARE_SM_LOGO = "https://www.sentiacare.com/images/logo-sentiacare-sm.png";
+import { BaseEnv } from "~/core/config/BaseEnv";
+import { openTawkToChat } from "~/infra/tawkto/types";
+import { AppUrl } from "~/infra/utils/AppUrl";
 
 export function Footer() {
     const year = new Date().getFullYear();
-    const email = "askus@sentiacare.com";
 
     const openMail = (subject: string) => {
         const s = encodeURIComponent(subject);
-        window.open(`mailto:${email}?subject=${s}`, "_blank");
-    };
-
-    const openChat = () => {
-        (window as any)?.Tawk_API?.toggle?.();
+        window.open(`mailto:${BaseEnv.instance.primaryEmail}?subject=${s}`, "_blank");
     };
 
     return (
         <footer className="text-white bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
             <div className="container px-4 py-10">
                 <div className="grid items-start gap-10 md:grid-cols-2">
-                    <FooterBrand email={email} onEmailClick={() => openMail("General Inquiry")} />
+                    <FooterBrand email={BaseEnv.instance.primaryEmail} onEmailClick={() => openMail("General Inquiry")} />
                     <FooterLinks
                         items={[
-                            { label: "About Us", href: "/about" },
-                            { label: "Terms of Service", href: "/terms" },
-                            { label: "Privacy Policy", href: "/privacy" },
-                            { label: "Contact Us", onClick: openChat },
+                            { label: "About Us", href: AppUrl.autoTo({ path: BaseEnv.instance.aboutUsUrl }) },
+                            { label: "Terms of Service", href: AppUrl.autoTo({ path: BaseEnv.instance.termsOfServiceUrl }) },
+                            { label: "Privacy Policy", href: AppUrl.autoTo({ path: BaseEnv.instance.privacyPolicyUrl }) },
+                            { label: "All Products", href: AppUrl.autoTo({ path: "products" }) },
+                            { label: "Contact Us", onClick: () => openTawkToChat() },
                         ]}
                     />
                 </div>
@@ -43,7 +39,7 @@ function FooterBrand({
     email,
     onEmailClick,
 }: {
-    email: string;
+    email?: string;
     onEmailClick: () => void;
 }) {
     return (
@@ -55,7 +51,7 @@ function FooterBrand({
                 AI-powered platform to create Assessments & Surveys, auto-evaluate
                 responses, and deliver actionable analytics.
             </p>
-            <FooterEmail email={email} onClick={onEmailClick} />
+            {email && <FooterEmail email={email} onClick={onEmailClick} />}
         </div>
     );
 }
@@ -131,7 +127,7 @@ function FooterBottom({ year }: { year: number }) {
     return (
         <div className="mt-10 border-t border-gray-800 pt-6">
             <div className="flex flex-col gap-3 text-sm text-gray-400 md:flex-row md:items-center md:justify-between">
-                <span>© {year} VIVEKA · All rights reserved.</span>
+                <span>© {year} {BaseEnv.instance.productName} · All rights reserved.</span>
                 <span className="inline-flex items-center gap-2">
                     <span>Designed & developed by</span>
                     <SentiaCareLogo />
@@ -144,7 +140,7 @@ function FooterBottom({ year }: { year: number }) {
 function SentiaCareLogo() {
     return (
         <a
-            href={SENTIACARE_URL}
+            href={BaseEnv.instance.parentCompanyUrl}
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Visit Sensiacare Website"
@@ -153,8 +149,8 @@ function SentiaCareLogo() {
         >
             <span className="inline-flex items-center rounded-full bg-white">
                 <img
-                    src={SENTIACARE_SM_LOGO}
-                    alt="Sensiacare Logo"
+                    src={BaseEnv.instance.parentCompanyLogoUrl}
+                    alt={`${BaseEnv.instance.parentCompanyName} Logo`}
                     className="h-8 w-auto object-contain"
                     loading="lazy"
                 />
