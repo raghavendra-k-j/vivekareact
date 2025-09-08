@@ -1,14 +1,15 @@
-import { useEffect } from "react";
 import { Observer } from "mobx-react-lite";
+import { useEffect } from "react";
 import { FormService } from "~/domain/forms/services/FormsService";
-import { ResponseViewProvider } from "./ResponseViewProvider";
-import { useResponseViewStore } from "./ResponseViewContext";
+import { AppStore } from "~/ui/pages/_layout/AppStore";
+import { FramedDialog } from "~/ui/widgets/dialogmanager";
+import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 import { LoaderView } from "~/ui/widgets/loader/LoaderView";
-import { ResponseDialogViewer } from "./models/ResponseViewViewer";
 import { DesktopView } from "./comp/DesktopView";
 import { MobileView } from "./comp/MobileView";
-import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
-import { FramedDialog } from "~/ui/widgets/dialogmanager";
+import { ResponseDialogViewer } from "./models/ResponseViewViewer";
+import { useResponseViewStore } from "./ResponseViewContext";
+import { ResponseViewProvider } from "./ResponseViewProvider";
 
 export type ResponseViewProps = {
     formId: number;
@@ -16,11 +17,12 @@ export type ResponseViewProps = {
     viewer: ResponseDialogViewer;
     formService: FormService;
     onClose: () => void;
+    appStore: AppStore;
 };
 
 
 
-export function ResponseView({ formId, responseUid, viewer, formService, onClose }: ResponseViewProps) {
+export function ResponseView({ formId, responseUid, viewer, formService, onClose, appStore }: ResponseViewProps) {
     return (
         <FramedDialog
             onClose={() => {
@@ -30,6 +32,7 @@ export function ResponseView({ formId, responseUid, viewer, formService, onClose
             contentClassName="w-full h-full flex flex-col max-w-[1200px] max-h-[800px]"
         >
             <ResponseViewProvider
+                appStore={appStore}
                 formId={formId}
                 responseUid={responseUid}
                 viewer={viewer}

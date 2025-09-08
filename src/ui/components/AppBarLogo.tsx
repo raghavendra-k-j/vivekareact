@@ -29,7 +29,7 @@ function PngLogo() {
 
 function LogoPng() {
     const appStore = useAppStore();
-    let logoUrl = "logo_sidebar.png";
+    let logoUrl = "./logo_sidebar.png";
     let altText = `${BaseEnv.instance.productName} Logo`;
     if (appStore.orgConfig.org.hasLogoUrl) {
         logoUrl = ServiceURL.getUrl(`/${appStore.orgConfig.org.logoUrl!}`);

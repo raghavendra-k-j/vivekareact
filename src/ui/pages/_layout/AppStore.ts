@@ -27,6 +27,7 @@ export class AppStore {
     public _authState: DataState<void> = DataState.init();
     public _planAndUsage: PlanAndUsage | null = null;
     public _planAndUsageState: DataState<void> = DataState.init();
+    static Provider: any;
 
     get orgConfig(): OrgConfig {
         return this._orgConfig;

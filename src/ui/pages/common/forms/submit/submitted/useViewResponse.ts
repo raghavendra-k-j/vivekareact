@@ -3,8 +3,10 @@ import { useDialogManager } from '~/ui/widgets/dialogmanager';
 import { ResponseView } from '~/ui/pages/common/forms/responseview/ResponseView';
 import { ResponseDialogViewer } from '~/ui/pages/common/forms/responseview/models/ResponseViewViewer';
 import { ResponseViewProps } from '~/ui/pages/common/forms/responseview/ResponseView';
+import { useAppStore } from '~/ui/pages/_layout/AppContext';
 
 export function useViewResponse(): () => void {
+    const appStore = useAppStore();
     const store = useSubmitStore();
     const dialogManager = useDialogManager();
 
@@ -17,6 +19,7 @@ export function useViewResponse(): () => void {
             onClose: () => {
                 dialogManager.closeById('response-dialog');
             },
+            appStore: appStore,
         };
 
         dialogManager.show({
