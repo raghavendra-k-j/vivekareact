@@ -1,12 +1,11 @@
-import { SoftLoginRes } from "../models/SoftLoginRes";
-import { ResEither } from "~/core/utils/ResEither";
-import { AuthRepo } from "~/infra/repos/AuthRepo";
-import Cookies from 'js-cookie'
 import { AuthConst } from "~/core/const/AuthConst";
-import { EmailOtpStatus } from "~/domain/common/models/EmailOtpStatus";
-import { AppUserType } from "~/domain/common/models/AppUserType";
-import { AutoLoginRes } from "../models/AutoLoginRes";
 import { AppError } from "~/core/error/AppError";
+import { ResEither } from "~/core/utils/ResEither";
+import { AppUserType } from "~/domain/common/models/AppUserType";
+import { EmailOtpStatus } from "~/domain/common/models/EmailOtpStatus";
+import { AuthRepo } from "~/infra/repos/AuthRepo";
+import { AutoLoginRes } from "../models/AutoLoginRes";
+import { SoftLoginRes } from "../models/SoftLoginRes";
 
 export class AuthService {
     private readonly authRepo: AuthRepo;
