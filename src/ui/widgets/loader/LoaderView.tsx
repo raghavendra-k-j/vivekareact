@@ -3,23 +3,23 @@ import { Loader2 } from "lucide-react";
 
 export type LoaderViewProps = {
     size?: number;
-    animation?: string;
     color?: string;
     className?: string;
 };
 
-export function LoaderView(props: LoaderViewProps) {
-    const {
-        size = 36,
-        animation = "animate-spin",
-        color = "text-primary",
-        className,
-    } = props;
-
+export function LoaderView({
+    size = 36,
+    color = "text-primary",
+    className,
+}: LoaderViewProps) {
     return (
         <Loader2
             size={size}
-            className={clsx(animation, color, "rounded-full", className)}
+            className={clsx(
+                color,
+                "animate-spin",
+                className
+            )}
         />
     );
 }

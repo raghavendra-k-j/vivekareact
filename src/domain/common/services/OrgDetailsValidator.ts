@@ -40,10 +40,10 @@ export function validateSubdomain(
 ): string | null {
     const { minLength, maxLength, messages } = options;
     const m: Required<SubdomainMessages> = {
-        empty: "Please enter website address",
-        tooShort: (n) => `Website address must be at least ${n} characters`,
-        tooLong: (n) => `Website address must be at most ${n} characters`,
-        invalidFormat: "Website address can only contain lowercase letters, numbers, and hyphens. It cannot start or end with a hyphen.",
+        empty: "Please enter organization link address",
+        tooShort: (n) => `Organization link must be at least ${n} characters`,
+        tooLong: (n) => `Organization link must be at most ${n} characters`,
+        invalidFormat: "Organization link can only contain lowercase letters, numbers, and hyphens. It cannot start or end with a hyphen.",
         ...messages,
     };
 

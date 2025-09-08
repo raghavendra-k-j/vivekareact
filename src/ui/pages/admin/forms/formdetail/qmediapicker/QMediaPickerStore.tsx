@@ -132,7 +132,7 @@ export class QMediaPickerStore {
     selectMedia(item: QMedia) {
         const isEligible = this.isEligible(item);
         if (!isEligible) {
-            const humanReadableMaxFileSize = FileSizeFmt.humanReadable(this.maxAllowedSizeInBytes(item.type));
+            const humanReadableMaxFileSize = FileSizeFmt.humanReadable(this.maxAllowedSize(item.type));
             const selectedFileSize = FileSizeFmt.humanReadable(item.size);
             const message = `The selected file exceeds the maximum allowed size of ${humanReadableMaxFileSize}. Selected file size: ${selectedFileSize}.`;
             showErrorToast({
@@ -178,7 +178,7 @@ export class QMediaPickerStore {
     }
 
     isEligible(item: QMedia): boolean {
-        const maxSize = this.maxAllowedSizeInBytes(item.type);
+        const maxSize = this.maxAllowedSize(item.type);
         return item.size <= maxSize;
     }
 
@@ -219,10 +219,6 @@ export class QMediaPickerStore {
         return 0;
     }
 
-    maxAllowedSizeInBytes(type: QMediaType): number {
-        return FileSizeFmt.mbToBytes(this.maxAllowedSize(type));
-    }
-
     async onFileSelected(file: File) {
         const fileExtension: string = file.name.split('.').pop()?.toLowerCase() ?? "";
         const extension = QMediaExtension.fromExtensionString(fileExtension);
@@ -237,7 +233,7 @@ export class QMediaPickerStore {
         }
 
         const selectedFileSize = file.size;
-        const maxAllowedSize = this.maxAllowedSizeInBytes(type);
+        const maxAllowedSize = this.maxAllowedSize(type);
 
         if (selectedFileSize > maxAllowedSize) {
             showErrorToast({

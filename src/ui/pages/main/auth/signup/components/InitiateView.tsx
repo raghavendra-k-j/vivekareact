@@ -61,7 +61,7 @@ export function SignUpInitView() {
             </AuthFormContainer>
             <AuthFooter>
                 <Observer>
-                    {() => (<Button loading={store.requestState.isLoading} className="w-full" onClick={() => store.onClickInitSignUp()}>
+                    {() => (<Button loading={store.requestState.isLoading || store.sendCodeState.isLoading} className="w-full" onClick={() => store.onClickInitSignUp()}>
                         Start Setup
                         <ArrowRightIcon className="ml-2 w-4 h-4" />
                     </Button>)}

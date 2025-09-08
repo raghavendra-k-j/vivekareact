@@ -1,9 +1,8 @@
 import { makeObservable, observable, runInAction } from "mobx";
+import { AppError } from "~/core/error/AppError";
 import { AdminFormsService } from "~/domain/forms/admin/services/AdminFormsService";
-import { withMinDelay } from "~/infra/utils/withMinDelay";
 import { DataState } from "~/ui/utils/DataState";
 import { AdminFormDetailVm } from "../common/models/AdminFormDetailVm";
-import { AppError } from "~/core/error/AppError";
 
 export type AdminFormStoreType = {
     permalink: string;
@@ -33,10 +32,7 @@ export class AdminFormStore {
             runInAction(() => {
                 this.fdState = DataState.loading();
             });
-            const response = (await withMinDelay(
-                this.adminFormService.getFormDetails({ permalink: this.permalink })
-            )).getOrError();
-            
+            const response = (await this.adminFormService.getFormDetails({ permalink: this.permalink })).getOrError();            
             runInAction(() => {
                 this.fdState = DataState.data(AdminFormDetailVm.fromModel(response));
             });

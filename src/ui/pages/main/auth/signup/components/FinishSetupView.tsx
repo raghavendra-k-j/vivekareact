@@ -4,6 +4,11 @@ import { FSelectField } from "~/ui/widgets/form/SelectField";
 import { FTextField } from "~/ui/widgets/form/TextField";
 import { AuthCard, AuthFooter, AuthFormContainer, AuthHeader } from "../../common/AuthCard";
 import { useSignUpPageStore } from "../SignUpPageContext";
+import { BaseEnv } from "~/core/config/BaseEnv";
+import { Input } from "~/ui/widgets/form/Input";
+import { InputLabel } from "~/ui/widgets/form/InputLabel";
+import { ReqMark } from "~/ui/widgets/form/ReqMark";
+import { InputError } from "~/ui/widgets/form/InputError";
 
 export function SignUpFinishSetupView() {
   const store = useSignUpPageStore();
@@ -23,12 +28,42 @@ export function SignUpFinishSetupView() {
           field={store.orgNameField}
         />
 
-        <FTextField
-          required
-          label="Website Address"
-          placeholder="Enter website address"
-          field={store.subDomainField}
-        />
+        <div>
+          <InputLabel>
+            Organization Link <ReqMark />
+          </InputLabel>
+
+          <Observer>
+            {() => {
+              const root = BaseEnv.instance.rootDomain;
+              return (
+                <>
+                  <div className="my-1 flex flex-row border border-default rounded-sm items-center shadow-xs focus-within:ring-[1.5px] focus-within:ring-primary focus-within:border-primary overflow-hidden">
+                    <div className="ps-2">https://</div>
+                    <Input
+                      value={store.subDomainField.value}
+                      onChange={(e) => store.subDomainField.set(e.target.value)}
+                      style={{
+                        borderTopRightRadius: 0,
+                        borderBottomRightRadius: 0,
+                        borderTopLeftRadius: 0,
+                        borderBottomLeftRadius: 0,
+                        boxShadow: "none",
+                        border: "none",
+                        flex: 1,
+                      }}
+                      placeholder="your-organization-name"
+                    />
+                    <div className="pe-2">.{root}</div>
+                  </div>
+                  <InputError>{store.subDomainField.error}</InputError>
+                </>
+              );
+            }}
+          </Observer>
+        </div>
+
+
 
         <FSelectField
           required

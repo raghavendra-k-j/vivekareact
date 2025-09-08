@@ -9,7 +9,6 @@ import { AutoLoginRes } from "../models/AutoLoginRes";
 import { AppError } from "~/core/error/AppError";
 
 export class AuthService {
-
     private readonly authRepo: AuthRepo;
 
     constructor(authRepo: AuthRepo) {
@@ -21,18 +20,18 @@ export class AuthService {
     }
 
     async getAccessToken(): Promise<string | null> {
-        const accessToken = Cookies.get(AuthConst.keyAccessToken) || null;
-        return accessToken;
+        const accessToken = localStorage.getItem(AuthConst.keyAccessToken);
+        return accessToken ? accessToken : null;
     }
 
     async removeTokenLocally() {
-        Cookies.remove(AuthConst.keyAccessToken);
-        Cookies.remove(AuthConst.keyAppUserType);
+        localStorage.removeItem(AuthConst.keyAccessToken);
+        localStorage.removeItem(AuthConst.keyAppUserType);
     }
 
     async saveTokenLocally({ accessToken, appUserType }: { accessToken: string, appUserType: AppUserType }) {
-        Cookies.set(AuthConst.keyAccessToken, accessToken, {expires: AuthConst.cookieExpiresDays});
-        Cookies.set(AuthConst.keyAppUserType, appUserType.type, {expires: AuthConst.cookieExpiresDays});
+        localStorage.setItem(AuthConst.keyAccessToken, accessToken);
+        localStorage.setItem(AuthConst.keyAppUserType, appUserType.type);
     }
 
     async checkAuthEmailOTPStatus(otpId: number): Promise<ResEither<AppError, EmailOtpStatus | null>> {
@@ -44,8 +43,7 @@ export class AuthService {
     }
 
     async clearTokenLocally() {
-        Cookies.remove(AuthConst.keyAccessToken);
-        Cookies.remove(AuthConst.keyAppUserType);
+        localStorage.removeItem(AuthConst.keyAccessToken);
+        localStorage.removeItem(AuthConst.keyAppUserType);
     }
-
 }

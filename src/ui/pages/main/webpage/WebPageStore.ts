@@ -1,3 +1,4 @@
+import { makeObservable } from "mobx";
 import { AppError } from "~/core/error/AppError";
 import { WebPageRes } from "~/domain/common/models/WebPageRes";
 import { WebPageService } from "~/domain/common/services/WebPageService";
@@ -13,6 +14,9 @@ export class WebPageStore {
         this.slug = slug;
         this.webPageService = new WebPageService();
         this.loadWebPage();
+        makeObservable(this, {
+            dataState: true,
+        });
     }
 
     async loadWebPage() {

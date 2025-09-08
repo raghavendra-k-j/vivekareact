@@ -39,7 +39,7 @@ export function ProductsSection() {
     ];
 
     return (
-        <SectionWrapper gradientClasses="from-indogo-50 via-white to-indogo-50">
+        <SectionWrapper gradientClasses="from-primary-50 via-white to-white">
             <SectionHeader
                 title="Products"
                 description="Discover what’s ready today, or collaborate with us on something custom."

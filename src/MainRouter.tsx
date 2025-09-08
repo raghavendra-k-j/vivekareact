@@ -13,7 +13,7 @@ const MainLayout = lazy(() => import("./ui/pages/main/layout/MainLayout"));
 
 export default function Router() {
     return (
-        <Suspense fallback={<PageLoader />}>
+        <Suspense fallback={<div className="h-full bg-brand-gradient"><PageLoader /></div>}>
             <Routes>
                 <Route element={<MainLayout />}>
                     <Route index element={<MainHome />} />

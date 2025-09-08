@@ -17,8 +17,8 @@ export function UploadMediaView() {
         QMediaExtension.extensionMp4,
     ];
 
-    const maxAllowedImageSize = FileSizeFmt.mbToHumanReadable(store.maxAllowedImageSize);
-    const maxAllowedVideoSize = FileSizeFmt.mbToHumanReadable(store.maxAllowedVideoSize);
+    const maxAllowedImageSize = store.maxAllowedImageSize;
+    const maxAllowedVideoSize = store.maxAllowedVideoSize;
 
     return (
         <div className="text-center p-6 overflow-auto">
@@ -28,7 +28,7 @@ export function UploadMediaView() {
             <div className="flex gap-2 flex-col items-center">
                 <h2 className="text-lg font-semibold text-default">Upload an Image or Video</h2>
                 <p className="text-sm text-secondary">
-                    Accepted formats: {imageExtensions.map(ext => `${ext}`).join(", ")} (up to {maxAllowedImageSize}), {videoExtensions.map(ext => `.${ext}`).join(", ")} (up to {maxAllowedVideoSize}).
+                    Accepted formats: {imageExtensions.map(ext => `${ext}`).join(", ")} (up to {FileSizeFmt.humanReadable(maxAllowedImageSize)}), {videoExtensions.map(ext => `.${ext}`).join(", ")} (up to {FileSizeFmt.humanReadable(maxAllowedVideoSize)}).
                 </p>
                 <Observer>
                     {() => {

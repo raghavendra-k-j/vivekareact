@@ -1,14 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
+import { ToastContainer } from "react-toastify";
 import AppRouter from "./AppRouter";
 import { BaseEnv } from "./core/config/BaseEnv";
-import { ServiceURL } from "./infra/datasources/ServiceURL";
-import MainRouter from "./MainRouter";
 import { BaseApiClient } from "./infra/datasources/BaseApiClient";
-import { DialogManagerProvider } from "./ui/widgets/dialogmanager";
-import { ToastContainer } from "react-toastify";
+import { ServiceURL } from "./infra/datasources/ServiceURL";
 import { AppUrl } from "./infra/utils/AppUrl";
+import MainRouter from "./MainRouter";
+import { DialogManagerProvider } from "./ui/widgets/dialogmanager";
 
 async function bootstrap() {
   const baseEnv = await BaseEnv.loadFromFile();

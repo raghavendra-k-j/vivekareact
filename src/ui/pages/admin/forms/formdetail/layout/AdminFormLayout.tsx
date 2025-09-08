@@ -1,11 +1,11 @@
+import { Observer } from "mobx-react-lite";
 import React, { useRef } from "react";
 import { Outlet, useParams } from "react-router";
+import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
+import { LoaderView } from "~/ui/widgets/loader/LoaderView";
+import { useAdminFormStore } from "./AdminFormContext";
 import { AdminFormProvider } from "./AdminFormProvider";
 import { AdminFormStore } from "./AdminFormStore";
-import { Observer } from "mobx-react-lite";
-import { useAdminFormStore } from "./AdminFormContext";
-import { PageLoader } from "~/ui/components/loaders/PageLoader";
-import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 
 const AdminFormLayout: React.FC = () => {
     return (
@@ -40,7 +40,7 @@ export function Body() {
         <Observer>
             {() => {
                 return store.fdState.stateWhen({
-                    initOrLoading: () => (<Center><PageLoader /></Center>),
+                    initOrLoading: () => (<Center><LoaderView /></Center>),
                     error: (error) => (<Center><SimpleRetryableAppView appError={error} onRetry={() => store.loadFormDetails()} /></Center>),
                     loaded: () => (<Main />),
                 });

@@ -46,8 +46,8 @@ export default function AppRouter() {
 
 
                     {/* Admin Layout */}
-                    <Route path="/admin" element={<AdminLayout />}>
-                        <Route path="forms/:permalink" element={<AdminFormsLayout />}>
+                    <Route path="/admin" element={<AdminLayout  />}>
+                        <Route path="forms/:permalink" element={<AdminFormsLayout  />}>
                             <Route index element={<QuestionsPage />} />
                             <Route path="questions" element={<QuestionsPage />} />
                             <Route path="upsert-question" element={<UpsertQuestionPage />} />
