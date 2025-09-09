@@ -58,6 +58,7 @@ interface Assessment {
     id: string;
     title: string;
     subject: string;
+    courseId: string;
     totalQuestions: number;
     totalTimeMinutes: number;
     maxMarks: number;
@@ -73,8 +74,44 @@ interface Assessment {
 interface Survey {
     id: string;
     title: string;
+    courseId: string;
     status: string;
     updatedAt: string;
+}
+
+interface Course {
+    id: string;
+    name: string;
+    code: string;
+    myAveragePercent: number;
+    color: string;
+}
+
+interface TopicStat {
+    topic: string;
+    courseId: string;
+    avgPercentage: number;
+    assessmentsCount: number;
+    maxMarks: number;
+    gainedMarks: number;
+}
+
+interface CourseLeaderboardRow {
+    rank: number;
+    name: string;
+    percentage: number;
+    isMe: boolean;
+}
+
+interface CourseReport {
+    courseId: string;
+    averagePercent: number;
+    topper: { name: string; percentage: number };
+    leaderboard: {
+        weekly: CourseLeaderboardRow[];
+        monthly: CourseLeaderboardRow[];
+        allTime: CourseLeaderboardRow[];
+    };
 }
 
 interface LeaderboardRow {
@@ -121,6 +158,14 @@ interface SurveyCardProps {
     item: Survey;
 }
 
+interface CourseCardProps {
+    course: Course;
+}
+
+interface CourseLeaderboardProps {
+    report: CourseReport;
+}
+
 interface KpiCardProps {
     label: string;
     value: string | number;
@@ -153,12 +198,58 @@ interface EmptyStateProps {
  * Mock Data
  ********************/
 
+/** @typedef {Object} Course */
+const courses: Course[] = [
+    { id: "c1", name: "Mathematics", code: "2024 • Class 10 • Section A • Math", myAveragePercent: 85, color: "from-blue-400 to-blue-600" },
+    { id: "c2", name: "Physics", code: "2024 • Class 10 • Section A • Physics", myAveragePercent: 91, color: "from-purple-400 to-purple-600" },
+    { id: "c3", name: "Chemistry", code: "2024 • Class 10 • Section A • Chemistry", myAveragePercent: 74, color: "from-green-400 to-green-600" },
+    { id: "c4", name: "Biology", code: "2024 • Class 10 • Section A • Biology", myAveragePercent: 76, color: "from-teal-400 to-teal-600" },
+    { id: "c5", name: "History", code: "2024 • Class 10 • Section A • History", myAveragePercent: 70, color: "from-amber-400 to-amber-600" },
+    { id: "c6", name: "English", code: "2024 • Class 10 • Section A • English", myAveragePercent: 82, color: "from-rose-400 to-rose-600" },
+];
+
+/** @typedef {Object} TopicStat */
+const topicStats: TopicStat[] = [
+    // Mathematics topics
+    { topic: "Algebra", courseId: "c1", avgPercentage: 88, assessmentsCount: 3, maxMarks: 150, gainedMarks: 132 },
+    { topic: "Geometry", courseId: "c1", avgPercentage: 82, assessmentsCount: 2, maxMarks: 100, gainedMarks: 82 },
+    { topic: "Trigonometry", courseId: "c1", avgPercentage: 85, assessmentsCount: 2, maxMarks: 80, gainedMarks: 68 },
+    { topic: "Statistics", courseId: "c1", avgPercentage: 79, assessmentsCount: 1, maxMarks: 50, gainedMarks: 39 },
+    
+    // Physics topics
+    { topic: "Mechanics", courseId: "c2", avgPercentage: 92, assessmentsCount: 2, maxMarks: 100, gainedMarks: 92 },
+    { topic: "Thermodynamics", courseId: "c2", avgPercentage: 89, assessmentsCount: 1, maxMarks: 60, gainedMarks: 53 },
+    { topic: "Optics", courseId: "c2", avgPercentage: 94, assessmentsCount: 1, maxMarks: 40, gainedMarks: 38 },
+    { topic: "Electricity", courseId: "c2", avgPercentage: 87, assessmentsCount: 2, maxMarks: 80, gainedMarks: 70 },
+    
+    // Chemistry topics
+    { topic: "Organic Chemistry", courseId: "c3", avgPercentage: 72, assessmentsCount: 2, maxMarks: 120, gainedMarks: 86 },
+    { topic: "Inorganic Chemistry", courseId: "c3", avgPercentage: 76, assessmentsCount: 1, maxMarks: 80, gainedMarks: 61 },
+    { topic: "Physical Chemistry", courseId: "c3", avgPercentage: 75, assessmentsCount: 1, maxMarks: 60, gainedMarks: 45 },
+    
+    // Biology topics
+    { topic: "Cell Biology", courseId: "c4", avgPercentage: 78, assessmentsCount: 2, maxMarks: 100, gainedMarks: 78 },
+    { topic: "Genetics", courseId: "c4", avgPercentage: 74, assessmentsCount: 1, maxMarks: 50, gainedMarks: 37 },
+    { topic: "Ecology", courseId: "c4", avgPercentage: 76, assessmentsCount: 1, maxMarks: 60, gainedMarks: 46 },
+    
+    // History topics
+    { topic: "Ancient History", courseId: "c5", avgPercentage: 72, assessmentsCount: 1, maxMarks: 40, gainedMarks: 29 },
+    { topic: "Medieval History", courseId: "c5", avgPercentage: 68, assessmentsCount: 1, maxMarks: 50, gainedMarks: 34 },
+    { topic: "Modern History", courseId: "c5", avgPercentage: 71, assessmentsCount: 1, maxMarks: 60, gainedMarks: 43 },
+    
+    // English topics
+    { topic: "Literature", courseId: "c6", avgPercentage: 84, assessmentsCount: 2, maxMarks: 100, gainedMarks: 84 },
+    { topic: "Grammar", courseId: "c6", avgPercentage: 80, assessmentsCount: 1, maxMarks: 50, gainedMarks: 40 },
+    { topic: "Writing Skills", courseId: "c6", avgPercentage: 82, assessmentsCount: 1, maxMarks: 60, gainedMarks: 49 },
+];
+
 /** @typedef {Object} Assessment */
 const assessments: Assessment[] = [
     {
         id: "a1",
         title: "Algebra Fundamentals Unit Test",
         subject: "Mathematics",
+        courseId: "c1",
         totalQuestions: 20,
         totalTimeMinutes: 40,
         maxMarks: 100,
@@ -184,6 +275,7 @@ const assessments: Assessment[] = [
         id: "a2",
         title: "Physics: Kinematics Quiz",
         subject: "Physics",
+        courseId: "c2",
         totalQuestions: 15,
         totalTimeMinutes: 30,
         maxMarks: 60,
@@ -205,6 +297,7 @@ const assessments: Assessment[] = [
         id: "a3",
         title: "Chemistry: Organic Basics",
         subject: "Chemistry",
+        courseId: "c3",
         totalQuestions: 25,
         totalTimeMinutes: 45,
         maxMarks: 100,
@@ -214,6 +307,7 @@ const assessments: Assessment[] = [
         id: "a4",
         title: "Biology: Cell Structure Assessment",
         subject: "Biology",
+        courseId: "c4",
         totalQuestions: 18,
         totalTimeMinutes: 35,
         maxMarks: 80,
@@ -235,6 +329,7 @@ const assessments: Assessment[] = [
         id: "a5",
         title: "Geometry Challenge",
         subject: "Mathematics",
+        courseId: "c1",
         totalQuestions: 22,
         totalTimeMinutes: 40,
         maxMarks: 100,
@@ -244,6 +339,7 @@ const assessments: Assessment[] = [
         id: "a6",
         title: "Trigonometry Practice Test",
         subject: "Mathematics",
+        courseId: "c1",
         totalQuestions: 20,
         totalTimeMinutes: 40,
         maxMarks: 100,
@@ -265,6 +361,7 @@ const assessments: Assessment[] = [
         id: "a7",
         title: "History: World Wars Quiz",
         subject: "History",
+        courseId: "c5",
         totalQuestions: 12,
         totalTimeMinutes: 20,
         maxMarks: 50,
@@ -274,10 +371,164 @@ const assessments: Assessment[] = [
 
 /** @typedef {Object} Survey */
 const surveys: Survey[] = [
-    { id: "s1", title: "Student Feedback — Term 1", status: "Open", updatedAt: "2025-08-28" },
-    { id: "s2", title: "Library Services Survey", status: "Closed", updatedAt: "2025-06-12" },
-    { id: "s3", title: "Cafeteria Satisfaction", status: "Completed", updatedAt: "2025-07-09" },
-    { id: "s4", title: "Wellbeing & Safety Check", status: "Open", updatedAt: "2025-09-03" },
+    { id: "s1", title: "Student Feedback — Term 1", courseId: "c1", status: "Open", updatedAt: "2025-08-28" },
+    { id: "s2", title: "Library Services Survey", courseId: "c6", status: "Closed", updatedAt: "2025-06-12" },
+    { id: "s3", title: "Cafeteria Satisfaction", courseId: "c6", status: "Completed", updatedAt: "2025-07-09" },
+    { id: "s4", title: "Wellbeing & Safety Check", courseId: "c2", status: "Open", updatedAt: "2025-09-03" },
+];
+
+/** @typedef {Object} CourseReport */
+const courseReports: CourseReport[] = [
+    {
+        courseId: "c1",
+        averagePercent: 85,
+        topper: { name: "Alice Johnson", percentage: 95 },
+        leaderboard: {
+            weekly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 6 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(60, Math.min(95, 92 - i * 2 + (i % 3) * 1)),
+                isMe: i === 6,
+            })),
+            monthly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 8 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(58, Math.min(94, 90 - i * 1.8 + (i % 3) * 1.5)),
+                isMe: i === 8,
+            })),
+            allTime: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 5 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(55, Math.min(96, 93 - i * 2.2 + (i % 3) * 2)),
+                isMe: i === 5,
+            })),
+        },
+    },
+    {
+        courseId: "c2",
+        averagePercent: 88,
+        topper: { name: "David Chen", percentage: 98 },
+        leaderboard: {
+            weekly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 4 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(65, Math.min(98, 95 - i * 2.2 + (i % 3) * 1)),
+                isMe: i === 4,
+            })),
+            monthly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 3 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(63, Math.min(97, 94 - i * 2.1 + (i % 3) * 1.5)),
+                isMe: i === 3,
+            })),
+            allTime: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 5 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(60, Math.min(98, 96 - i * 2.5 + (i % 3) * 2)),
+                isMe: i === 5,
+            })),
+        },
+    },
+    {
+        courseId: "c3",
+        averagePercent: 74,
+        topper: { name: "Emma Wilson", percentage: 89 },
+        leaderboard: {
+            weekly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 9 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(50, Math.min(89, 86 - i * 2.4 + (i % 3) * 1)),
+                isMe: i === 9,
+            })),
+            monthly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 11 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(48, Math.min(87, 84 - i * 2.2 + (i % 3) * 1.5)),
+                isMe: i === 11,
+            })),
+            allTime: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 10 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(45, Math.min(89, 85 - i * 2.6 + (i % 3) * 2)),
+                isMe: i === 10,
+            })),
+        },
+    },
+    {
+        courseId: "c4",
+        averagePercent: 76,
+        topper: { name: "Michael Brown", percentage: 92 },
+        leaderboard: {
+            weekly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 7 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(52, Math.min(92, 89 - i * 2.3 + (i % 3) * 1)),
+                isMe: i === 7,
+            })),
+            monthly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 8 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(50, Math.min(90, 87 - i * 2.1 + (i % 3) * 1.5)),
+                isMe: i === 8,
+            })),
+            allTime: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 9 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(47, Math.min(92, 88 - i * 2.7 + (i % 3) * 2)),
+                isMe: i === 9,
+            })),
+        },
+    },
+    {
+        courseId: "c5",
+        averagePercent: 70,
+        topper: { name: "Sarah Davis", percentage: 87 },
+        leaderboard: {
+            weekly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 12 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(45, Math.min(87, 84 - i * 2.5 + (i % 3) * 1)),
+                isMe: i === 12,
+            })),
+            monthly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 13 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(43, Math.min(85, 82 - i * 2.3 + (i % 3) * 1.5)),
+                isMe: i === 13,
+            })),
+            allTime: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 14 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(40, Math.min(87, 83 - i * 2.8 + (i % 3) * 2)),
+                isMe: i === 14,
+            })),
+        },
+    },
+    {
+        courseId: "c6",
+        averagePercent: 82,
+        topper: { name: "James Miller", percentage: 94 },
+        leaderboard: {
+            weekly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 5 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(58, Math.min(94, 91 - i * 2.1 + (i % 3) * 1)),
+                isMe: i === 5,
+            })),
+            monthly: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 6 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(56, Math.min(92, 89 - i * 1.9 + (i % 3) * 1.5)),
+                isMe: i === 6,
+            })),
+            allTime: Array.from({ length: 15 }).map((_, i) => ({
+                rank: i + 1,
+                name: i === 4 ? "You" : `Student ${i + 1}`,
+                percentage: Math.max(53, Math.min(94, 90 - i * 2.3 + (i % 3) * 2)),
+                isMe: i === 4,
+            })),
+        },
+    },
 ];
 
 /** @typedef {Object} LeaderboardRow */
@@ -335,8 +586,8 @@ function AppBar({ schoolName = "Blue Ridge High", onMenuClick, onNotificationsCl
     const navigate = useNavigate();
     return (
         <div className="sticky top-0 z-40 w-full backdrop-blur supports-[backdrop-filter]:bg-white/80 bg-white shadow-sm">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div className="flex items-center gap-3">
+            <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8 h-14 sm:h-16 flex items-center justify-between">
+                <div className="flex items-center gap-2 sm:gap-3">
                     <button
                         onClick={onMenuClick}
                         className="md:hidden p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
@@ -344,14 +595,14 @@ function AppBar({ schoolName = "Blue Ridge High", onMenuClick, onNotificationsCl
                     >
                         <Menu className="w-5 h-5" />
                     </button>
-                    <Link to="/" className="font-semibold text-gray-900 text-base sm:text-lg tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded">
+                    <Link to="/" className="font-semibold text-gray-900 text-sm sm:text-base lg:text-lg tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 rounded truncate">
                         {schoolName}
                     </Link>
                 </div>
-                <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-1 sm:gap-2">
                     <button
                         onClick={() => navigate("/reports")}
-                        className="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-xl text-sm bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow hover:shadow-md focus:outline-none focus-visible:ring-2 ring-offset-2 ring-indigo-500"
+                        className="hidden sm:inline-flex items-center gap-2 px-2 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow hover:shadow-md focus:outline-none focus-visible:ring-2 ring-offset-2 ring-indigo-500"
                         aria-label="Open My Reports"
                         title="My Reports"
                     >
@@ -360,21 +611,21 @@ function AppBar({ schoolName = "Blue Ridge High", onMenuClick, onNotificationsCl
                     </button>
                     <button
                         onClick={onNotificationsClick}
-                        className="p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                        className="p-1.5 sm:p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                         aria-label="Notifications"
                     >
-                        <Bell className="w-5 h-5" />
+                        <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                     <button
-                        className="ml-1 inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                        className="ml-1 inline-flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                         aria-label="Profile"
                         onClick={() => navigate("/reports")}
                         title="Open My Reports"
                     >
                         {userAvatarUrl ? (
-                            <img src={userAvatarUrl} alt="User avatar" className="w-8 h-8 rounded-full object-cover" />
+                            <img src={userAvatarUrl} alt="User avatar" className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover" />
                         ) : (
-                            <User className="w-4 h-4" />
+                            <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                         )}
                     </button>
                 </div>
@@ -386,12 +637,12 @@ function AppBar({ schoolName = "Blue Ridge High", onMenuClick, onNotificationsCl
 function TabsBar({ tabs, activeTab, onChange }: TabsBarProps) {
     // keyboard navigation
     return (
-        <div className="sticky top-16 z-30 bg-white/90 backdrop-blur border-b">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="sticky top-14 sm:top-16 z-30 bg-white/90 backdrop-blur border-b">
+            <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8">
                 <div
                     role="tablist"
                     aria-label="Content tabs"
-                    className="relative flex gap-2 py-3 overflow-x-auto"
+                    className="relative flex gap-1 sm:gap-2 py-2 sm:py-3 overflow-x-auto"
                 >
                     <motion.div
                         className="absolute bottom-0 h-0.5 bg-gradient-to-r from-indigo-500 to-violet-500 left-0 right-0 opacity-40"
@@ -413,7 +664,7 @@ function TabsBar({ tabs, activeTab, onChange }: TabsBarProps) {
                                         if (e.key === "ArrowLeft") onChange(Math.max(idx - 1, 0));
                                     }}
                                     className={classNames(
-                                        "relative px-4 py-2 rounded-xl text-sm sm:text-base whitespace-nowrap focus:outline-none focus-visible:ring-2 ring-indigo-500",
+                                        "relative px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm lg:text-base whitespace-nowrap focus:outline-none focus-visible:ring-2 ring-indigo-500",
                                         selected
                                             ? "text-indigo-700 bg-indigo-50"
                                             : "text-gray-600 hover:bg-gray-100"
@@ -434,36 +685,6 @@ function TabsBar({ tabs, activeTab, onChange }: TabsBarProps) {
                 </div>
             </div>
         </div>
-    );
-}
-
-function ViewMyReportsCTA() {
-    const navigate = useNavigate();
-    return (
-        <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 140, damping: 18 }}
-            className="mb-4"
-        >
-            <div className="relative overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-100 via-violet-100 to-pink-100 opacity-70" />
-                <div className="relative p-4 sm:p-5 flex items-center justify-between">
-                    <div>
-                        <p className="text-sm text-gray-600">Quick access</p>
-                        <h3 className="text-lg font-semibold text-gray-900">View My Reports</h3>
-                    </div>
-                    <button
-                        onClick={() => navigate("/reports")}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow hover:shadow-md focus:outline-none focus-visible:ring-2 ring-offset-2 ring-indigo-500"
-                        aria-label="Go to My Reports"
-                    >
-                        <FileBarChart2 className="w-4 h-4" />
-                        <span>Open</span>
-                    </button>
-                </div>
-            </div>
-        </motion.div>
     );
 }
 
@@ -490,14 +711,14 @@ function AssessmentCard({ item }: AssessmentCardProps) {
     return (
         <motion.button
             onClick={() => navigate(`/assessment/${item.id}`)}
-            className="text-left group w-full rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5 hover:shadow-md transition relative focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            className="text-left group w-full rounded-2xl bg-white p-3 sm:p-4 shadow-sm ring-1 ring-black/5 hover:shadow-md transition relative focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             whileHover={{ y: -2 }}
             aria-label={`Open ${item.title}`}
         >
-            <div className="flex items-start justify-between gap-4">
-                <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{item.title}</h4>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600">
+            <div className="flex items-start justify-between gap-3 sm:gap-4">
+                <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">{item.title}</h4>
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs text-gray-600">
                         <Badge color="blue">{item.subject}</Badge>
                         {item.completed ? (
                             <Badge color="green">Completed</Badge>
@@ -508,17 +729,17 @@ function AssessmentCard({ item }: AssessmentCardProps) {
                         <Badge color="gray">{item.totalTimeMinutes} min</Badge>
                     </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                     {item.completed && (
                         <div className="text-right">
-                            <div className="text-sm text-gray-500">Score</div>
-                            <div className="text-lg font-semibold text-gray-900">{item.percentage}%</div>
+                            <div className="text-xs text-gray-500">Score</div>
+                            <div className="text-base sm:text-lg font-semibold text-gray-900">{item.percentage}%</div>
                             {item.timeTakenMinutes != null && (
                                 <div className="text-xs text-gray-500">{item.timeTakenMinutes} min</div>
                             )}
                         </div>
                     )}
-                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600" aria-hidden="true" />
+                    <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-gray-600" aria-hidden="true" />
                 </div>
             </div>
         </motion.button>
@@ -528,21 +749,69 @@ function AssessmentCard({ item }: AssessmentCardProps) {
 function SurveyCard({ item }: SurveyCardProps) {
     return (
         <motion.div
-            className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5 hover:shadow-md transition"
+            className="rounded-2xl bg-white p-3 sm:p-4 shadow-sm ring-1 ring-black/5 hover:shadow-md transition"
             whileHover={{ y: -2 }}
             aria-label={`${item.title} survey`}
         >
-            <div className="flex items-center justify-between gap-4">
-                <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">{item.title}</h4>
-                    <div className="flex items-center gap-2 text-xs text-gray-600">
+            <div className="flex items-center justify-between gap-3 sm:gap-4">
+                <div className="flex-1 min-w-0">
+                    <h4 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base truncate">{item.title}</h4>
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-600">
                         <Badge color={item.status === "Open" ? "green" : item.status === "Closed" ? "red" : "indigo"}>{item.status}</Badge>
                         <span>Updated {item.updatedAt}</span>
                     </div>
                 </div>
-                <ChevronRight className="w-5 h-5 text-gray-400" aria-hidden="true" />
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 flex-shrink-0" aria-hidden="true" />
             </div>
         </motion.div>
+    );
+}
+
+function CourseCard({ course }: CourseCardProps) {
+    const navigate = useNavigate();
+    return (
+        <motion.button
+            onClick={() => navigate(`/course/${course.id}`)}
+            className="text-left group w-full rounded-2xl bg-white p-3 sm:p-4 shadow-sm ring-1 ring-black/5 hover:shadow-md transition relative focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            whileHover={{ y: -2 }}
+            aria-label={`Open ${course.name} course`}
+        >
+            <div className="flex items-start gap-3 sm:gap-4">
+                <div 
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br ${course.color} flex items-center justify-center text-white font-semibold text-base sm:text-lg flex-shrink-0`}
+                    aria-label={`${course.name} course avatar`}
+                >
+                    {course.name.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                    <h4 className="text-sm sm:text-base font-semibold text-gray-900 mb-1 truncate">{course.name}</h4>
+                    <div className="flex items-center gap-2 mb-2">
+                        <Badge color="gray">{course.code}</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <div className="text-xs sm:text-sm text-gray-600">My average</div>
+                        <div className="text-base sm:text-lg font-semibold text-gray-900">{course.myAveragePercent}%</div>
+                    </div>
+                    <div className="mt-2 h-1.5 sm:h-2 rounded-full bg-gray-100 overflow-hidden">
+                        <div 
+                            className={`h-full bg-gradient-to-r ${course.color}`}
+                            style={{ width: `${course.myAveragePercent}%` }} 
+                        />
+                    </div>
+                </div>
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-gray-600 flex-shrink-0" aria-hidden="true" />
+            </div>
+        </motion.button>
+    );
+}
+
+function CoursesList() {
+    return (
+        <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {courses.map((course) => (
+                <CourseCard key={course.id} course={course} />
+            ))}
+        </div>
     );
 }
 
@@ -648,6 +917,75 @@ function ScoreTrendArea({ timeline }: ScoreTrendAreaProps) {
     );
 }
 
+function TopicWiseChart({ courseId }: { courseId: string }) {
+    const courseTopics = topicStats.filter(topic => topic.courseId === courseId);
+    
+    // Define a color palette for different bars
+    const getTopicColors = () => [
+        '#3B82F6', // blue
+        '#8B5CF6', // purple
+        '#10B981', // green
+        '#F59E0B', // amber
+        '#EF4444', // red
+        '#14B8A6', // teal
+        '#F97316', // orange
+        '#8B5CF6', // violet
+        '#06B6D4', // cyan
+        '#84CC16', // lime
+    ];
+    
+    const colors = getTopicColors();
+    
+    const data = courseTopics.map((topic, index) => ({
+        name: topic.topic,
+        percentage: topic.avgPercentage,
+        assessments: topic.assessmentsCount,
+        gained: topic.gainedMarks,
+        total: topic.maxMarks,
+        fill: colors[index % colors.length] // Assign different color to each bar
+    }));
+
+    return (
+        <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5" role="img" aria-label="Topic wise performance chart">
+            <h4 className="text-sm font-medium text-gray-900 mb-2 flex items-center gap-2">
+                <BarChart3 className="w-4 h-4" /> Topic-wise Performance
+            </h4>
+            <div className="h-64">
+                <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis 
+                            dataKey="name" 
+                            angle={-45}
+                            textAnchor="end"
+                            height={80}
+                            interval={0}
+                            fontSize={12}
+                        />
+                        <YAxis label={{ value: "%", angle: -90, position: "insideLeft" }} />
+                        <Tooltip 
+                            formatter={(value, name) => {
+                                if (name === "percentage") return [`${value}%`, "Average %"];
+                                return [value, name];
+                            }}
+                            labelFormatter={(label) => `Topic: ${label}`}
+                        />
+                        <Bar 
+                            dataKey="percentage" 
+                            radius={[4, 4, 0, 0]}
+                            name="percentage"
+                        >
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                            ))}
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+    );
+}
+
 /********************
  * Lists
  ********************/
@@ -726,6 +1064,102 @@ function CategoryStrengthList() {
     );
 }
 
+function TopicWiseList() {
+    return (
+        <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+            <h4 className="text-sm font-medium text-gray-900 mb-2">Topic-wise Performance</h4>
+            <ul className="space-y-3">
+                {topicStats.slice(0, 8).map((topic) => {
+                    const course = courses.find(c => c.id === topic.courseId);
+                    return (
+                        <li key={`${topic.courseId}-${topic.topic}`} className="">
+                            <div className="flex items-center justify-between text-sm">
+                                <div className="flex items-center gap-2">
+                                    <div 
+                                        className={`w-3 h-3 rounded-full bg-gradient-to-br ${course?.color || 'from-gray-400 to-gray-600'}`}
+                                        aria-label={`${course?.name} indicator`}
+                                    />
+                                    <div className="font-medium text-gray-900">{topic.topic}</div>
+                                    <Badge color="gray">{course?.name}</Badge>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Badge color={topic.avgPercentage >= 85 ? "green" : topic.avgPercentage >= 75 ? "indigo" : "yellow"}>
+                                        {topic.avgPercentage}%
+                                    </Badge>
+                                    <span className="text-xs text-gray-500">{topic.assessmentsCount} tests</span>
+                                </div>
+                            </div>
+                            <div className="mt-2 h-2 rounded-full bg-gray-100 overflow-hidden">
+                                <div 
+                                    className={`h-full bg-gradient-to-r ${course?.color || 'from-gray-500 to-gray-600'}`}
+                                    style={{ width: `${topic.avgPercentage}%` }} 
+                                />
+                            </div>
+                        </li>
+                    );
+                })}
+            </ul>
+        </div>
+    );
+}
+
+function CourseLeaderboard({ report }: CourseLeaderboardProps) {
+    const [period, setPeriod] = useState<"weekly" | "monthly" | "allTime">("weekly");
+    const leaderboardData = report.leaderboard[period];
+    const me = leaderboardData.find((r) => r.isMe);
+    
+    return (
+        <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5">
+            <div className="flex items-center justify-between mb-3">
+                <h4 className="text-sm font-medium text-gray-900">Course Leaderboard</h4>
+                <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-xl">
+                    {([
+                        { key: "weekly" as const, label: "Weekly" },
+                        { key: "monthly" as const, label: "Monthly" },
+                        { key: "allTime" as const, label: "All-time" }
+                    ]).map((p) => (
+                        <button
+                            key={p.key}
+                            onClick={() => setPeriod(p.key)}
+                            className={classNames("px-3 py-1.5 text-xs rounded-lg focus:outline-none focus-visible:ring-2 ring-indigo-500", period === p.key ? "bg-white shadow text-gray-900" : "text-gray-600")}
+                            aria-pressed={period === p.key}
+                        >
+                            {p.label}
+                        </button>
+                    ))}
+                </div>
+            </div>
+            <div className="relative max-h-80 overflow-auto pr-1">
+                <ul className="divide-y">
+                    {leaderboardData.map((row) => (
+                        <li key={row.rank} className="py-2 flex items-center justify-between text-sm">
+                            <div className="flex items-center gap-3">
+                                <span className="w-6 text-gray-500">{row.rank}</span>
+                                <span className={classNames("font-medium", row.isMe && "text-indigo-700")}>{row.name}</span>
+                            </div>
+                            <span className="font-semibold text-gray-900">{row.percentage}%</span>
+                        </li>
+                    ))}
+                </ul>
+                {/* Sticky my row */}
+                {me && (
+                    <div className="sticky bottom-0 -mb-4">
+                        <div className="mt-2 rounded-xl bg-gradient-to-r from-indigo-50 to-violet-50 p-2 ring-1 ring-indigo-200 shadow">
+                            <div className="flex items-center justify-between text-sm">
+                                <div className="flex items-center gap-3">
+                                    <span className="w-6 text-gray-600">{me.rank}</span>
+                                    <span className="font-semibold text-indigo-700">You</span>
+                                </div>
+                                <span className="font-semibold text-indigo-700">{me.percentage}%</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
 /********************
  * Screens
  ********************/
@@ -736,20 +1170,18 @@ function Home({ activeTab, setActiveTab }: HomeProps) {
         return () => clearTimeout(t);
     }, []);
 
-    const incompleteCount = assessments.filter((a) => !a.completed).length;
+    const incompleteAssessments = assessments.filter((a) => !a.completed).length;
+    const openSurveys = surveys.filter((s) => s.status === "Open").length;
     const tabs = [
-        { key: "all", label: "All" },
-        { key: "assessments", label: `Assessments(${incompleteCount})` },
-        { key: "surveys", label: "Surveys" },
+        { key: "courses", label: "Courses" },
+        { key: "assessments-surveys", label: `Assessments & Surveys (${incompleteAssessments + openSurveys})` },
     ];
 
     return (
         <div>
             <TabsBar tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
-            <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-                {activeTab === 1 && <ViewMyReportsCTA />}
-
+            <main className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8 pt-3 sm:pt-4 pb-8">
                 {/* Lists */}
                 {loading ? (
                     <SkeletonList />
@@ -757,58 +1189,41 @@ function Home({ activeTab, setActiveTab }: HomeProps) {
                     <AnimatePresence mode="wait">
                         {activeTab === 0 && (
                             <motion.div
-                                key="all"
+                                key="courses"
                                 variants={fadeSlide}
                                 initial="hidden"
                                 animate="visible"
                                 exit={{ opacity: 0 }}
-                                className="grid gap-4 md:grid-cols-2"
                                 aria-live="polite"
                             >
-                                <section aria-labelledby="assessments-heading" className="space-y-3">
-                                    <h3 id="assessments-heading" className="text-sm font-semibold text-gray-700">Assessments</h3>
-                                    {assessments.map((a) => (
-                                        <AssessmentCard key={a.id} item={a} />
-                                    ))}
-                                </section>
-                                <section aria-labelledby="surveys-heading" className="space-y-3">
-                                    <h3 id="surveys-heading" className="text-sm font-semibold text-gray-700">Surveys</h3>
-                                    {surveys.map((s) => (
-                                        <SurveyCard key={s.id} item={s} />
-                                    ))}
-                                </section>
+                                <CoursesList />
                             </motion.div>
                         )}
 
                         {activeTab === 1 && (
                             <motion.div
-                                key="assessments"
+                                key="assessments-surveys"
                                 variants={fadeSlide}
                                 initial="hidden"
                                 animate="visible"
                                 exit={{ opacity: 0 }}
-                                className="grid gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3"
+                                className="grid gap-3 sm:gap-4 lg:grid-cols-2"
+                                aria-live="polite"
                             >
-                                {assessments.map((a) => (
-                                    <AssessmentCard key={a.id} item={a} />
-                                ))}
-                            </motion.div>
-                        )}
-
-                        {activeTab === 2 && (
-                            <motion.div
-                                key="surveys"
-                                variants={fadeSlide}
-                                initial="hidden"
-                                animate="visible"
-                                exit={{ opacity: 0 }}
-                                className="grid gap-3 sm:gap-4 md:grid-cols-2"
-                            >
-                                {surveys.length === 0 ? (
-                                    <EmptyState title="No surveys right now" subtitle="Check back later." />
-                                ) : (
-                                    surveys.map((s) => <SurveyCard key={s.id} item={s} />)
-                                )}
+                                <section aria-labelledby="all-assessments-heading" className="space-y-2 sm:space-y-3">
+                                    <h3 id="all-assessments-heading" className="text-xs sm:text-sm font-semibold text-gray-700">Assessments</h3>
+                                    {assessments.map((a) => (
+                                        <AssessmentCard key={a.id} item={a} />
+                                    ))}
+                                </section>
+                                <section aria-labelledby="all-surveys-heading" className="space-y-2 sm:space-y-3">
+                                    <h3 id="all-surveys-heading" className="text-xs sm:text-sm font-semibold text-gray-700">Surveys</h3>
+                                    {surveys.length === 0 ? (
+                                        <EmptyState title="No surveys right now" subtitle="Check back later." />
+                                    ) : (
+                                        surveys.map((s) => <SurveyCard key={s.id} item={s} />)
+                                    )}
+                                </section>
                             </motion.div>
                         )}
                     </AnimatePresence>
@@ -826,29 +1241,29 @@ function AssessmentResult() {
 
     return (
         <div>
-            <div className="sticky top-16 z-30 bg-white shadow-sm">
-                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+            <div className="sticky top-14 sm:top-16 z-30 bg-white shadow-sm">
+                <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8 h-12 sm:h-14 flex items-center justify-between">
                     <button
                         onClick={() => navigate(-1)}
-                        className="p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                        className="p-1.5 sm:p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                         aria-label="Go back"
                     >
-                        <ArrowLeft className="w-5 h-5" />
+                        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
-                    <div className="text-sm font-semibold text-gray-900">Assessment Result</div>
+                    <div className="text-xs sm:text-sm font-semibold text-gray-900">Assessment Result</div>
                     <button
                         onClick={() => navigate("/reports")}
-                        className="p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                        className="p-1.5 sm:p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                         aria-label="Open overall reports"
                         title="My Reports"
                     >
-                        <FileBarChart2 className="w-5 h-5" />
+                        <FileBarChart2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                 </div>
                 {/* inner tabs */}
                 <div className="border-t">
-                    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                        <div role="tablist" aria-label="Result tabs" className="flex gap-2 py-2">
+                    <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8">
+                        <div role="tablist" aria-label="Result tabs" className="flex gap-1 sm:gap-2 py-1.5 sm:py-2">
                             {[
                                 { key: "summary", label: "Result Summary" },
                                 { key: "review", label: "Review Questions" },
@@ -863,7 +1278,7 @@ function AssessmentResult() {
                                         tabIndex={selected ? 0 : -1}
                                         onClick={() => setInnerTab(i)}
                                         className={classNames(
-                                            "relative px-3 py-1.5 rounded-lg text-sm focus:outline-none focus-visible:ring-2 ring-indigo-500",
+                                            "relative px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm focus:outline-none focus-visible:ring-2 ring-indigo-500",
                                             selected ? "bg-indigo-50 text-indigo-700" : "text-gray-600 hover:bg-gray-100"
                                         )}
                                     >
@@ -876,12 +1291,12 @@ function AssessmentResult() {
                 </div>
             </div>
 
-            <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-4 pb-8">
+            <main className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8 pt-3 sm:pt-4 pb-8">
                 <AnimatePresence mode="wait">
                     {innerTab === 0 ? (
                         <motion.section key="summary" variants={fadeSlide} initial="hidden" animate="visible" exit={{ opacity: 0 }}>
                             {/* KPI grid */}
-                            <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+                            <div className="grid gap-2 sm:gap-3 lg:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
                                 <KpiCard label="Total Questions" value={a.totalQuestions} />
                                 <KpiCard label="Total Time Available" value={`${a.totalTimeMinutes} min`} />
                                 <KpiCard label="Marks" value={a.maxMarks} />
@@ -890,7 +1305,7 @@ function AssessmentResult() {
                             </div>
 
                             {/* Attempt breakdown */}
-                            <div className="mt-4 grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
+                            <div className="mt-3 sm:mt-4 grid gap-2 sm:gap-3 lg:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-5">
                                 <KpiCard label="Attempted" value={a.attemptBreakdown?.attempted ?? 0} />
                                 <KpiCard label="Correct" value={a.attemptBreakdown?.correct ?? 0} />
                                 <KpiCard label="Partial" value={a.attemptBreakdown?.partial ?? 0} />
@@ -899,14 +1314,14 @@ function AssessmentResult() {
                             </div>
 
                             {/* Marks summary */}
-                            <div className="mt-4 grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
+                            <div className="mt-3 sm:mt-4 grid gap-2 sm:gap-3 lg:gap-4 grid-cols-1 sm:grid-cols-3">
                                 <KpiCard label="Total Gained Marks" value={a.marksSummary?.gained ?? 0} />
                                 <KpiCard label="Negative Marks Lost" value={a.marksSummary?.negative ?? 0} />
                                 <KpiCard label="Grand Total Marks" value={a.marksSummary?.grandTotal ?? 0} />
                             </div>
 
                             {/* Charts */}
-                            <div className="mt-4 grid gap-3 sm:gap-4 grid-cols-1 lg:grid-cols-3">
+                            <div className="mt-3 sm:mt-4 grid gap-2 sm:gap-3 lg:gap-4 grid-cols-1 lg:grid-cols-3">
                                 <motion.div variants={fadeSlide} initial="hidden" animate="visible">
                                     <BreakdownDonut breakdown={a.attemptBreakdown} />
                                 </motion.div>
@@ -939,32 +1354,32 @@ function Reports() {
 
     return (
         <div>
-            <div className="sticky top-16 z-30 bg-white shadow-sm">
-                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-3">
+            <div className="sticky top-14 sm:top-16 z-30 bg-white shadow-sm">
+                <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8 h-12 sm:h-14 flex items-center gap-3">
                     <button
                         onClick={() => navigate(-1)}
-                        className="p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                        className="p-1.5 sm:p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
                         aria-label="Go back"
                     >
-                        <ArrowLeft className="w-5 h-5" />
+                        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
-                    <h2 className="text-sm font-semibold text-gray-900">My Reports</h2>
+                    <h2 className="text-xs sm:text-sm font-semibold text-gray-900">My Reports</h2>
                 </div>
             </div>
 
-            <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-4 pb-8">
-                <div className="grid gap-4 lg:grid-cols-3">
-                    <div className="space-y-4 lg:col-span-2">
+            <main className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8 pt-3 sm:pt-4 pb-8">
+                <div className="grid gap-3 sm:gap-4 lg:grid-cols-3">
+                    <div className="space-y-3 sm:space-y-4 lg:col-span-2">
                         {/* Averages + My Rank */}
-                        <div className="grid gap-3 sm:grid-cols-2">
+                        <div className="grid gap-2 sm:gap-3 grid-cols-1 sm:grid-cols-2">
                             <KpiCard label="Overall Average" value={`${average}%`} sub={`${completed.length} assessments`} />
-                            <motion.div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-black/5" variants={fadeSlide} initial="hidden" animate="visible">
-                                <div className="text-sm text-gray-500">Current Leader / My Rank</div>
+                            <motion.div className="rounded-2xl bg-white p-3 sm:p-4 shadow-sm ring-1 ring-black/5" variants={fadeSlide} initial="hidden" animate="visible">
+                                <div className="text-xs sm:text-sm text-gray-500">Current Leader / My Rank</div>
                                 <div className="mt-1 flex items-end justify-between">
-                                    <div className="text-2xl font-semibold text-gray-900">#{myRow.rank}</div>
+                                    <div className="text-xl sm:text-2xl font-semibold text-gray-900">#{myRow.rank}</div>
                                     <div className="text-sm text-gray-600">{myRow.percentage}%</div>
                                 </div>
-                                <div className="mt-3 h-2 rounded-full bg-gray-100 overflow-hidden">
+                                <div className="mt-2 sm:mt-3 h-2 rounded-full bg-gray-100 overflow-hidden">
                                     <div className="h-full bg-gradient-to-r from-indigo-500 to-violet-500" style={{ width: `${100 - (myRow.rank - 1) * 5}%` }} />
                                 </div>
                             </motion.div>
@@ -973,10 +1388,123 @@ function Reports() {
                         <LeaderboardList />
                     </div>
 
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                         <CategoryStrengthList />
+                        <TopicWiseList />
                     </div>
                 </div>
+            </main>
+        </div>
+    );
+}
+
+function CourseDetails() {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const course = courses.find((c) => c.id === id) || courses[0];
+    const report = courseReports.find((r) => r.courseId === course.id) || courseReports[0];
+    const [innerTab, setInnerTab] = useState(0);
+    
+    const courseAssessments = assessments.filter((a) => a.courseId === course.id);
+    const courseSurveys = surveys.filter((s) => s.courseId === course.id);
+    const myRank = report.leaderboard.weekly.find((r) => r.isMe)?.rank || 1;
+
+    return (
+        <div>
+            <div className="sticky top-14 sm:top-16 z-30 bg-white shadow-sm">
+                <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8 h-12 sm:h-14 flex items-center justify-between">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="p-1.5 sm:p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                        aria-label="Go back"
+                    >
+                        <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </button>
+                    <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate px-2">{course.name}</div>
+                    <button
+                        onClick={() => navigate("/reports")}
+                        className="p-1.5 sm:p-2 rounded-xl hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                        aria-label="Open overall reports"
+                        title="My Reports"
+                    >
+                        <FileBarChart2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                    </button>
+                </div>
+                {/* inner tabs */}
+                <div className="border-t">
+                    <div className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8">
+                        <div role="tablist" aria-label="Course tabs" className="flex gap-1 sm:gap-2 py-1.5 sm:py-2">
+                            {[
+                                { key: "content", label: "Content" },
+                                { key: "reports", label: "Reports" },
+                            ].map((t, i) => {
+                                const selected = innerTab === i;
+                                return (
+                                    <button
+                                        key={t.key}
+                                        role="tab"
+                                        aria-selected={selected}
+                                        aria-controls={`inner-${t.key}`}
+                                        tabIndex={selected ? 0 : -1}
+                                        onClick={() => setInnerTab(i)}
+                                        className={classNames(
+                                            "relative px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs sm:text-sm focus:outline-none focus-visible:ring-2 ring-indigo-500",
+                                            selected ? "bg-indigo-50 text-indigo-700" : "text-gray-600 hover:bg-gray-100"
+                                        )}
+                                    >
+                                        {t.label}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <main className="mx-auto max-w-6xl px-3 sm:px-4 lg:px-8 pt-3 sm:pt-4 pb-8">
+                <AnimatePresence mode="wait">
+                    {innerTab === 0 ? (
+                        <motion.section key="content" variants={fadeSlide} initial="hidden" animate="visible" exit={{ opacity: 0 }}>
+                            <div className="grid gap-3 sm:gap-4 lg:grid-cols-2">
+                                <section aria-labelledby="course-assessments-heading" className="space-y-2 sm:space-y-3">
+                                    <h3 id="course-assessments-heading" className="text-xs sm:text-sm font-semibold text-gray-700">Assessments</h3>
+                                    {courseAssessments.length === 0 ? (
+                                        <EmptyState title="No assessments yet" subtitle="Check back later for new assessments." />
+                                    ) : (
+                                        courseAssessments.map((a) => (
+                                            <AssessmentCard key={a.id} item={a} />
+                                        ))
+                                    )}
+                                </section>
+                                <section aria-labelledby="course-surveys-heading" className="space-y-2 sm:space-y-3">
+                                    <h3 id="course-surveys-heading" className="text-xs sm:text-sm font-semibold text-gray-700">Surveys</h3>
+                                    {courseSurveys.length === 0 ? (
+                                        <EmptyState title="No surveys yet" subtitle="Check back later for new surveys." />
+                                    ) : (
+                                        courseSurveys.map((s) => (
+                                            <SurveyCard key={s.id} item={s} />
+                                        ))
+                                    )}
+                                </section>
+                            </div>
+                        </motion.section>
+                    ) : (
+                        <motion.section key="reports" variants={fadeSlide} initial="hidden" animate="visible" exit={{ opacity: 0 }}>
+                            {/* Course KPIs */}
+                            <div className="grid gap-2 sm:gap-3 lg:gap-4 grid-cols-1 sm:grid-cols-3 mb-3 sm:mb-4">
+                                <KpiCard label="Course Average" value={`${report.averagePercent}%`} />
+                                <KpiCard label="Course Topper" value={report.topper.name} sub={`${report.topper.percentage}%`} />
+                                <KpiCard label="My Rank" value={`#${myRank}`} sub={`${report.leaderboard.weekly.find((r) => r.isMe)?.percentage || 0}%`} />
+                            </div>
+                            
+                            {/* Topic-wise Chart and Course Leaderboard */}
+                            <div className="grid gap-3 sm:gap-4 lg:grid-cols-2 mb-3 sm:mb-4">
+                                <TopicWiseChart courseId={course.id} />
+                                <CourseLeaderboard report={report} />
+                            </div>
+                        </motion.section>
+                    )}
+                </AnimatePresence>
             </main>
         </div>
     );
@@ -1017,7 +1545,7 @@ function SkeletonList() {
 /********************
  * Root App
  ********************/
-export default function App() {
+export default function ReportsApp() {
     const [activeTab, setActiveTab] = useSessionStorage("activeTab", 0);
     const location = useLocation();
 
@@ -1041,6 +1569,7 @@ export default function App() {
                 <Routes location={location} key={location.pathname}>
                     <Route path="/" element={<Home activeTab={activeTab} setActiveTab={setActiveTab} />} />
                     <Route path="/assessment/:id" element={<AssessmentResult />} />
+                    <Route path="/course/:id" element={<CourseDetails />} />
                     <Route path="/reports" element={<Reports />} />
                     <Route path="*" element={<Home activeTab={activeTab} setActiveTab={setActiveTab} />} />
                 </Routes>
@@ -1049,9 +1578,3 @@ export default function App() {
     );
 }
 
-/********************
- * Preview Wrapper for the canvas
- ********************/
-export const Preview = () => (
-    <App />
-);

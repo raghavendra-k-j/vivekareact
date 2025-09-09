@@ -9,6 +9,7 @@ import { ServiceURL } from "./infra/datasources/ServiceURL";
 import { AppUrl } from "./infra/utils/AppUrl";
 import MainRouter from "./MainRouter";
 import { DialogManagerProvider } from "./ui/widgets/dialogmanager";
+// import ReportsApp from "./ui/pages/main/test/ReportsApp";
 
 async function bootstrap() {
   const baseEnv = await BaseEnv.loadFromFile();
