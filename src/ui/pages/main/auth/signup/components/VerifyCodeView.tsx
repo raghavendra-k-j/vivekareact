@@ -1,8 +1,8 @@
+import { Observer } from "mobx-react-lite";
+import { AuthCard, AuthFooter, AuthFormContainer, AuthHeader } from "~/ui/components/auth/AuthCard";
 import { Button } from "~/ui/widgets/button/Button";
 import { FTextField } from "~/ui/widgets/form/TextField";
-import { AuthCard, AuthFooter, AuthFormContainer, AuthHeader } from "../../common/AuthCard";
 import { useSignUpPageStore } from "../SignUpPageContext";
-import { Observer } from "mobx-react-lite";
 
 export function SignUpVerifyCodeView() {
     const store = useSignUpPageStore();

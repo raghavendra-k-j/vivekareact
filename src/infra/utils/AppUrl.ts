@@ -1,5 +1,5 @@
 export class AppUrl {
-    
+
     private static instance: AppUrl;
     private readonly baseUrl: string;
 
@@ -51,5 +51,10 @@ export class AppUrl {
         const basePath = new URL(this.getBaseUrl()).pathname;
         return pathname === basePath || pathname === `${basePath}/`;
     }
+
+    static get home() {
+        return this.getBaseUrl() + "/";
+    }
+
 
 }

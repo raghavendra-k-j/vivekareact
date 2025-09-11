@@ -2,13 +2,13 @@ import { Observer } from "mobx-react-lite";
 import { Button } from "~/ui/widgets/button/Button";
 import { FSelectField } from "~/ui/widgets/form/SelectField";
 import { FTextField } from "~/ui/widgets/form/TextField";
-import { AuthCard, AuthFooter, AuthFormContainer, AuthHeader } from "../../common/AuthCard";
 import { useSignUpPageStore } from "../SignUpPageContext";
 import { BaseEnv } from "~/core/config/BaseEnv";
 import { Input } from "~/ui/widgets/form/Input";
 import { InputLabel } from "~/ui/widgets/form/InputLabel";
 import { ReqMark } from "~/ui/widgets/form/ReqMark";
 import { InputError } from "~/ui/widgets/form/InputError";
+import { AuthCard, AuthHeader, AuthFormContainer, AuthFooter } from "~/ui/components/auth/AuthCard";
 
 export function SignUpFinishSetupView() {
   const store = useSignUpPageStore();

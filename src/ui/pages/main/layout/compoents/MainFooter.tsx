@@ -4,6 +4,7 @@ import { BaseNamedLogo } from "~/ui/components/logo/BaseLogo";
 import { BaseEnv } from "~/core/config/BaseEnv";
 import { openTawkToChat } from "~/infra/tawkto/types";
 import { AppUrl } from "~/infra/utils/AppUrl";
+import { ParentCompanyFooterLogo } from "~/ui/components/logo/SentiaFooterLogo";
 
 export function Footer() {
     const year = new Date().getFullYear();
@@ -130,31 +131,9 @@ function FooterBottom({ year }: { year: number }) {
                 <span>© {year} {BaseEnv.instance.productName} · All rights reserved.</span>
                 <span className="inline-flex items-center gap-2">
                     <span>Designed & developed by</span>
-                    <SentiaCareLogo />
+                    <ParentCompanyFooterLogo />
                 </span>
             </div>
         </div>
-    );
-}
-
-function SentiaCareLogo() {
-    return (
-        <a
-            href={BaseEnv.instance.parentCompanyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Visit Sensiacare Website"
-            title="Sentiacare"
-            className="inline-flex items-center"
-        >
-            <span className="inline-flex items-center rounded-full bg-white">
-                <img
-                    src={BaseEnv.instance.parentCompanyLogoUrl}
-                    alt={`${BaseEnv.instance.parentCompanyName} Logo`}
-                    className="h-8 w-auto object-contain"
-                    loading="lazy"
-                />
-            </span>
-        </a>
     );
 }

@@ -7,8 +7,8 @@ import { MobileField } from "~/ui/widgets/form/MobileField";
 import { PasswordField } from "~/ui/widgets/form/PasswordField";
 import { PasswordOkView } from "~/ui/widgets/form/PasswordOkView";
 import { FTextField } from "~/ui/widgets/form/TextField";
-import { AuthCard, AuthFooter, AuthFormContainer, AuthHeader } from "../../common/AuthCard";
 import { useSignUpPageStore } from "../SignUpPageContext";
+import { AuthCard, AuthHeader, AuthFormContainer, AuthFooter } from "~/ui/components/auth/AuthCard";
 
 export function SignUpInitView() {
     const store = useSignUpPageStore();

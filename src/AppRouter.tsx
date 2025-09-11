@@ -7,7 +7,14 @@ import NotFoundPage from "./ui/pages/error/NotFoundPage";
 
 
 const UserPortalLayout = lazy(() => import("./ui/pages/portallayout/UserPortalLayout"));
+
+const AuthLoginPage = lazy(() => import("./ui/pages/auth/login/LoginPage"));
+const AuthSignUpPage = lazy(() => import("./ui/pages/auth/signup/SignUpPage"));
+const AuthResetPasswordPage = lazy(() => import("./ui/pages/auth/reset/ResetPasswordPage"));
+const AuthForgotPage = lazy(() => import("./ui/pages/auth/forgot/ForgotPage"));
 const AdminPortalLayout = lazy(() => import("./ui/pages/portallayout/AdminPortalLayout"));
+
+
 const AppLayout = lazy(() => import("./ui/pages/_layout/AppLayout"));
 const AdminFormsLayout = lazy(() => import("./ui/pages/admin/forms/formdetail/layout/AdminFormLayout"));
 const HomePage = lazy(() => import("./ui/pages/home/HomePage"));
@@ -65,6 +72,12 @@ export default function AppRouter() {
                     <Route path="/token-login" element={<TokenLoginPage />} />
                     <Route path="/auto-login" element={<AutoLoginPage />} />
                     <Route path="/question-paper-generator" element={<QPGenPage />} />
+                    <Route path="/auth">
+                        <Route path="login" element={<AuthLoginPage />} />
+                        <Route path="signup" element={<AuthSignUpPage />} />
+                        <Route path="reset" element={<AuthResetPasswordPage />} />
+                        <Route path="forgot" element={<AuthForgotPage />} />
+                    </Route>
                 </Route>
 
                 <Route element={<AppLayout softLogin={true} />}>
