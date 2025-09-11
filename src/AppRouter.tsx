@@ -13,7 +13,9 @@ const AuthSignUpPage = lazy(() => import("./ui/pages/auth/signup/SignUpPage"));
 const AuthResetPasswordPage = lazy(() => import("./ui/pages/auth/reset/ResetPasswordPage"));
 const AuthForgotPage = lazy(() => import("./ui/pages/auth/forgot/ForgotPage"));
 const AdminPortalLayout = lazy(() => import("./ui/pages/portallayout/AdminPortalLayout"));
-
+const AdminUsersPage = lazy(() => import("./ui/pages/admin/users/userslist/UsersPage"));
+const AdminRolesPage = lazy(() => import("./ui/pages/admin/users/roles/RolesPage"));
+const AdminImportUsersPage = lazy(() => import("./ui/pages/admin/users/import/ImportPage"));
 
 const AppLayout = lazy(() => import("./ui/pages/_layout/AppLayout"));
 const AdminFormsLayout = lazy(() => import("./ui/pages/admin/forms/formdetail/layout/AdminFormLayout"));
@@ -65,6 +67,44 @@ export default function AppRouter() {
                         </Route>
                     </Route>
 
+                    {/* Admin Layout */}
+                    <Route path="/console" element={<AdminPortalLayout />}>
+                        <Route path="forms">
+                            <Route index element={<div>All Forms</div>} />
+                            <Route path="categories" element={<div>Categories</div>} />
+                            <Route path=":permalink">
+                                <Route path="questions" element={<div>Sigle Form Details</div>} />
+                                <Route path="settings">
+                                    <Route path="general" element={<div>General Settings</div>} />
+                                    <Route path="translations" element={<div>Translations Settings</div>} />
+                                </Route>
+                                <Route path="sharing">
+                                    <Route path="invite" element={<div>Invite</div>} />
+                                    <Route path="link" element={<div>Public Link</div>} />
+                                    <Route path="notifications" element={<div>Notifications</div>} />
+                                </Route>
+                                <Route path="responses" element={<div>Responses</div>} />
+                                <Route path="compare-results" element={<div>Compare Results</div>} />
+                                <Route path="reports" element={<div>Reports</div>} />
+                            </Route>
+                        </Route>
+                        <Route path="spaces">
+                            <Route index element={<div>Spaces</div>} />
+                            <Route path=":id">
+                                <Route path="content" element={<div>Content</div>} />
+                                <Route path="members" element={<div>Members</div>} />
+                                <Route path="reports" element={<div>Reports</div>} />
+                                <Route path="settings" element={<div>Settings</div>} />
+                            </Route>
+                        </Route>
+                        <Route path="users" element={<AdminUsersPage />} />
+                        <Route path="roles" element={<AdminRolesPage />} />
+                        <Route path="import-users" element={<AdminImportUsersPage />} />
+                        <Route path="org-settings">
+                            <Route path="general" element={<div>Org Settings</div>} />
+                            <Route path="terminologies" element={<div>Terminologies</div>} />
+                        </Route>
+                    </Route>
                 </Route>
 
                 {/* Token login wrapped with AppLayout and softLogin = false */}

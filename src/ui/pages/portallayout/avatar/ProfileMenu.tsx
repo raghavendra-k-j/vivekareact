@@ -26,22 +26,27 @@ function MenuItem({ children, onClick, colorClass = "text-default", hoverBg = "h
         </button>
     );
 }
-export const AppBarProfileMenu = () => {
+
+
+export type ProfileMenuProps = {
+    children: React.ReactNode;
+}
+
+export const ProfileMenu = ({ children }: ProfileMenuProps) => {
     const user = {
         id: 1,
         name: "John Doe",
         email: "16102000.rghu@gmail.com",
         role: "Admin"
     };
-
     return (
         <RadixPopover.Root>
             <RadixPopover.Trigger>
-                <UserAvatar id={user.id} name={user.name} />
+                {children}
             </RadixPopover.Trigger>
             <RadixPopover.Portal>
                 <RadixPopover.Content className="bg-surface shadow-xl border border-default rounded-md m-2">
-                    <UserDetails user={user} />
+                    <ProfileMenuUserDetails user={user} />
                     <MenuItems>
                         <MenuItem onClick={() => { }}>
                             Change Password
@@ -58,7 +63,7 @@ export const AppBarProfileMenu = () => {
 
 
 
-function UserDetails({ user }: { user: { id: number, name: string, email: string, role: string } }) {
+function ProfileMenuUserDetails({ user }: { user: { id: number, name: string, email: string, role: string } }) {
     return (
         <div className="border-b border-default">
             <div className="p-4">

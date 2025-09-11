@@ -4,6 +4,7 @@ export type OrgUsageDetailProps = {
     orgId: number;
     usersCount: number;
 
+    formsCount: number;
     formsAiGenPlanUnitsRemaining: number;
     formsAiGenAddonUnitsRemaining: number;
 
@@ -12,6 +13,8 @@ export type OrgUsageDetailProps = {
 
     formsAiEvaluationPlanUnitsRemaining: number;
     formsAiEvaluationAddonUnitsRemaining: number;
+
+    spacesCount: number;
 
     summarizerSummariesPlanRemaining: number;
     summarizerSummariesAddonRemaining: number;
@@ -23,6 +26,7 @@ export class OrgUsageDetail {
     readonly orgId: number;
     readonly usersCount: number;
 
+    readonly formsCount: number;
     readonly formsAiGenPlanUnitsRemaining: number;
     readonly formsAiGenAddonUnitsRemaining: number;
 
@@ -31,6 +35,8 @@ export class OrgUsageDetail {
 
     readonly formsAiEvaluationPlanUnitsRemaining: number;
     readonly formsAiEvaluationAddonUnitsRemaining: number;
+
+    readonly spacesCount: number;
 
     readonly summarizerSummariesPlanRemaining: number;
     readonly summarizerSummariesAddonRemaining: number;
@@ -41,6 +47,7 @@ export class OrgUsageDetail {
         this.orgId = props.orgId;
         this.usersCount = props.usersCount;
 
+        this.formsCount = props.formsCount;
         this.formsAiGenPlanUnitsRemaining = props.formsAiGenPlanUnitsRemaining;
         this.formsAiGenAddonUnitsRemaining = props.formsAiGenAddonUnitsRemaining;
 
@@ -49,6 +56,8 @@ export class OrgUsageDetail {
 
         this.formsAiEvaluationPlanUnitsRemaining = props.formsAiEvaluationPlanUnitsRemaining;
         this.formsAiEvaluationAddonUnitsRemaining = props.formsAiEvaluationAddonUnitsRemaining;
+
+        this.spacesCount = props.spacesCount;
 
         this.summarizerSummariesPlanRemaining = props.summarizerSummariesPlanRemaining;
         this.summarizerSummariesAddonRemaining = props.summarizerSummariesAddonRemaining;
@@ -77,6 +86,7 @@ export class OrgUsageDetail {
             orgId: json.orgId,
             usersCount: json.usersCount,
 
+            formsCount: json.formsCount,
             formsAiGenPlanUnitsRemaining: json.formsAiGenPlanUnitsRemaining ?? 0,
             formsAiGenAddonUnitsRemaining: json.formsAiGenAddonUnitsRemaining ?? 0,
 
@@ -85,6 +95,8 @@ export class OrgUsageDetail {
 
             formsAiEvaluationPlanUnitsRemaining: json.formsAiEvaluationPlanUnitsRemaining ?? 0,
             formsAiEvaluationAddonUnitsRemaining: json.formsAiEvaluationAddonUnitsRemaining ?? 0,
+
+            spacesCount: json.spacesCount,
 
             summarizerSummariesPlanRemaining: json.summarizerSummariesPlanRemaining ?? 0,
             summarizerSummariesAddonRemaining: json.summarizerSummariesAddonRemaining ?? 0,

@@ -11,9 +11,11 @@ export type PlanDetailProps = {
     billingInterval: BillingInterval;
     intervalCount: number;
 
-    usersLimit: number;
     creditsCarryOver: boolean;
 
+    usersLimit: number;
+
+    formsLimit: number;
     formsAiGenUnits: number;
     formsAiTransUnits: number;
     formsAiEvaluationUnits: number;
@@ -26,6 +28,12 @@ export type PlanDetailProps = {
     formsAiMaxQuestions: number;
     formsAiEqnAdminEnabled: boolean;
     formsAiEqnUserEnabled: boolean;
+
+    spacesFeatureEnabled: boolean;
+    spacesLimit: number;
+    spacesMaxMembersPerSpace: number;
+    spacesMaxTopicsPerSpace: number;
+    spacesMaxFormsPerSpace: number;
 
     summarizerSummaries: number;
     summarizerMaxFileSize: number;
@@ -46,9 +54,10 @@ export class PlanDetail {
     readonly billingInterval: BillingInterval;
     readonly intervalCount: number;
 
-    readonly usersLimit: number;
     readonly creditsCarryOver: boolean;
+    readonly usersLimit: number;
 
+    readonly formsLimit: number;
     readonly formsAiGenUnits: number;
     readonly formsAiTransUnits: number;
     readonly formsAiEvaluationUnits: number;
@@ -61,6 +70,12 @@ export class PlanDetail {
     readonly formsAiMaxQuestions: number;
     readonly formsAiEqnAdminEnabled: boolean;
     readonly formsAiEqnUserEnabled: boolean;
+
+    readonly spacesFeatureEnabled: boolean;
+    readonly spacesLimit: number;
+    readonly spacesMaxMembersPerSpace: number;
+    readonly spacesMaxTopicsPerSpace: number;
+    readonly spacesMaxFormsPerSpace: number;
 
     readonly summarizerSummaries: number;
     readonly summarizerMaxFileSize: number;
@@ -80,9 +95,11 @@ export class PlanDetail {
         this.billingInterval = props.billingInterval;
         this.intervalCount = props.intervalCount;
 
-        this.usersLimit = props.usersLimit;
         this.creditsCarryOver = props.creditsCarryOver;
 
+        this.usersLimit = props.usersLimit;
+
+        this.formsLimit = props.formsLimit;
         this.formsAiGenUnits = props.formsAiGenUnits;
         this.formsAiTransUnits = props.formsAiTransUnits;
         this.formsAiEvaluationUnits = props.formsAiEvaluationUnits;
@@ -95,6 +112,12 @@ export class PlanDetail {
         this.formsAiMaxQuestions = props.formsAiMaxQuestions;
         this.formsAiEqnAdminEnabled = props.formsAiEqnAdminEnabled;
         this.formsAiEqnUserEnabled = props.formsAiEqnUserEnabled;
+
+        this.spacesFeatureEnabled = props.spacesFeatureEnabled;
+        this.spacesLimit = props.spacesLimit;
+        this.spacesMaxMembersPerSpace = props.spacesMaxMembersPerSpace;
+        this.spacesMaxTopicsPerSpace = props.spacesMaxTopicsPerSpace;
+        this.spacesMaxFormsPerSpace = props.spacesMaxFormsPerSpace;
 
         this.summarizerSummaries = props.summarizerSummaries;
         this.summarizerMaxFileSize = props.summarizerMaxFileSize;
@@ -116,12 +139,15 @@ export class PlanDetail {
             billingInterval: BillingInterval.fromValue(json.billingInterval),
             intervalCount: json.intervalCount,
 
-            usersLimit: json.usersLimit,
             creditsCarryOver: json.creditsCarryOver,
 
+            usersLimit: json.usersLimit,
+
+            formsLimit: json.formsLimit,
             formsAiGenUnits: json.formsAiGenUnits,
             formsAiTransUnits: json.formsAiTransUnits,
             formsAiEvaluationUnits: json.formsAiEvaluationUnits,
+
 
             formsAiGenMaxFileSize: json.formsAiGenMaxFileSize,
             formsImageMaxFileSize: json.formsImageMaxFileSize,
@@ -131,6 +157,12 @@ export class PlanDetail {
             formsAiMaxQuestions: json.formsAiMaxQuestions,
             formsAiEqnAdminEnabled: json.formsAiEqnAdminEnabled,
             formsAiEqnUserEnabled: json.formsAiEqnUserEnabled,
+
+            spacesFeatureEnabled: json.spacesFeatureEnabled,
+            spacesLimit: json.spacesLimit,
+            spacesMaxMembersPerSpace: json.spacesMaxMembersPerSpace,
+            spacesMaxTopicsPerSpace: json.spacesMaxTopicsPerSpace,
+            spacesMaxFormsPerSpace: json.spacesMaxFormsPerSpace,
 
             summarizerSummaries: json.summarizerSummaries,
             summarizerMaxFileSize: json.summarizerMaxFileSize,

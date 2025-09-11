@@ -1,4 +1,4 @@
-import { AppBarProfileMenu } from "../avatar/ProfileMenu";
+import { AppBarUserAvatar } from "../avatar/AppBarUserAvatar";
 import { NotificationBell } from "../notifications/NotificationBell";
 import { PortalAppBarLogo } from "./AppBarLogo";
 
@@ -10,7 +10,7 @@ export function UserAppBar() {
             </div>
             <div className="flex flex-row items-center gap-4">
                 <NotificationBell />
-                <AppBarProfileMenu />
+                <AppBarUserAvatar />
             </div>
         </header>
     );

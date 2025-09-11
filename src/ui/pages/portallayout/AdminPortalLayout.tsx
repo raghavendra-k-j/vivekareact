@@ -1,3 +1,10 @@
+import { Navigate, Outlet } from "react-router";
+import { useAppStore } from "../_layout/AppContext";
+
 export default function AdminPortalLayout() {
-    return (<div>Admin Portal Layout</div>);
+    const appStore = useAppStore();
+    if (appStore.hasAdminUser) {
+        return <Navigate to="/auth/login" replace />;
+    }
+    return (<Outlet />);
 }

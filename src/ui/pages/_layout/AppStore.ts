@@ -5,9 +5,13 @@ import { logger } from "~/core/utils/logger";
 import { BaseAuthRes } from "~/domain/auth/models/BaseAuthRes";
 import { AuthService } from "~/domain/auth/services/AuthService";
 import { AbsUser } from "~/domain/common/models/AbsUser";
+import { AppUserType } from "~/domain/common/models/AppUserType";
 import { AuthToken } from "~/domain/common/models/AuthToken";
+import { AuthUser } from "~/domain/common/models/AuthUser";
+import { NoAuthUser } from "~/domain/common/models/NoAuthUser";
 import type { OrgConfig } from "~/domain/common/models/OrgConfig";
 import { PlanAndUsage } from "~/domain/common/models/PlanAndUsage";
+import { UserBase } from "~/domain/common/models/UserBase";
 import { ConfigService } from "~/domain/common/services/ConfigService";
 import { addAuthInterceptor } from "~/infra/datasources/apiClientHelper";
 import type { BrowserInfo } from "~/infra/utils/deviceinfo/BrowserInfo";
@@ -34,7 +38,16 @@ export class AppStore {
     }
 
     get appUser(): AbsUser {
-        return this._appUser!;
+        // return this._appUser!;
+        return new NoAuthUser({
+            base: new UserBase({
+                id: 0,
+                name: "Guest",
+                email: "john@gmail.com",
+                mobile: null,
+                userName: "guest",
+            }),
+        });
     }
 
     get apiBaseUrl(): string {
@@ -44,6 +57,21 @@ export class AppStore {
     get hasUser(): boolean {
         return this._appUser !== null;
     }
+
+    get hasAdminUser(): boolean {
+        if (!this._appUser) {
+            return false;
+        }
+        if (!this._appUser.appUserType.isAuthUser) {
+            return false;
+        }
+        return this.authUser.role.isAdmin;
+    }
+
+    get authUser(): AuthUser {
+        return this.appUser as AuthUser;
+    }
+
 
     get optAppUser(): AbsUser | null {
         return this._appUser;
