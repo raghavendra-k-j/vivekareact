@@ -35,7 +35,7 @@ export const AvatarView = ({
     const colorClass = avatarClasses[id % avatarClasses.length];
     return (
         <div
-            className={clsx(styles.avatarLetter, colorClass, "text-white", className)}
+            className={clsx(styles.avatarLetter, colorClass, "text-white shrink-0", className)}
             style={fontSize ? { fontSize } : undefined}
         >
             {name?.charAt(0) ?? ""}

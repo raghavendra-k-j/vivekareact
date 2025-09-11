@@ -6,6 +6,8 @@ import AdminLayout from "./ui/pages/admin/_layout/AdminLayout";
 import NotFoundPage from "./ui/pages/error/NotFoundPage";
 
 
+const UserPortalLayout = lazy(() => import("./ui/pages/portallayout/UserPortalLayout"));
+const AdminPortalLayout = lazy(() => import("./ui/pages/portallayout/AdminPortalLayout"));
 const AppLayout = lazy(() => import("./ui/pages/_layout/AppLayout"));
 const AdminFormsLayout = lazy(() => import("./ui/pages/admin/forms/formdetail/layout/AdminFormLayout"));
 const HomePage = lazy(() => import("./ui/pages/home/HomePage"));
@@ -46,8 +48,8 @@ export default function AppRouter() {
 
 
                     {/* Admin Layout */}
-                    <Route path="/admin" element={<AdminLayout  />}>
-                        <Route path="forms/:permalink" element={<AdminFormsLayout  />}>
+                    <Route path="/admin" element={<AdminLayout />}>
+                        <Route path="forms/:permalink" element={<AdminFormsLayout />}>
                             <Route index element={<QuestionsPage />} />
                             <Route path="questions" element={<QuestionsPage />} />
                             <Route path="upsert-question" element={<UpsertQuestionPage />} />
@@ -60,10 +62,15 @@ export default function AppRouter() {
 
                 {/* Token login wrapped with AppLayout and softLogin = false */}
                 <Route element={<AppLayout softLogin={false} />}>
-                    <Route path="/" element={<HomePage />} />
                     <Route path="/token-login" element={<TokenLoginPage />} />
                     <Route path="/auto-login" element={<AutoLoginPage />} />
                     <Route path="/question-paper-generator" element={<QPGenPage />} />
+                </Route>
+
+                <Route element={<AppLayout softLogin={true} />}>
+                    <Route element={<UserPortalLayout />}>
+                        <Route path="/" element={<HomePage />} />
+                    </Route>
                 </Route>
 
 

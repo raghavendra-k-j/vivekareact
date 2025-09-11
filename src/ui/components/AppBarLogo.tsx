@@ -18,7 +18,7 @@ export default AppBarLogo;
 
 
 
-function PngLogo() {
+export function PngLogo() {
     return (
         <div className="h-[32px] max-h-[32px] flex items-center overflow-hidden">
             <LogoPng />
