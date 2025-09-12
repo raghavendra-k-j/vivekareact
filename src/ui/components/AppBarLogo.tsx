@@ -1,6 +1,6 @@
 import { ServiceURL } from "~/infra/datasources/ServiceURL";
-import { useAppStore } from "../pages/_layout/AppContext";
 import { BaseEnv } from "~/core/config/BaseEnv";
+import { useAppStore } from "../portal/layout/app/AppContext";
 
 function AppBarLogo() {
     return (<a href="/" onClick={(e) => e.preventDefault()}>

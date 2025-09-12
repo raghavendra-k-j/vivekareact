@@ -1,0 +1,151 @@
+.ig {
+    isolation: isolate;
+}
+
+.ig--attached>*+* {}
+
+.ig-addon {
+    --addon-px: var(--dimen-input-md-px);
+    --addon-py: var(--dimen-input-md-py);
+    --addon-font-size: var(--dimen-input-md-font-size);
+    --addon-min-height: var(--dimen-input-md-min-height);
+    --addon-radius: var(--dimen-input-radius);
+    display: inline-flex;
+    align-items: center;
+    padding: var(--addon-py) var(--addon-px);
+    font-size: var(--addon-font-size);
+    min-height: var(--addon-min-height);
+    border: 1px solid var(--color-input-border);
+    background-color: var(--color-input-bg);
+    color: var(--color-input-text);
+    border-radius: var(--addon-radius);
+    box-shadow: var(--shadow-input);
+    white-space: nowrap;
+}
+
+.ig-addon--md {
+    --addon-px: var(--dimen-input-md-px);
+    --addon-py: var(--dimen-input-md-py);
+    --addon-font-size: var(--dimen-input-md-font-size);
+    --addon-min-height: var(--dimen-input-md-min-height);
+}
+
+.ig-addon--sm {
+    --addon-px: var(--dimen-input-sm-px);
+    --addon-py: var(--dimen-input-sm-py);
+    --addon-font-size: var(--dimen-input-sm-font-size);
+    --addon-min-height: var(--dimen-input-sm-min-height);
+}
+
+.ig-addon.is-disabled {
+    background-color: var(--color-input-bg-disabled);
+    border-color: var(--color-input-border-disabled);
+    color: var(--color-input-text-disabled);
+    cursor: not-allowed;
+}
+
+.ig-addon.is-invalid {
+    border-color: var(--color-danger-500);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-500) 20%, transparent);
+}
+
+.ig-cut-l {
+    border-left-width: 0;
+}
+
+.ig>.ig-rounded-r-none {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.ig>.ig-rounded-l-none {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.ig>.ig-rounded-none {
+    border-radius: 0;
+}
+
+.ig>.input:focus,
+.ig>.select:focus,
+.ig>.ig-addon:focus {
+    position: relative;
+    z-index: 1;
+}
+
+.ig>.input.ig-cut-l:focus,
+.ig>.select.ig-cut-l:focus,
+.ig>.ig-addon.ig-cut-l:focus {
+    box-shadow: var(--shadow-input-focused), inset 1px 0 0 var(--color-input-border-focus);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ig-addon {
+        transition: none;
+    }
+}
+
+
+/* Button segment that visually matches inputs/selects */
+.ig-btn {
+  --btn-px: var(--dimen-input-md-px);
+  --btn-py: var(--dimen-input-md-py);
+  --btn-font-size: var(--dimen-input-md-font-size);
+  --btn-min-height: var(--dimen-input-md-min-height);
+  --btn-radius: var(--dimen-input-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--btn-py) var(--btn-px);
+  min-height: var(--btn-min-height);
+  font-size: var(--btn-font-size);
+  border: 1px solid var(--color-input-border);
+  background-color: var(--color-input-bg);
+  color: var(--color-input-text);
+  border-radius: var(--btn-radius);
+  box-shadow: var(--shadow-input);
+  outline: none;
+  gap: 0.25rem;
+}
+.ig-btn:hover { border-color: var(--color-input-border-hover); }
+.ig-btn:focus { border-color: var(--color-input-border-focus); box-shadow: var(--shadow-input-focused); }
+.ig-btn:disabled, .ig-btn.is-disabled {
+  background-color: var(--color-input-bg-disabled);
+  border-color: var(--color-input-border-disabled);
+  color: var(--color-input-text-disabled);
+  cursor: not-allowed;
+}
+.ig-btn.is-invalid {
+  border-color: var(--color-danger-500);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-danger-500) 20%, transparent);
+}
+.ig-btn--md {
+  --btn-px: var(--dimen-input-md-px);
+  --btn-py: var(--dimen-input-md-py);
+  --btn-font-size: var(--dimen-input-md-font-size);
+  --btn-min-height: var(--dimen-input-md-min-height);
+}
+.ig-btn--sm {
+  --btn-px: var(--dimen-input-sm-px);
+  --btn-py: var(--dimen-input-sm-py);
+  --btn-font-size: var(--dimen-input-sm-font-size);
+  --btn-min-height: var(--dimen-input-sm-min-height);
+}
+
+/* Keep focus ring stacking consistent for all segments */
+.ig > .ig-btn:focus { position: relative; z-index: 1; }
+
+/* Redraw left seam on focus when left border is cut */
+.ig > .ig-btn.ig-cut-l:focus {
+  box-shadow: var(--shadow-input-focused), inset 1px 0 0 var(--color-input-border-focus);
+}
+
+/* Ensure group radius utilities override any base rounded classes on the button */
+.ig > .ig-rounded-r-none { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.ig > .ig-rounded-l-none { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.ig > .ig-rounded-none { border-radius: 0; }
+
+/* Remove left border for middle/last items (avoids double seams) */
+.ig-cut-l { border-left-width: 0; }
+

@@ -4,7 +4,6 @@
   --input-font-size: var(--dimen-input-md-font-size);
   --input-min-height: var(--dimen-input-md-min-height);
   --input-radius: var(--dimen-input-radius);
-
   display: inline-flex;
   align-items: center;
   width: 100%;
@@ -17,11 +16,7 @@
   color: var(--color-input-text);
   box-shadow: var(--shadow-input);
   outline: none;
-  transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease,
-    background-color 180ms ease,
-    color 180ms ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease, color 180ms ease;
 }
 
 .input::placeholder {
@@ -62,8 +57,4 @@
   --input-py: var(--dimen-input-sm-py);
   --input-font-size: var(--dimen-input-sm-font-size);
   --input-min-height: var(--dimen-input-sm-min-height);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .input { transition: none; }
 }

@@ -4,7 +4,6 @@
   --select-font-size: var(--dimen-input-md-font-size);
   --select-min-height: var(--dimen-input-md-min-height);
   --select-radius: var(--dimen-input-radius);
-
   display: inline-flex;
   align-items: center;
   padding: var(--select-py) var(--select-px);
@@ -17,29 +16,25 @@
   outline: none;
   width: auto;
   white-space: nowrap;
-
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-
   background-image: url('data:image/svg+xml;utf8,<svg fill="%23777" height="8" width="12" xmlns="http://www.w3.org/2000/svg"><polygon points="0,0 12,0 6,7"/></svg>');
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 12px 8px;
-
   padding-right: calc(var(--select-px) + 20px);
-
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-shadow: var(--shadow-input);
+}
+
+.select:hover {
+  border-color: var(--color-input-border-hover);
 }
 
 .select:focus {
   border-color: var(--color-input-border-focus);
   box-shadow: var(--shadow-input-focused);
-}
-
-.select:hover {
-  border-color: var(--color-input-border-hover);
 }
 
 .select:disabled,

@@ -5,6 +5,7 @@ import { SoftLoginRes } from "~/domain/auth/models/SoftLoginRes";
 import { EmailOtpStatus } from "~/domain/common/models/EmailOtpStatus";
 import { ApiClient } from "../datasources/ApiClient";
 import { ApiError } from "../errors/ApiError";
+import { LoginRes } from "~/domain/auth/models/LoginRes";
 
 export class AuthRepo {
 
@@ -56,5 +57,21 @@ export class AuthRepo {
             return ResEither.error(apiError);
         }
     }
+
+    async login({ identifier, password }: { identifier: string, password: string }): Promise<ResEither<ApiError, LoginRes>> {
+        try {
+            const res = await this.apiClient.axios.post("/api/v1/auth/login", {
+                identifier,
+                password,
+            });
+            const loginRes = LoginRes.fromJson(res.data);
+            return ResEither.data(loginRes);
+        }
+        catch (error) {
+            const apiError = ApiError.fromAny(error);
+            return ResEither.error(apiError);
+        }
+    }
+
 
 }

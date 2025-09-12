@@ -1,10 +1,10 @@
 import { X } from "lucide-react";
-import { useAppStore } from "~/ui/pages/_layout/AppContext";
 import * as Popover from "@radix-ui/react-popover";
 import styles from "./styles.module.css";
 import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { AppBarProfileAvatar } from "~/ui/components/avatar/AppBarProfileAvatar";
 import { AvatarView } from "~/ui/components/avatar/AvatarView";
+import { useAppStore } from "~/ui/portal/layout/app/AppContext";
 
 export const ProfileView = () => {
     return <ProfileMenu />;

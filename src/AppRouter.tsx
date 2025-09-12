@@ -1,58 +1,78 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router";
+import NotFoundPage from "./ui/components/errorpages/NotFoundPage";
 import { PageLoader } from "./ui/components/loaders/PageLoader";
 import "./ui/ds/core/core.css";
-import AdminLayout from "./ui/pages/admin/_layout/AdminLayout";
-import NotFoundPage from "./ui/pages/error/NotFoundPage";
+import AdminLayout from "./ui/portal/admin/_layout/AdminLayout";
+
+// Core Layouts
+const RootLayout = lazy(() => import("./ui/portal/layout/root/RootLayout"));
+const AppLayout = lazy(() => import("./ui/portal/layout/app/AppLayout"));
+const PortalLayout = lazy(() => import("./ui/portal/layout/portal/PortalLayout"));
+
+// Admin And User Portal Layouts
+const UserPortalLayout = lazy(() => import("./ui/portal/user/root/UserPortalLayout"));
+const AdminPortalLayout = lazy(() => import("./ui/portal/admin/root/AdminPortalLayout"));
+
+// Auth Pages
+const AuthLoginPage = lazy(() => import("./ui/portal/auth/login/LoginPage"));
+const AuthSignUpPage = lazy(() => import("./ui/portal/auth/signup/SignUpPage"));
+const AuthResetPasswordPage = lazy(() => import("./ui/portal/auth/reset/ResetPasswordPage"));
+const AuthForgotPage = lazy(() => import("./ui/portal/auth/forgot/ForgotPage"));
 
 
-const UserPortalLayout = lazy(() => import("./ui/pages/portallayout/UserPortalLayout"));
+// User Pages
+const HomePage = lazy(() => import("./ui/portal/user/home/HomePage"));
 
-const AuthLoginPage = lazy(() => import("./ui/pages/auth/login/LoginPage"));
-const AuthSignUpPage = lazy(() => import("./ui/pages/auth/signup/SignUpPage"));
-const AuthResetPasswordPage = lazy(() => import("./ui/pages/auth/reset/ResetPasswordPage"));
-const AuthForgotPage = lazy(() => import("./ui/pages/auth/forgot/ForgotPage"));
-const AdminPortalLayout = lazy(() => import("./ui/pages/portallayout/AdminPortalLayout"));
-const AdminUsersPage = lazy(() => import("./ui/pages/admin/users/userslist/UsersPage"));
-const AdminRolesPage = lazy(() => import("./ui/pages/admin/users/roles/RolesPage"));
-const AdminImportUsersPage = lazy(() => import("./ui/pages/admin/users/import/ImportPage"));
 
-const AppLayout = lazy(() => import("./ui/pages/_layout/AppLayout"));
-const AdminFormsLayout = lazy(() => import("./ui/pages/admin/forms/formdetail/layout/AdminFormLayout"));
-const HomePage = lazy(() => import("./ui/pages/home/HomePage"));
-const DSPage = lazy(() => import("./ui/pages/ds/DSPage"));
-const TTSTestPage = lazy(() => import("./ui/pages/ttstest/TTSTestPage"));
-const SubmitPage = lazy(() => import("./ui/pages/common/forms/submit/SubmitPage"));
-const QuestionsPage = lazy(() => import("./ui/pages/admin/forms/formdetail/questions/QuestionsPage"));
-const EditTranslationView = lazy(() => import("./ui/pages/admin/forms/formdetail/edittranslation/EditTranslationView"));
-const UpsertQuestionPage = lazy(() => import("./ui/pages/admin/forms/formdetail/upsertquestion/UpsertQuestionPage"));
-const AdminFormComparePage = lazy(() => import("./ui/pages/admin/forms/formdetail/compare/ComparePage"));
-const TokenLoginPage = lazy(() => import("./ui/pages/tokenlogin/TokenLoginPage"));
-const AutoLoginPage = lazy(() => import("./ui/pages/autologin/AutoLoginPage"));
-const QPGenPage = lazy(() => import("./ui/pages/admin/qpgen/QPGenPage"));
+
+
+// Admin Pages
+const AdminUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/userslist/UsersPage"));
+const AdminRolesPage = lazy(() => import("./ui/portal/admin/usermgmt/roles/RolesPage"));
+const AdminImportUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/import/ImportPage"));
+
+
+
+const AdminFormsLayout = lazy(() => import("./ui/portal/admin/forms/formdetail/layout/AdminFormLayout"));
+const SubmitPage = lazy(() => import("./ui/portal/common/forms/submit/SubmitPage"));
+const QuestionsPage = lazy(() => import("./ui/portal/admin/forms/formdetail/questions/QuestionsPage"));
+const EditTranslationView = lazy(() => import("./ui/portal/admin/forms/formdetail/edittranslation/EditTranslationView"));
+const UpsertQuestionPage = lazy(() => import("./ui/portal/admin/forms/formdetail/upsertquestion/UpsertQuestionPage"));
+const AdminFormComparePage = lazy(() => import("./ui/portal/admin/forms/formdetail/compare/ComparePage"));
+const TokenLoginPage = lazy(() => import("./ui/portal/linklogin/TokenLoginPage"));
+const AutoLoginPage = lazy(() => import("./ui/portal/linklogin/AutoLoginPage"));
+const QPGenPage = lazy(() => import("./ui/portal/admin/qpgen/QPGenPage"));
 
 
 // Billing
-const BillingLayout = lazy(() => import("./ui/pages/billing/layout/BillingLayout"));
-const MyPlanPage = lazy(() => import("./ui/pages/billing/myplan/MyPlanPage"));
-const PlansPage = lazy(() => import("./ui/pages/billing/plans/PlansPage"));
-const PaymentsPage = lazy(() => import("./ui/pages/billing/payments/PaymentsPage"));
-const TopUpPage = lazy(() => import("./ui/pages/billing/topup/TopUpPage"));
-const CheckoutPage = lazy(() => import("./ui/pages/billing/checkout/CheckoutPage"));
+const BillingLayout = lazy(() => import("./ui/portal/admin/billing/layout/BillingLayout"));
+const MyPlanPage = lazy(() => import("./ui/portal/admin/billing/myplan/MyPlanPage"));
+const PlansPage = lazy(() => import("./ui/portal/admin/billing/plans/PlansPage"));
+const PaymentsPage = lazy(() => import("./ui/portal/admin/billing/payments/PaymentsPage"));
+const TopUpPage = lazy(() => import("./ui/portal/admin/billing/topup/TopUpPage"));
+const CheckoutPage = lazy(() => import("./ui/portal/admin/billing/checkout/CheckoutPage"));
 
-
-// MainDomain 
-const MainHome = lazy(() => import("./ui/pages/main/home/HomePage"));
 
 export default function AppRouter() {
     return (
         <Suspense fallback={<PageLoader />}>
             <Routes>
+
+                <Route element={<RootLayout />}>
+                    <Route element={<AppLayout softLogin={true} />}>
+                        <Route element={<PortalLayout />}>
+                            {userPortalRoutes}
+                            {adminPortalRoutes}
+                        </Route>
+                        {authRoutes}
+                    </Route>
+                </Route>
+
+
                 {/* AppLayout with default props */}
                 <Route element={<AppLayout softLogin={true} />}>
                     {/* Public routes */}
-                    <Route path="/ds" element={<DSPage />} />
-                    <Route path="/ttstest" element={<TTSTestPage />} />
                     <Route path="/forms/:permalink/submit" element={<SubmitPage />} />
 
 
@@ -66,45 +86,6 @@ export default function AppRouter() {
                             <Route path="translations/:languageId" element={<EditTranslationView />} />
                         </Route>
                     </Route>
-
-                    {/* Admin Layout */}
-                    <Route path="/console" element={<AdminPortalLayout />}>
-                        <Route path="forms">
-                            <Route index element={<div>All Forms</div>} />
-                            <Route path="categories" element={<div>Categories</div>} />
-                            <Route path=":permalink">
-                                <Route path="questions" element={<div>Sigle Form Details</div>} />
-                                <Route path="settings">
-                                    <Route path="general" element={<div>General Settings</div>} />
-                                    <Route path="translations" element={<div>Translations Settings</div>} />
-                                </Route>
-                                <Route path="sharing">
-                                    <Route path="invite" element={<div>Invite</div>} />
-                                    <Route path="link" element={<div>Public Link</div>} />
-                                    <Route path="notifications" element={<div>Notifications</div>} />
-                                </Route>
-                                <Route path="responses" element={<div>Responses</div>} />
-                                <Route path="compare-results" element={<div>Compare Results</div>} />
-                                <Route path="reports" element={<div>Reports</div>} />
-                            </Route>
-                        </Route>
-                        <Route path="spaces">
-                            <Route index element={<div>Spaces</div>} />
-                            <Route path=":id">
-                                <Route path="content" element={<div>Content</div>} />
-                                <Route path="members" element={<div>Members</div>} />
-                                <Route path="reports" element={<div>Reports</div>} />
-                                <Route path="settings" element={<div>Settings</div>} />
-                            </Route>
-                        </Route>
-                        <Route path="users" element={<AdminUsersPage />} />
-                        <Route path="roles" element={<AdminRolesPage />} />
-                        <Route path="import-users" element={<AdminImportUsersPage />} />
-                        <Route path="org-settings">
-                            <Route path="general" element={<div>Org Settings</div>} />
-                            <Route path="terminologies" element={<div>Terminologies</div>} />
-                        </Route>
-                    </Route>
                 </Route>
 
                 {/* Token login wrapped with AppLayout and softLogin = false */}
@@ -112,18 +93,6 @@ export default function AppRouter() {
                     <Route path="/token-login" element={<TokenLoginPage />} />
                     <Route path="/auto-login" element={<AutoLoginPage />} />
                     <Route path="/question-paper-generator" element={<QPGenPage />} />
-                    <Route path="/auth">
-                        <Route path="login" element={<AuthLoginPage />} />
-                        <Route path="signup" element={<AuthSignUpPage />} />
-                        <Route path="reset" element={<AuthResetPasswordPage />} />
-                        <Route path="forgot" element={<AuthForgotPage />} />
-                    </Route>
-                </Route>
-
-                <Route element={<AppLayout softLogin={true} />}>
-                    <Route element={<UserPortalLayout />}>
-                        <Route path="/" element={<HomePage />} />
-                    </Route>
                 </Route>
 
 
@@ -141,11 +110,6 @@ export default function AppRouter() {
                     </Route>
                 </Route>
 
-                <Route path="/main">
-                    <Route path="" element={<MainHome />} />
-                </Route>
-
-
                 {/* 404 */}
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
@@ -153,3 +117,60 @@ export default function AppRouter() {
         </Suspense>
     );
 }
+
+
+
+const authRoutes = (
+    <Route path="auth">
+        <Route path="login" element={<AuthLoginPage />} />
+        <Route path="signup" element={<AuthSignUpPage />} />
+        <Route path="reset-password" element={<AuthResetPasswordPage />} />
+        <Route path="forgot-password" element={<AuthForgotPage />} />
+    </Route>
+);
+
+const userPortalRoutes = (
+    <Route element={<UserPortalLayout />}>
+        <Route path="/" element={<HomePage />} />
+    </Route>
+);
+
+const adminPortalRoutes = (
+    <Route path="/console" element={<AdminPortalLayout />}>
+        <Route path="forms">
+            <Route index element={<div>All Forms</div>} />
+            <Route path="categories" element={<div>Categories</div>} />
+            <Route path=":permalink">
+                <Route path="questions" element={<div>Sigle Form Details</div>} />
+                <Route path="settings">
+                    <Route path="general" element={<div>General Settings</div>} />
+                    <Route path="translations" element={<div>Translations Settings</div>} />
+                </Route>
+                <Route path="sharing">
+                    <Route path="invite" element={<div>Invite</div>} />
+                    <Route path="link" element={<div>Public Link</div>} />
+                    <Route path="notifications" element={<div>Notifications</div>} />
+                </Route>
+                <Route path="responses" element={<div>Responses</div>} />
+                <Route path="compare-results" element={<div>Compare Results</div>} />
+                <Route path="reports" element={<div>Reports</div>} />
+            </Route>
+        </Route>
+        <Route path="spaces">
+            <Route index element={<div>Spaces</div>} />
+            <Route path=":id">
+                <Route path="content" element={<div>Content</div>} />
+                <Route path="members" element={<div>Members</div>} />
+                <Route path="reports" element={<div>Reports</div>} />
+                <Route path="settings" element={<div>Settings</div>} />
+            </Route>
+        </Route>
+        <Route path="users" element={<AdminUsersPage />} />
+        <Route path="roles" element={<AdminRolesPage />} />
+        <Route path="import-users" element={<AdminImportUsersPage />} />
+        <Route path="org-settings">
+            <Route path="general" element={<div>Org Settings</div>} />
+            <Route path="terminologies" element={<div>Terminologies</div>} />
+        </Route>
+    </Route>
+);

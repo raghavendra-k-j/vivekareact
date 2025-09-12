@@ -7,4 +7,5 @@ export class AuthConst {
     static readonly keyTempAuthToken = "token";
     static readonly keyUserId = "userId";
     static readonly cookieExpiresDays = 7;
+    static readonly keyOrgId = "Org-Id";
 }

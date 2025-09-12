@@ -4,14 +4,9 @@ import React from "react";
 
 const InputVariants = cva("input", {
     variants: {
-        inputSize: {
-            sm: "input--sm",
-            md: "input--md",
-        },
+        inputSize: { sm: "input--sm", md: "input--md" },
     },
-    defaultVariants: {
-        inputSize: "md",
-    },
+    defaultVariants: { inputSize: "md" },
 });
 
 export interface InputProps
@@ -19,18 +14,10 @@ export interface InputProps
     VariantProps<typeof InputVariants> { }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, inputSize, type = "text", ...props }, ref) => {
-        return (
-            <input
-                type={type}
-                className={clsx(InputVariants({ inputSize }), className)}
-                ref={ref}
-                {...props}
-            />
-        );
-    }
+    ({ className, inputSize, type = "text", ...props }, ref) => (
+        <input type={type} className={clsx(InputVariants({ inputSize }), className)} ref={ref} {...props} />
+    )
 );
 
 Input.displayName = "Input";
-
 export { Input };

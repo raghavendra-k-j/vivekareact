@@ -4,14 +4,9 @@ import { cva, type VariantProps } from "class-variance-authority";
 
 const SelectInputVariants = cva("select", {
     variants: {
-        inputSize: {
-            sm: "select--sm",
-            md: "select--md",
-        },
+        inputSize: { sm: "select--sm", md: "select--md" },
     },
-    defaultVariants: {
-        inputSize: "md",
-    },
+    defaultVariants: { inputSize: "md" },
 });
 
 export interface SelectInputProps
@@ -19,19 +14,12 @@ export interface SelectInputProps
     VariantProps<typeof SelectInputVariants> { }
 
 const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
-    ({ className, inputSize, children, ...props }, ref) => {
-        return (
-            <select
-                className={clsx(SelectInputVariants({ inputSize }), className)}
-                ref={ref}
-                {...props}
-            >
-                {children}
-            </select>
-        );
-    }
+    ({ className, inputSize, children, ...props }, ref) => (
+        <select className={clsx(SelectInputVariants({ inputSize }), className)} ref={ref} {...props}>
+            {children}
+        </select>
+    )
 );
 
 SelectInput.displayName = "SelectInput";
-
 export { SelectInput };

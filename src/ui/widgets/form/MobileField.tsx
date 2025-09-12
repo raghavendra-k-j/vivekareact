@@ -1,12 +1,11 @@
 import { Observer } from "mobx-react-lite";
 import React from "react";
 import { InputLabel } from "~/ui/widgets/form/InputLabel";
-import { Input } from "./Input";
 import { InputError } from "./InputError";
+import { InputGroup } from "./InputGroup";
 import { InputSize } from "./InputSize";
 import { InputValue } from "./InputValue";
 import { ReqMark } from "./ReqMark";
-import { SelectInput } from "./SelectInput";
 
 export class MobileFieldValue {
     callingCode: string | null;
@@ -53,18 +52,16 @@ export function MobileField({
                 </InputLabel>
             )}
 
-            <div className="flex flex-row gap-2">
-                <Observer>
-                    {() => (
-                        <SelectInput
+            <Observer>
+                {() => (
+                    <InputGroup>
+                        <InputGroup.Select
+                            autoComplete="section-phone tel-country-code"
                             className="w-auto shrink-0"
-                            inputSize={inputSize}
                             value={field.value.callingCode ?? ""}
                             onChange={(e) => {
                                 const code = e.target.value || null;
-                                field.set(
-                                    new MobileFieldValue(code, field.value.mobileNumber)
-                                );
+                                field.set(new MobileFieldValue(code, field.value.mobileNumber));
                             }}
                         >
                             <option value=""></option>
@@ -73,29 +70,24 @@ export function MobileField({
                                     {opt.label}
                                 </option>
                             ))}
-                        </SelectInput>
-                    )}
-                </Observer>
-
-                <Observer>
-                    {() => (
-                        <Input
+                        </InputGroup.Select>
+                        <InputGroup.Input
                             className="flex-1"
                             id={id}
                             type="tel"
+                            autoComplete="section-phone tel-national"
                             maxLength={maxLength}
                             placeholder={placeholder}
                             value={field.value.mobileNumber ?? ""}
-                            inputSize={inputSize}
                             onChange={(e) =>
                                 field.set(
                                     new MobileFieldValue(field.value.callingCode, e.target.value)
                                 )
                             }
                         />
-                    )}
-                </Observer>
-            </div>
+                    </InputGroup>
+                )}
+            </Observer>
 
             <Observer>
                 {() => (field.error ? <InputError>{field.error}</InputError> : null)}

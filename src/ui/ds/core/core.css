@@ -5,6 +5,7 @@
 @import "./_colors";
 @import "./comp/_buttons";
 @import './comp/_input';
+@import './comp/_ig';
 @import './comp/_picker';
 @import './comp/_select';
 @import './comp/_listbox';
