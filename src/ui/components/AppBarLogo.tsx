@@ -1,6 +1,7 @@
 import { ServiceURL } from "~/infra/datasources/ServiceURL";
 import { BaseEnv } from "~/core/config/BaseEnv";
 import { useAppStore } from "../portal/layout/app/AppContext";
+import { CssSize, toCssSize } from "../types/css";
 
 function AppBarLogo() {
     return (<a href="/" onClick={(e) => e.preventDefault()}>
@@ -46,6 +47,11 @@ function LogoPng() {
 }
 
 
+export function ProductLogoPng({ width = "auto", height = "auto" }: { width?: CssSize, height?: CssSize }) {
+    const widthCss = toCssSize(width);
+    const heightCss = toCssSize(height);
+    return (<img src="./logo_sidebar.png" alt="Viveka Logo" style={{ width: widthCss, height: heightCss, objectFit: "contain" }} />);
+}
 
 
 

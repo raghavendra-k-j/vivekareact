@@ -28,6 +28,7 @@ const HomePage = lazy(() => import("./ui/portal/user/home/HomePage"));
 
 
 // Admin Pages
+const AdminHomePage = lazy(() => import("./ui/portal/admin/home/HomePage"));
 const AdminUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/userslist/UsersPage"));
 const AdminRolesPage = lazy(() => import("./ui/portal/admin/usermgmt/roles/RolesPage"));
 const AdminImportUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/import/ImportPage"));
@@ -137,6 +138,7 @@ const userPortalRoutes = (
 
 const adminPortalRoutes = (
     <Route path="/console" element={<AdminPortalLayout />}>
+        <Route index element={<AdminHomePage />} />
         <Route path="forms">
             <Route index element={<div>All Forms</div>} />
             <Route path="categories" element={<div>Categories</div>} />
@@ -168,6 +170,7 @@ const adminPortalRoutes = (
         <Route path="users" element={<AdminUsersPage />} />
         <Route path="roles" element={<AdminRolesPage />} />
         <Route path="import-users" element={<AdminImportUsersPage />} />
+        <Route path="question-paper-generator" element={<QPGenPage />} />
         <Route path="org-settings">
             <Route path="general" element={<div>Org Settings</div>} />
             <Route path="terminologies" element={<div>Terminologies</div>} />

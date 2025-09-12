@@ -7,7 +7,7 @@ import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 export function AuthCard({ children }: { children: React.ReactNode }) {
     return (
         <div className="container mx-auto p-6">
-            <Card className="max-w-lg mx-auto" radius="lg" shadow="lg" >
+            <Card className="max-w-md mx-auto" radius="lg" shadow="lg" >
                 {children}
             </Card>
         </div>

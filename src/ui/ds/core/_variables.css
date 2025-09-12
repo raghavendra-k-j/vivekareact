@@ -50,8 +50,9 @@
     --dimen-button-sm-ldr-margin: 0.5rem;
     --dimen-input-radius: 0.375rem;
     --dimen-input-md-px: 1rem;
-    --dimen-input-md-py: 0.5rem;
-    --dimen-input-md-font-size: 0.875rem;
+    --dimen-input-md-py: 0.4rem;
+    --dimen-input-md-font-size: 0.938rem;
+    /* --dimen-input-md-font-size: var(--text-sm); */
     --dimen-input-md-min-height: 2.5rem;
     --dimen-input-sm-px: 0.5rem;
     --dimen-input-sm-py: 0.375rem;

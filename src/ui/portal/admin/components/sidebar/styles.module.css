@@ -1,0 +1,234 @@
+/* styles.module.css */
+:root {
+    --sidebar-width: 260px;
+    --sidebar-px: 14px;
+    --c-top: rgba(8, 20, 40, 0.98);
+    --c-mid: rgba(0, 45, 90, 0.95);
+    --c-bot: rgba(0, 34, 68, 0.94);
+    --sidebar-bg-gradient: linear-gradient(180deg, var(--c-top) 0%, var(--c-mid) 40%, var(--c-bot) 100%);
+    --sidebar-text-color: #ffffff;
+    --sidebar-header-bg-color: rgba(10, 36, 61, 0.92);
+    --sidebar-profile-bg-color: linear-gradient(135deg, rgba(0, 64, 128, 0.9) 0%, rgba(0, 80, 160, 0.9) 100%);
+    --sidebar-profile-bg-hover-color: linear-gradient(135deg, rgba(0, 89, 179, 0.95) 0%, rgba(0, 109, 200, 0.95) 100%);
+    --sidebar-profile-text-default-color: #ffffff;
+    --sidebar-profile-text-secondary-color: #d6dbe4;
+    --sidebar-menu-bg-color: rgba(0, 51, 102, 0.9);
+    --sidebar-menu-item-hover-bg-color: linear-gradient(90deg, rgba(0, 89, 179, 0.9) 0%, rgba(0, 119, 230, 0.9) 100%);
+    --sidebar-menu-item-text-color: #d2d7e2;
+    --sidebar-menu-item-text-hover-color: #ffffff;
+    --sidebar-menu-section-text-color: #bfc7d6;
+    --sidebar-menu-active-bg-color: linear-gradient(90deg, rgba(0, 102, 204, 1) 0%, rgba(0, 140, 255, 1) 100%);
+    --sidebar-menu-active-text-color: #ffffff;
+    --icon-size-md: 18px;
+    --border-radius-md: 10px;
+    --menu-item-gap: 8px;
+    --menu-item-padding-vertical: 3px;
+    --menu-item-padding-horizontal: 8px;
+    --profile-gap: 8px;
+    --profile-padding-vertical: 7px;
+    --menu-font-size: 0.9rem;
+    --transition-fast: 120ms;
+    --accent-indicator: rgba(255, 255, 255, 0.85);
+    --accent-indicator-dim: rgba(255, 255, 255, 0.45);
+    --hairline: rgba(255, 255, 255, 0.08);
+}
+
+.sidebarContainer {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--sidebar-text-color);
+    background:
+        radial-gradient(90% 50% at 10% -10%, rgba(0, 160, 255, 0.10), transparent 60%),
+        radial-gradient(70% 40% at 110% 20%, rgba(0, 120, 255, 0.06), transparent 60%),
+        var(--sidebar-bg-gradient);
+    position: relative;
+    overflow: hidden;
+}
+
+.headerContainer {
+    background: linear-gradient(180deg, var(--sidebar-header-bg-color), rgba(10, 36, 61, 0.7));
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--hairline);
+}
+
+.profileContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--profile-gap);
+    padding: var(--profile-padding-vertical) var(--sidebar-px);
+    background: var(--sidebar-profile-bg-color);
+    color: var(--sidebar-profile-text-default-color);
+    cursor: pointer;
+    transition: background var(--transition-fast);
+    text-align: left;
+}
+
+.profileContainer:hover {
+    background: var(--sidebar-profile-bg-hover-color);
+}
+
+.profileDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    overflow: hidden;
+    flex: 1 1 auto;
+}
+
+.profileName {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--sidebar-profile-text-default-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profileRole {
+    font-size: 0.8rem;
+    color: var(--sidebar-profile-text-secondary-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 0px var(--sidebar-px) 10px;
+    background: var(--sidebar-menu-bg-color);
+    flex-grow: 1;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 51, 102, 0.95) rgba(0, 51, 102, 0.9);
+}
+
+.nav::-webkit-scrollbar {
+    width: 8px;
+}
+
+.nav::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(0, 51, 102, 0.98), rgba(0, 51, 102, 0.92));
+    border-radius: 8px;
+    border: 2px solid rgba(0, 51, 102, 0.9);
+}
+
+.nav::-webkit-scrollbar-track {
+    background: rgba(0, 51, 102, 0.9);
+    border-radius: 8px;
+}
+
+.navSection {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px 0 10px;
+    position: relative;
+    margin-bottom: 6px;
+}
+
+.navSection::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -1px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--hairline), transparent);
+}
+
+.navSection::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--hairline), transparent);
+    pointer-events: none;
+}
+
+.navSectionLabel {
+    color: var(--sidebar-menu-section-text-color);
+    font-weight: 600;
+    font-size: 0.82rem;
+    padding: 2px 2px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    opacity: 0.92;
+}
+
+.navItem {
+    display: flex;
+    align-items: center;
+    gap: var(--menu-item-gap);
+    padding: var(--menu-item-padding-vertical) var(--menu-item-padding-horizontal);
+    border-radius: var(--border-radius-md);
+    background: transparent;
+    color: var(--sidebar-menu-item-text-color);
+    text-decoration: none;
+    font-size: var(--menu-font-size);
+    font-weight: 500;
+    width: 100%;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+    min-height: 28px;
+}
+
+.navItem:hover {
+    background: var(--sidebar-menu-item-hover-bg-color);
+    color: var(--sidebar-menu-item-text-hover-color);
+}
+
+.navItem:global(.active),
+.navItemActive {
+    background: var(--sidebar-menu-active-bg-color);
+    color: var(--sidebar-menu-active-text-color);
+    position: relative;
+}
+
+.navSection .navItem {
+    padding-left: calc(var(--menu-item-padding-horizontal) + 2px);
+}
+
+.navItemLabel {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    flex: 1 1 auto;
+}
+
+.iconNoShrink {
+    flex-shrink: 0;
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer {
+    padding: 8px var(--sidebar-px);
+    background: var(--sidebar-menu-bg-color);
+    border-top: 1px solid var(--hairline);
+}
+
+.logoutButton {
+    width: 100%;
+    border: none;
+    background: transparent;
+    text-align: left;
+}
+
+.logoutButton:hover {
+    background: var(--sidebar-menu-item-hover-bg-color);
+    color: var(--sidebar-menu-item-text-hover-color);
+}

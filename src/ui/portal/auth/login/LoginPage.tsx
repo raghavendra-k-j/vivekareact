@@ -63,15 +63,22 @@ function LoginPageInner() {
                         />
                         <Observer>{() => (<PasswordField
                             field={store.passwordField}
+                            placeholder="Enter your password"
                             passwordVisible={store.showPassword}
                             onClickEye={() => store.toggleShowPassword()}
                         />)}</Observer>
                         <RememberMe />
                     </div>
-                    <Button className="w-full" onClick={() => store.onClickLogin()}>
-                        Login
-                        <ArrowRight className="ms-2" size={16} />
-                    </Button>
+                    <Observer>
+                        {() => (<Button
+                            className="w-full"
+                            loading={store.loginState.isLoading}
+                            onClick={() => store.onClickLogin()}
+                        >
+                            Login
+                            <ArrowRight className="ms-2" size={16} />
+                        </Button>)}
+                    </Observer>
                 </AuthFormContainer>
                 <AuthFooter>
                     <div className="flex flex-col w-full items-center">

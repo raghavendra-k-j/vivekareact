@@ -4,7 +4,6 @@ import { CurrentURL } from "./CurrentURL";
 
 // Environment Configuration related to base application (Main Site and Tenant Apps)
 
-
 export class BaseEnv {
 
     private static readonly _main_ = "_main_";
@@ -27,6 +26,8 @@ export class BaseEnv {
     readonly tawkToPropertyUrl: string;
     readonly logoText: string;
     readonly rootDomain: string;
+    readonly faqUrl: string;
+    readonly rateAppURL: string;
 
     private static _instance: BaseEnv | null = null;
 
@@ -48,6 +49,8 @@ export class BaseEnv {
         tawkToPropertyUrl: string;
         logoText: string;
         rootDomain: string;
+        faqUrl: string;
+        rateAppURL: string;
     }) {
         this.tenant = props.tenant;
         this.websiteBaseUrl = props.websiteBaseUrl;
@@ -66,6 +69,8 @@ export class BaseEnv {
         this.tawkToPropertyUrl = props.tawkToPropertyUrl;
         this.logoText = props.logoText;
         this.rootDomain = props.rootDomain;
+        this.faqUrl = props.faqUrl;
+        this.rateAppURL = props.rateAppURL;
     }
 
     static get instance(): BaseEnv {
@@ -141,6 +146,8 @@ export class BaseEnv {
             tawkToPropertyUrl: json.tawkToPropertyUrl,
             logoText: json.logoText,
             rootDomain: json.rootDomain,
+            faqUrl: json.faqUrl,
+            rateAppURL: json.rateAppURL,
         };
     }
 
