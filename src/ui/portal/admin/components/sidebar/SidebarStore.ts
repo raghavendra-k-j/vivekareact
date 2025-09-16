@@ -3,21 +3,22 @@ import {
     Building2,
     FileText,
     Folder,
+    FolderOpen,
     HelpCircle,
+    LifeBuoy,
+    ScrollText,
     Sparkles,
+    SplitSquareHorizontal,
+    Star,
     Tags,
     UserCog,
     Users as UsersIcon,
-    FolderOpen,
-    SplitSquareHorizontal,
-    ScrollText,
-    LifeBuoy,
-    Star,
 } from "lucide-react";
+import { BaseEnv } from "~/core/config/BaseEnv";
 import { UserPermissions } from "~/domain/common/models/UserPermissions";
+import { FormConst } from "~/domain/forms/const/FormConst";
 import { AppStore } from "~/ui/portal/layout/app/AppStore";
 import { BaseNavItem, NavItem, NavItemActionType, NavSection } from "./SidebarModels";
-import { BaseEnv } from "~/core/config/BaseEnv";
 
 export class SidebarStore {
     appStore: AppStore;
@@ -36,6 +37,10 @@ export class SidebarStore {
     setActiveKey = (key: string) => {
         this.activeKey = key;
     };
+
+    get entityCatalog() {
+        return this.appStore.entityCatalog;
+    }
 
     private initItems(): BaseNavItem[] {
         const items: BaseNavItem[] = [];
@@ -157,7 +162,7 @@ export class SidebarStore {
 
         const allForms = new NavItem({
             id: "all-forms",
-            label: "All Forms",
+            label: `All Forms`,
             icon: FileText,
             actionType: NavItemActionType.LINK,
             data: "/admin/forms",
@@ -187,11 +192,11 @@ export class SidebarStore {
         }
 
         return new NavItem({
-            id: "spaces",
-            label: "Spaces",
+            id: "lms",
+            label: "LMS",
             icon: Folder,
             actionType: NavItemActionType.LINK,
-            data: "/admin/spaces",
+            data: "/console/lms",
         });
     }
 
@@ -229,7 +234,7 @@ export class SidebarStore {
                     label: "Organization Settings",
                     icon: Building2,
                     actionType: NavItemActionType.LINK,
-                    data: "/admin/org-settings",
+                    data: "/console/org-settings",
                 })
             );
         }

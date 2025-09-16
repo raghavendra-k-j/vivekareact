@@ -7,16 +7,17 @@ import { AuthService } from "~/domain/auth/services/AuthService";
 import { AbsUser } from "~/domain/common/models/AbsUser";
 import { AuthToken } from "~/domain/common/models/AuthToken";
 import { AuthUser } from "~/domain/common/models/AuthUser";
+import { Org } from "~/domain/common/models/Org";
 import type { OrgConfig } from "~/domain/common/models/OrgConfig";
 import { PlanAndUsage } from "~/domain/common/models/PlanAndUsage";
 import { ConfigService } from "~/domain/common/services/ConfigService";
+import { EntityCatalog } from "~/domain/entitydict/models/EntityCatalog";
 import { addAuthInterceptor } from "~/infra/datasources/apiClientHelper";
 import type { BrowserInfo } from "~/infra/utils/deviceinfo/BrowserInfo";
 import { BrowserInfoUtil } from "~/infra/utils/deviceinfo/BrowserInfoUtil";
 import { DataState } from "~/ui/utils/DataState";
 
 export class AppStore {
-
 
     private _appEnv: AppEnv;
     private _orgConfig: OrgConfig;
@@ -29,7 +30,13 @@ export class AppStore {
     public _authState: DataState<void> = DataState.init();
     public _planAndUsage: PlanAndUsage | null = null;
     public _planAndUsageState: DataState<void> = DataState.init();
+    public _entityDictResState: DataState<void> = DataState.init();
+    public _entityCatalog: EntityCatalog | null = null;
     static Provider: any;
+
+    get entityCatalog() {
+        return this._entityCatalog!
+    }
 
     get orgConfig(): OrgConfig {
         return this._orgConfig;
@@ -116,6 +123,10 @@ export class AppStore {
 
     get configService(): ConfigService {
         return this._configService;
+    }
+
+    updateOrg(newOrgConfig: Org) {
+        this._orgConfig = this._orgConfig.copyWith({ org: newOrgConfig });
     }
 
 
@@ -211,6 +222,8 @@ export class AppStore {
             this._authToken = authToken;
             this._planAndUsage = baseAuthRes.planAndUsage;
             this._planAndUsageState = DataState.data(undefined);
+            this._entityCatalog = baseAuthRes.entityCatalog;
+            this._entityDictResState = DataState.data(undefined);
         });
     }
 

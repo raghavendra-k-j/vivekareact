@@ -9,6 +9,7 @@ export type OrgProps = {
 };
 
 export class Org {
+
     readonly id: number;
     readonly subdomain: string;
     readonly name: string;
@@ -40,4 +41,16 @@ export class Org {
             createdAt: new Date(json.createdAt),
         });
     }
+
+    copyWith(params: Partial<OrgProps>): Org {
+        return new Org({
+            id: params.id ?? this.id,
+            subdomain: params.subdomain ?? this.subdomain,
+            name: params.name ?? this.name,
+            logoUrl: params.logoUrl ?? this.logoUrl,
+            createdAt: params.createdAt ?? this.createdAt,
+        });
+    }
+
+
 }

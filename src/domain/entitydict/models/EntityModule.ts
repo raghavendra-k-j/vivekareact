@@ -1,26 +1,26 @@
 import { JsonObj } from "~/core/types/Json";
-
-export interface EntityModuleParams {
-    id: string;
-    nameSingular: string;
-    namePlural: string;
-}
+import { EntityModuleBase } from "./EntityModuleBase";
+import { EntityDictBase } from "./EntityDictBase";
 
 export class EntityModule {
-    id: string;
-    nameSingular: string;
-    namePlural: string;
-    constructor(params: EntityModuleParams) {
-        this.id = params.id;
-        this.nameSingular = params.nameSingular;
-        this.namePlural = params.namePlural;
+    module: EntityModuleBase;
+    entities: EntityDictBase[];
+    _entitiesMap: Map<string, EntityDictBase>;
+
+    constructor({ module, entities }: { module: EntityModuleBase; entities: EntityDictBase[] }) {
+        this.module = module;
+        this.entities = entities;
+        this._entitiesMap = new Map(entities.map((e) => [e.defId, e]));
     }
 
     static fromJson(json: JsonObj): EntityModule {
-        return new EntityModule({
-            id: json.id,
-            nameSingular: json.nameSingular,
-            namePlural: json.namePlural,
-        });
+        const module = EntityModuleBase.fromJson(json.module as JsonObj);
+        const entities = (json.entities as JsonObj[]).map((e) => EntityDictBase.fromJson(e));
+        return new EntityModule({ module, entities });
     }
+
+    entity(defId: string) {
+        return this._entitiesMap.get(defId)!;
+    }
+
 }

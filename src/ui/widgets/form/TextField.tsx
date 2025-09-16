@@ -16,6 +16,7 @@ type FTextFieldProps = React.HTMLAttributes<HTMLDivElement> & {
     field: InputValue<string>;
     inputSize?: InputSize;
     maxLength?: number;
+    disabled?: boolean;
 };
 
 export function FTextField({
@@ -27,6 +28,7 @@ export function FTextField({
     field,
     inputSize = "md",
     maxLength,
+    disabled = false,
     ...divProps
 }: FTextFieldProps) {
     const handleChange = (newVal: string) => {
@@ -51,6 +53,7 @@ export function FTextField({
                         value={field.value}
                         inputSize={inputSize}
                         onChange={(e) => handleChange(e.target.value)}
+                        disabled={disabled}
                     />
                 )}
             </Observer>

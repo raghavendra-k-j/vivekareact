@@ -5,7 +5,7 @@ import { OrgConfig } from "~/domain/common/models/OrgConfig";
 import type { AxiosInstance } from "axios";
 import { PlanAndUsage } from "~/domain/common/models/PlanAndUsage";
 import { ApiClient } from "../datasources/ApiClient";
-import { QueryEntityDictRes } from "~/domain/entitydict/models/QueryEntityDictRes";
+import { EntityCatalog } from "~/domain/entitydict/models/EntityCatalog";
 
 export class ConfigRepo {
     private baseApiClient: BaseApiClient;
@@ -51,10 +51,10 @@ export class ConfigRepo {
         }
     }
 
-    public async getEntityDict(): Promise<ResEither<ApiError, QueryEntityDictRes>> {
+    public async getEntityDict(): Promise<ResEither<ApiError, EntityCatalog>> {
         try {
             const response = await this.apiClientAxios.get("/api/v1/entitydict/query");
-            const entityDict = QueryEntityDictRes.fromJson(response.data);
+            const entityDict = EntityCatalog.fromJson(response.data);
             return ResEither.data(entityDict);
         }
         catch (error) {

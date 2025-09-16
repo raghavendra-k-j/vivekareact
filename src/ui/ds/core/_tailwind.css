@@ -43,26 +43,32 @@
   .bg-brand-gradient {
     @apply bg-gradient-to-r from-indigo-100 via-purple-100 to-pink-100;
   }
-  
+
+  .bg-brand-text-gradient {
+    background: linear-gradient(90deg, #667eea, #764ba2, #e91e63);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+
   .shimmer {
     position: relative;
     overflow: hidden;
   }
-  
+
   .shimmer::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.4),
-      transparent
-    );
+    background: linear-gradient(90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent);
     transform: translateX(-100%);
     animation: shimmer 1.5s infinite;
   }
-  
+
   @keyframes shimmer {
     100% {
       transform: translateX(100%);

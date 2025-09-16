@@ -12,7 +12,6 @@ import { Badge } from "~/ui/widgets/badges/Badge";
 import { Button } from "~/ui/widgets/button/Button";
 import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 import { Input } from "~/ui/widgets/form/Input";
-import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { Pagination } from "~/ui/widgets/pagination/Pagination";
 import { AdminPageAppBar, AdminPageAppBarTitle } from "../../components/PageAppBar";
 import { UsersPageContext, useUsersPageStore } from "./UsersPageContext";
@@ -187,7 +186,7 @@ function Th({
 
 function UserRow({ item }: { item: AdminUserListItem }) {
     return (
-        <tr className="border-t border-default/60">
+        <tr className="border-t border-default/60 hover:bg-content2 transition-colors cursor-pointer">
             <Td className="max-w-[340px]">
                 <div className="flex items-center gap-2.5">
                     <UserAvatar id={item.base.id} name={item.base.name} sizeClass="w-8 h-8" />
@@ -215,6 +214,26 @@ function Td({ children, className = "" }: { children: React.ReactNode; className
     return <td className={clsx("px-3 py-1.5 whitespace-nowrap align-middle text-default", className)}>{children}</td>;
 }
 
+function ShimmerRow() {
+    return (
+        <tr className="border-t border-default/60">
+            <Td className="max-w-[340px]">
+                <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 bg-gray-300 animate-pulse rounded-full"></div>
+                    <div className="min-w-0 leading-tight">
+                        <div className="w-24 h-4 bg-gray-300 animate-pulse mb-1"></div>
+                        <div className="w-16 h-3 bg-gray-300 animate-pulse"></div>
+                    </div>
+                </div>
+            </Td>
+            <Td><div className="w-32 h-4 bg-gray-300 animate-pulse"></div></Td>
+            <Td><div className="w-20 h-4 bg-gray-300 animate-pulse"></div></Td>
+            <Td><div className="w-16 h-4 bg-gray-300 animate-pulse"></div></Td>
+            <Td><div className="w-24 h-4 bg-gray-300 animate-pulse"></div></Td>
+        </tr>
+    );
+}
+
 function TableErrorView() {
     const store = useUsersPageStore();
     return (
@@ -228,8 +247,21 @@ function TableErrorView() {
 
 function CenteredLoader() {
     return (
-        <div className="flex flex-col justify-center items-center min-h-[180px] p-4 border-t border-default">
-            <LoaderView />
+        <div className="overflow-x-auto datatable-scrollbar">
+            <table className="min-w-full text-[13px]">
+                <thead className="bg-content2">
+                    <tr>
+                        <Th compact sortable field={UserSortField.NAME} label="User" />
+                        <Th compact sortable field={UserSortField.EMAIL} label="Email" />
+                        <Th compact sortable field={UserSortField.MOBILE} label="Mobile" />
+                        <Th compact sortable field={UserSortField.ROLE_NAME} label="Role" />
+                        <Th compact sortable field={UserSortField.CREATED_AT} label="Created" className="min-w-[140px]" />
+                    </tr>
+                </thead>
+                <tbody>
+                    {Array.from({ length: 5 }).map((_, i) => <ShimmerRow key={i} />)}
+                </tbody>
+            </table>
         </div>
     );
 }

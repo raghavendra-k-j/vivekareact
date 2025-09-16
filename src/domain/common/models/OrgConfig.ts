@@ -6,6 +6,7 @@ export type OrgConfigProps = {
 };
 
 export class OrgConfig {
+   
     readonly org: Org;
 
     constructor(props: OrgConfigProps) {
@@ -18,4 +19,11 @@ export class OrgConfig {
             org: org,
         });
     }
+
+    copyWith(params: Partial<OrgConfigProps>): OrgConfig {
+        return new OrgConfig({
+            org: params.org ?? this.org,
+        });
+    }
+
 }

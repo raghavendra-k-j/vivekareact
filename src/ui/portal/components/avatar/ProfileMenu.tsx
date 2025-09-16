@@ -43,7 +43,7 @@ export const ProfileMenu = ({ children }: ProfileMenuProps) => {
                 {children}
             </RadixPopover.Trigger>
             <RadixPopover.Portal>
-                <RadixPopover.Content className="bg-surface shadow-xl border border-default rounded-md m-2">
+                <RadixPopover.Content className="bg-surface shadow-xl border border-strong rounded m-2 z-50">
                     <ProfileMenuUserDetails />
                     <MenuItems>
                         {appStore.appUser.appUserType.isAuthUser && (<MenuItem onClick={() => portalStore.changePassword()}>

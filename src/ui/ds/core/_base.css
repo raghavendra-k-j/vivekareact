@@ -28,10 +28,12 @@
   --color-input-text: var(--color-text-default);
   --color-input-text-disabled: var(--color-text-secondary);
   --color-input-bg: var(--color-surface);
-  --color-input-bg-disabled: var(--color-slate-500);
+  --color-input-bg-disabled: var(--color-slate-50);
+  --color-input-border-disabled: var(--color-slate-300);
   --shadow-input: var(--shadow-xs);
   --shadow-input-focused: 0 0 0 1px var(--color-input-border-focus);
 }
+
 
 html,
 body,

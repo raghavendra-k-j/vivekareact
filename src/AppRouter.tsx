@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes, useNavigate } from "react-router";
 import NotFoundPage from "./ui/components/errorpages/NotFoundPage";
 import { PageLoader } from "./ui/components/loaders/PageLoader";
 import "./ui/ds/core/core.css";
@@ -20,10 +20,11 @@ const AuthSignUpPage = lazy(() => import("./ui/portal/auth/signup/SignUpPage"));
 const AuthResetPasswordPage = lazy(() => import("./ui/portal/auth/reset/ResetPasswordPage"));
 const AuthForgotPage = lazy(() => import("./ui/portal/auth/forgot/ForgotPage"));
 
-
 // User Pages
-const HomePage = lazy(() => import("./ui/portal/user/home/HomePage"));
-
+const HomeLayout = lazy(() => import("./ui/portal/user/home/HomeLayout"));
+const HomeIndexPage = lazy(() => import("./ui/portal/user/home/HomeIndexPage"));
+const CoursesPage = lazy(() => import("./ui/portal/user/courses/CoursesPage"));
+const FormsPage = lazy(() => import("./ui/portal/user/forms/FormsPage"));
 
 
 
@@ -33,6 +34,9 @@ const AdminUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/userslist/U
 const AdminRolesPage = lazy(() => import("./ui/portal/admin/usermgmt/roles/RolesPage"));
 const AdminImportUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/import/ImportPage"));
 
+const AdminLMSLayout = lazy(() => import("./ui/portal/admin/lms/layout/LMSLayout"));
+const AdminLMSHomePage = lazy(() => import("./ui/portal/admin/lms/home/LMSHomePage"));
+const AdminCoursePage = lazy(() => import("./ui/portal/admin/lms/course/CoursePage"));
 
 
 const AdminFormsLayout = lazy(() => import("./ui/portal/admin/forms/formdetail/layout/AdminFormLayout"));
@@ -53,6 +57,13 @@ const PlansPage = lazy(() => import("./ui/portal/admin/billing/plans/PlansPage")
 const PaymentsPage = lazy(() => import("./ui/portal/admin/billing/payments/PaymentsPage"));
 const TopUpPage = lazy(() => import("./ui/portal/admin/billing/topup/TopUpPage"));
 const CheckoutPage = lazy(() => import("./ui/portal/admin/billing/checkout/CheckoutPage"));
+
+// Org Settings Pages
+const AdminOrgSettingsLayout = lazy(() => import("./ui/portal/admin/orgsettings/layout/OrgSettingsLayout"));
+const AdminGeneralSettingsPage = lazy(() => import("./ui/portal/admin/orgsettings/general/GeneralSettingsPage"));
+const AdminEntityDictSettingsPage = lazy(() => import("./ui/portal/admin/orgsettings/entitydict/EntityDictSettingsPage"));
+const AdminUserAppSettingsPage = lazy(() => import("./ui/portal/admin/orgsettings/userapp/UserAppSettingsPage"));
+
 
 
 export default function AppRouter() {
@@ -132,7 +143,12 @@ const authRoutes = (
 
 const userPortalRoutes = (
     <Route element={<UserPortalLayout />}>
-        <Route path="/" element={<HomePage />} />
+        <Route element={<HomeLayout />}>
+            <Route index element={<HomeIndexPage />} />
+            <Route path="courses" element={<CoursesPage />} />
+            <Route path="assessments" element={<FormsPage />} />
+            <Route path="surveys" element={<FormsPage />} />
+        </Route>
     </Route>
 );
 
@@ -158,9 +174,9 @@ const adminPortalRoutes = (
                 <Route path="reports" element={<div>Reports</div>} />
             </Route>
         </Route>
-        <Route path="spaces">
-            <Route index element={<div>Spaces</div>} />
-            <Route path=":id">
+        <Route path="lms" element={<AdminLMSLayout />}>
+            <Route index element={<AdminLMSHomePage />} />
+            <Route path=":id" element={<AdminCoursePage />}>
                 <Route path="content" element={<div>Content</div>} />
                 <Route path="members" element={<div>Members</div>} />
                 <Route path="reports" element={<div>Reports</div>} />
@@ -171,9 +187,11 @@ const adminPortalRoutes = (
         <Route path="roles" element={<AdminRolesPage />} />
         <Route path="import-users" element={<AdminImportUsersPage />} />
         <Route path="question-paper-generator" element={<QPGenPage />} />
-        <Route path="org-settings">
-            <Route path="general" element={<div>Org Settings</div>} />
-            <Route path="terminologies" element={<div>Terminologies</div>} />
+        <Route path="org-settings" element={<AdminOrgSettingsLayout />}>
+            <Route index element={<Navigate replace to="general" />} />
+            <Route path="general" element={<AdminGeneralSettingsPage />} />
+            <Route path="entitydict" element={<AdminEntityDictSettingsPage />} />
+            <Route path="userapp" element={<AdminUserAppSettingsPage />} />
         </Route>
     </Route>
 );

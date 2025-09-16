@@ -4,16 +4,18 @@ import { ReactNode } from "react";
 export type AdminPageAppBarProps = {
     start?: ReactNode;
     end?: ReactNode;
+    bottom?: ReactNode;
     className?: string;
 };
 
-export function AdminPageAppBar({ start, end, className }: AdminPageAppBarProps) {
+export function AdminPageAppBar({ start, end, bottom, className }: AdminPageAppBarProps) {
     return (
-        <header className={clsx("bg-surface shadow border-b border-default h-14 py-2 px-4 sm:px-6", className)}>
-            <div className="flex items-center justify-between h-full">
+        <header className={clsx("bg-surface shadow w-full border-b border-default", className)}>
+            <div className="flex items-center justify-between min-h-14 py-2 px-4 sm:px-6">
                 <div className="flex items-center gap-2 min-w-0">{start}</div>
                 <div className="flex items-center gap-4">{end}</div>
             </div>
+            {bottom && bottom}
         </header>
     );
 }

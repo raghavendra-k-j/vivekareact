@@ -15,7 +15,7 @@ export default function AdminPortalLayout() {
         return null;
     }
     return (
-        <div className="flex flex-row h-full overyflow-y-hidden">
+        <div className="flex flex-row h-full overflow-hidden">
             <AdminSidebar />
             <Outlet />
         </div>

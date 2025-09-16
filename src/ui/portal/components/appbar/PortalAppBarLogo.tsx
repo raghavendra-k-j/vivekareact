@@ -21,5 +21,5 @@ export function PortalAppBarLogo() {
             </a>
         );
     }
-    return (<BaseNamedLogo />);
+    return (<BaseNamedLogo textClassName="text-default" />);
 }
