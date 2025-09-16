@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useContext, useRef } from "react";
+import { useNavigate } from "react-router";
 import { useLMSStore } from "../../layout/LMSLayoutContext";
 import { AllSpacesStore } from "./AllSpacesStore";
 import { useDialogManager } from "~/ui/widgets/dialogmanager";
@@ -16,11 +17,13 @@ export function useAllSpacesStore(): AllSpacesStore {
 export function AllSpacesProvider({ children }: { children: ReactNode }) {
     const layoutStore = useLMSStore();
     const dialogManager = useDialogManager();
+    const navigate = useNavigate();
     const storeRef = useRef<AllSpacesStore | null>(null);
     if (!storeRef.current) {
         storeRef.current = new AllSpacesStore({
             layoutStore: layoutStore,
-            dialogManager: dialogManager
+            dialogManager: dialogManager,
+            navigate: navigate
         });
     }
     return (

@@ -1,23 +1,28 @@
-import { FileText, Folder, MoreVertical } from "lucide-react";
+import { FileText, Folder, MoreVertical, Sparkle } from "lucide-react";
 import { Observer } from "mobx-react-lite";
 import { useEffect } from "react";
+import { useParams } from "react-router";
+import { AdminFolderInfo } from "~/domain/lms/models/AdminFolderInfo";
+import { AdminSpaceItem } from "~/domain/lms/models/AdminSpaceItem";
 import { LMSConst } from "~/domain/lms/models/LMSConst";
 import { SpaceType } from "~/domain/lms/models/SpaceType";
-import { Button } from "~/ui/widgets/button/Button";
-import { Input } from "~/ui/widgets/form/Input";
-import { IconButton } from "~/ui/widgets/button/IconButton";
 import { Card, CardBody } from "~/ui/components/card";
-import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 import { AdminPageAppBar, AdminPageAppBarTitle } from "~/ui/portal/admin/components/PageAppBar";
+import { Button } from "~/ui/widgets/button/Button";
+import { IconButton } from "~/ui/widgets/button/IconButton";
+import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
+import { Input } from "~/ui/widgets/form/Input";
 import { AllSpacesProvider, useAllSpacesStore } from "./AllSpacesContext";
-import { AdminSpaceItem } from "~/domain/lms/models/AdminSpaceItem";
-import { AdminFolderInfo } from "~/domain/lms/models/AdminFolderInfo";
 
 function AllSpacesPageInner() {
     const store = useAllSpacesStore();
+    const { id } = useParams<{ id: string }>();
+
     useEffect(() => {
-        store.loadItems();
-    }, [store]);
+        const folderId = id ? parseInt(id, 10) : null;
+        store.loadItems({ parentId: folderId, page: 1 });
+    }, [store, id]);
+
     return (
         <div className="flex flex-col h-full">
             <AppBarView />
@@ -29,7 +34,7 @@ function AllSpacesPageInner() {
                             <div className="flex-1 p-4">
                                 <SimpleRetryableAppView
                                     appError={error}
-                                    onRetry={() => store.reloadCurrentFolder()}
+                                    onRetry={() => store.reloadCurrentFolder(id ? parseInt(id, 10) : null)}
                                 />
                             </div>
                         ),
@@ -41,7 +46,7 @@ function AllSpacesPageInner() {
     );
 }
 
-export function AllSpacesPage() {
+export default function AllSpacesPage() {
     return (
         <AllSpacesProvider>
             <AllSpacesPageInner />
@@ -62,6 +67,15 @@ function AppBarView() {
                         className="w-64 sm:w-80 md:w-96 lg:w-[28rem] xl:w-[32rem]"
                         inputSize="md"
                     />
+                    <Button
+                        color="secondary"
+                        variant="outline"
+                        onClick={() => store.showAiCreateDialog()}
+                        size="md"
+                    >
+                        <Sparkle className="w-4 h-4 mr-2 text-purple-600" />
+                        Create with AI
+                    </Button>
                     <Button
                         color="secondary"
                         variant="outline"
@@ -251,6 +265,9 @@ function TableRow({ item }: { item: AdminSpaceItem }) {
     const handleRowClick = () => {
         if (item.type.isFolder) {
             store.navigateToFolder(item.id);
+        }
+        else if(item.type.isCourse) {
+            store.navigateToCouse(item.id);
         }
     };
 

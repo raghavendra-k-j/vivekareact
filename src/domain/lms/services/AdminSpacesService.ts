@@ -6,6 +6,9 @@ import { CreateSpaceReq, CreateSpaceRes } from "../models/CreateSpaceModels";
 import { AddMembersReq, AddMembersRes } from "../models/AddRemoveMembersModels";
 import { RemoveMembersReq, RemoveMembersRes } from "../models/AddRemoveMembersModels";
 import { AdminSpaceListReq, AdminSpaceListRes } from "../models/AdminQuerySpacesModels";
+import { AiSpacesCreatorReq, AiSpacesCreatorRes } from "../models/AiSpacesCreatorModels";
+import { AdminCCListReq, AdminCCListRes } from "../models/AdminQueryCCModels";
+import { AdminCMListReq, AdminCMListRes } from "../models/AdminCMListModels";
 
 export class AdminSpacesService {
     private apiClient: ApiClient;
@@ -65,4 +68,40 @@ export class AdminSpacesService {
             return ResEither.error(appError);
         }
     }
+
+    async aiGenerateSpaceStructure(req: AiSpacesCreatorReq): Promise<ResEither<AppError, AiSpacesCreatorRes>> {
+        try {
+            const res = await this.axios.post(this.baseUrl('/spaces/structure/ai-generate'), req.toJson());
+            return ResEither.data(AiSpacesCreatorRes.fromJson(res.data));
+        } catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+    async queryCourseContents(req: AdminCCListReq): Promise<ResEither<AppError, AdminCCListRes>> {
+        try {
+            const res = await this.axios.post(this.baseUrl(`/spaces/courses/${req.courseId}/contents/query`), req.toJson());
+            return ResEither.data(AdminCCListRes.fromJson(res.data, new Date()));
+        }
+        catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+    async queryMembers(req: AdminCMListReq): Promise<ResEither<AppError, AdminCMListRes>> {
+        try {
+            const res = await this.axios.post(this.baseUrl(`/spaces/courses/${req.courseId}/members/query`), req.toJson());
+            return ResEither.data(AdminCMListRes.fromJson(res.data));
+        }
+        catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
 }

@@ -8,23 +8,32 @@ import { DialogManagerStore } from "~/ui/widgets/dialogmanager/DialogManagerStor
 import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
 import { CreateSpaceDialog } from "../createspace/CreateSpaceDialog";
 import { createSpaceDialogId } from "../createspace/CreateSpaceDialogConst";
+import { AiCreateSpaceDialog } from "../aicreate/AiCreateSpaceDialog";
+import { aiCreateSpaceDialogId } from "../aicreate/AiCreateSpaceDialogConst";
 import { AdminSpaceListVm } from "./models/AdminSpaceListVm";
 import { withMinDelay } from "~/infra/utils/withMinDelay";
 
 
 export class AllSpacesStore {
+    
 
 
     dialogManager: DialogManagerStore;
     layoutStore: LMSLayoutStore;
+    navigate: (path: string) => void;
 
     searchQuery: string = "";
     queryState: DataState<AdminSpaceListVm> = DataState.init();
     pageSize: number = 50;
 
-    constructor({ layoutStore, dialogManager }: { layoutStore: LMSLayoutStore, dialogManager: DialogManagerStore }) {
+    constructor({ layoutStore, dialogManager, navigate }: { 
+        layoutStore: LMSLayoutStore, 
+        dialogManager: DialogManagerStore,
+        navigate: (path: string) => void
+    }) {
         this.layoutStore = layoutStore;
         this.dialogManager = dialogManager;
+        this.navigate = navigate;
         makeObservable(this, {
             queryState: observable.ref,
             searchQuery: observable,
@@ -69,7 +78,11 @@ export class AllSpacesStore {
     }
 
     navigateToFolder(id: number | null) {
-        this.loadItems({ parentId: id, page: 1 });
+        if (id === null) {
+            this.navigate('/console/lms/spaces');
+        } else {
+            this.navigate(`/console/lms/spaces/${id}`);
+        }
     }
 
     showCreateDialog(type: SpaceType) {
@@ -86,8 +99,26 @@ export class AllSpacesStore {
         });
     }
 
-    reloadCurrentFolder() {
-        this.loadItems({ parentId: this.currentFolderId, page: 1 });
+    showAiCreateDialog() {
+        this.dialogManager.show({
+            id: aiCreateSpaceDialogId,
+            component: AiCreateSpaceDialog,
+            props: {
+                parentId: this.currentFolderId,
+                adminSpacesService: this.adminSpacesService,
+                layoutStore: this.layoutStore,
+                allSpacesStore: this,
+            },
+        });
+    }
+
+    reloadCurrentFolder(folderId?: number | null) {
+        const parentId = folderId !== undefined ? folderId : this.currentFolderId;
+        this.loadItems({ parentId: parentId, page: 1 });
+    }
+
+    navigateToCouse(id: number) {
+        this.navigate(`/console/lms/courses/${id}/content`);
     }
 
 }

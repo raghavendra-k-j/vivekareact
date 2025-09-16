@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import NotFoundPage from "./ui/components/errorpages/NotFoundPage";
 import { PageLoader } from "./ui/components/loaders/PageLoader";
 import "./ui/ds/core/core.css";
@@ -33,10 +33,18 @@ const AdminHomePage = lazy(() => import("./ui/portal/admin/home/HomePage"));
 const AdminUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/userslist/UsersPage"));
 const AdminRolesPage = lazy(() => import("./ui/portal/admin/usermgmt/roles/RolesPage"));
 const AdminImportUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/import/ImportPage"));
+const AdminCategoriesPage = lazy(() => import("./ui/portal/admin/forms/categories/CategoriesPage"));
 
 const AdminLMSLayout = lazy(() => import("./ui/portal/admin/lms/layout/LMSLayout"));
 const AdminLMSHomePage = lazy(() => import("./ui/portal/admin/lms/home/LMSHomePage"));
-const AdminCoursePage = lazy(() => import("./ui/portal/admin/lms/course/CoursePage"));
+const AdminAllSpacesPage = lazy(() => import("./ui/portal/admin/lms/home/allspaces/AllSpacesPage"));
+const AdminCoursesPage = lazy(() => import("./ui/portal/admin/lms/home/AdminCoursesPage"));
+const AdminCourseLayout = lazy(() => import("./ui/portal/admin/lms/course/layout/CourseLayout"));
+const AdminContentPage = lazy(() => import("./ui/portal/admin/lms/course/content/ContentPage"));
+const AdminMembersPage = lazy(() => import("./ui/portal/admin/lms/course/members/MembersPage"));
+const AdminReportsPage = lazy(() => import("./ui/portal/admin/lms/course/reports/ReportsPage"));
+const AdminSettingsPage = lazy(() => import("./ui/portal/admin/lms/course/settings/SettingsPage"));
+const AdminLMSHomePageNavigator = lazy(() => import("./ui/portal/admin/lms/home/LMSHomePageNavigator"));
 
 
 const AdminFormsLayout = lazy(() => import("./ui/portal/admin/forms/formdetail/layout/AdminFormLayout"));
@@ -157,7 +165,7 @@ const adminPortalRoutes = (
         <Route index element={<AdminHomePage />} />
         <Route path="forms">
             <Route index element={<div>All Forms</div>} />
-            <Route path="categories" element={<div>Categories</div>} />
+            <Route path="categories" element={<AdminCategoriesPage />} />
             <Route path=":permalink">
                 <Route path="questions" element={<div>Sigle Form Details</div>} />
                 <Route path="settings">
@@ -174,15 +182,23 @@ const adminPortalRoutes = (
                 <Route path="reports" element={<div>Reports</div>} />
             </Route>
         </Route>
+
         <Route path="lms" element={<AdminLMSLayout />}>
-            <Route index element={<AdminLMSHomePage />} />
-            <Route path=":id" element={<AdminCoursePage />}>
-                <Route path="content" element={<div>Content</div>} />
-                <Route path="members" element={<div>Members</div>} />
-                <Route path="reports" element={<div>Reports</div>} />
-                <Route path="settings" element={<div>Settings</div>} />
+            <Route index element={<AdminLMSHomePageNavigator />} />
+            <Route path="spaces" element={<AdminLMSHomePage />}>
+                <Route index element={<AdminAllSpacesPage />} />
+                <Route path=":id/*" element={<AdminAllSpacesPage />} />
+            </Route>
+            <Route path="my-courses" element={<AdminCoursesPage />} />
+            <Route path="courses/:id" element={<AdminCourseLayout />}>
+                <Route index element={<Navigate replace to="content" />} />
+                <Route path="content" element={<AdminContentPage />} />
+                <Route path="members" element={<AdminMembersPage />} />
+                <Route path="reports" element={<AdminReportsPage />} />
+                <Route path="settings" element={<AdminSettingsPage />} />
             </Route>
         </Route>
+
         <Route path="users" element={<AdminUsersPage />} />
         <Route path="roles" element={<AdminRolesPage />} />
         <Route path="import-users" element={<AdminImportUsersPage />} />

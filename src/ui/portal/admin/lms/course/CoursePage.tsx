@@ -1,15 +1,15 @@
 import { useRef } from "react";
-import { CoursePageStore } from "./CoursePageStore";
-import { LMSLayoutStore } from "../layout/LMSLayoutStore";
-import { CoursePageContext } from "./CoursePageContext";
 import { Outlet } from "react-router";
+import { useLMSStore } from "../layout/LMSLayoutContext";
+import { CoursePageContext } from "./CoursePageContext";
+import { CoursePageStore } from "./CoursePageStore";
 
 function PageProvider({ children }: { children: React.ReactNode }) {
     const storeRef = useRef<CoursePageStore | null>(null);
-    const layoutStoreRef = useRef<LMSLayoutStore | null>(null);
+    const layoutStore = useLMSStore();
     if (!storeRef.current) {
         storeRef.current = new CoursePageStore({
-            layoutStore: layoutStoreRef,
+            layoutStore: layoutStore,
         });
     }
     return (

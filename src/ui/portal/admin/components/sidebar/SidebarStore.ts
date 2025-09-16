@@ -16,7 +16,6 @@ import {
 } from "lucide-react";
 import { BaseEnv } from "~/core/config/BaseEnv";
 import { UserPermissions } from "~/domain/common/models/UserPermissions";
-import { FormConst } from "~/domain/forms/const/FormConst";
 import { AppStore } from "~/ui/portal/layout/app/AppStore";
 import { BaseNavItem, NavItem, NavItemActionType, NavSection } from "./SidebarModels";
 
@@ -173,7 +172,7 @@ export class SidebarStore {
             label: "Categories",
             icon: Tags,
             actionType: NavItemActionType.LINK,
-            data: "/admin/forms/categories",
+            data: "/console/forms/categories",
         });
 
         return new NavSection({

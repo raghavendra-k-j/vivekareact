@@ -97,7 +97,14 @@ export class CreateSpaceDialogStore {
             runInAction(() => {
                 this.createState = DataState.data(res);
             });
-            this.allSpacesStore.reloadCurrentFolder();
+            
+            // Navigate to the newly created folder if it's a folder
+            if (this.type.isFolder) {
+                this.allSpacesStore.navigateToFolder(res.id);
+            } else {
+                this.allSpacesStore.reloadCurrentFolder();
+            }
+            
             this.dialogManager.closeById(createSpaceDialogId);
         } catch (error) {
             const appError = AppError.fromAny(error);
