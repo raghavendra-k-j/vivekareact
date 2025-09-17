@@ -12,7 +12,7 @@ export function AppBar({ leading, trailing }: AppBarProps) {
     <div
       className={clsx(
         style.appbar,
-        "flex flex-row items-center justify-between shadow-sm min-h-[48px] px-3 py-2"
+        "flex flex-row items-center justify-between shadow-sm min-h-[48px] px-3 py-2 bg-surface border-b border-default"
       )}
     >
       <div className="flex-1">{leading}</div>

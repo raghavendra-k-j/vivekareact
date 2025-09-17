@@ -18,7 +18,7 @@ export class LMSHomePageStore {
     }
 
     get ed() {
-        return this.layoutStore.appStore.entityCatalog.module(LMSConst.MODULE_ID);
+        return this.layoutStore.appStore.entityCatalog.module(LMSConst.MODULE);
     }
 
     get user(): AuthUser {

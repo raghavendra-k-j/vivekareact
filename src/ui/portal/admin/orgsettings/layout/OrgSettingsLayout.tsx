@@ -38,13 +38,25 @@ function PageInner() {
     }, [store]);
 
     return (<div className="w-full h-full overflow-y-hidden flex flex-col">
-        <AdminPageAppBar start={<AdminPageAppBarTitle title="Organization Settings" />} bottom={<Tabs />} />
+        <AdminPageAppBar
+        className="min-h-16"
+        start={
+            <AdminPageAppBarTitle
+                title="Organization Settings"
+            />}
+            bottom={<Tabs />}
+        />
         <Observer>
             {() => {
                 return store.orgSettingsState.stateWhen({
                     initOrLoading: () => (<CenteredView><LoaderView /></CenteredView>),
                     loaded: () => (<Outlet />),
-                    error: (err) => (<CenteredView><SimpleRetryableAppView appError={err} onRetry={() => store.loadGeneralSettings()} /></CenteredView>),
+                    error: (err) => (<CenteredView>
+                        <SimpleRetryableAppView
+                            appError={err}
+                            onRetry={() => store.loadGeneralSettings()}
+                        />
+                    </CenteredView>),
                 });
             }}
         </Observer>
@@ -69,7 +81,7 @@ function Tabs() {
         { to: "/console/org-settings/userapp", label: "User Website Settings" },
     ];
     return (
-        <TabsList >
+        <TabsList className="px-6 border-t border-default">
             {tabs.map(t => {
                 const isTabActive = useIsLinkActive(t.to, true);
                 return (

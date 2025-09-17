@@ -2,11 +2,11 @@ import { ReactNode, useRef } from "react";
 import Card, { CardBody } from "~/ui/components/card";
 import { ReportsContext } from "./ReportsContext";
 import { ReportsStore } from "./ReportsStore";
-import { useCoursePageStore } from "../CoursePageContext";
+import { useCourseLayoutStore } from "../layout/CourseLayoutContext";
 
 function ReportsProvider({ children }: { children: ReactNode }) {
     const store = useRef<ReportsStore | null>(null);
-    const layoutStore = useCoursePageStore();
+    const layoutStore = useCourseLayoutStore();
     if (store.current === null) {
         store.current = new ReportsStore({
             layoutStore: layoutStore

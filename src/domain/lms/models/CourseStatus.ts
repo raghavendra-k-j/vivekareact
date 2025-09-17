@@ -23,11 +23,11 @@ export class CourseStatus {
         return status;
     }
 
-    public isActive(): boolean {
+    public get isActive(): boolean {
         return this === CourseStatus.ACTIVE;
     }
 
-    public isClosed(): boolean {
+    public get isClosed(): boolean {
         return this === CourseStatus.CLOSED;
     }
 }

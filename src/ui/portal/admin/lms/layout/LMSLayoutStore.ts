@@ -14,7 +14,7 @@ export class LMSLayoutStore {
     }
 
     entity(defIf: string) {
-        return this.appStore.entityCatalog.module(LMSConst.MODULE_ID)!.entity(defIf)!;
+        return this.appStore.entityCatalog.module(LMSConst.MODULE)!.entity(defIf)!;
     }
 
     get hasAllPermission() {

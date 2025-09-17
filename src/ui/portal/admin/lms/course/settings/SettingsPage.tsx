@@ -2,11 +2,11 @@ import { ReactNode, useRef } from "react";
 import Card, { CardBody } from "~/ui/components/card";
 import { SettingsContext } from "./SettingsContext";
 import { SettingsStore } from "./SettingsStore";
-import { useCoursePageStore } from "../CoursePageContext";
+import { useCourseLayoutStore } from "../layout/CourseLayoutContext";
 
 function SettingsProvider({ children }: { children: ReactNode }) {
     const store = useRef<SettingsStore | null>(null);
-    const layoutStore = useCoursePageStore();
+    const layoutStore = useCourseLayoutStore();
     if (store.current === null) {
         store.current = new SettingsStore({
             layoutStore: layoutStore

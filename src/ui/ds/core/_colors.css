@@ -55,6 +55,11 @@
   border-color: var(--color-border-tertiary);
 }
 
+/* Hover variants */
+.hover\:bg-surface:hover {
+  background-color: var(--color-surface-hover, var(--color-gray-50));
+}
+
 /* Divide colors */
 .divide-strong > :not([hidden]) {
   border-color: var(--color-border-strong);

@@ -51,4 +51,14 @@ export class UserBase implements AbsUserBase {
         });
     }
 
+    toJson(): JsonObj {
+        return {
+            id: this._id,
+            name: this._name,
+            email: this._email,
+            mobile: this._mobile,
+            userName: this._userName,
+        };
+    }
+
 }

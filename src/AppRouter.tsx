@@ -190,7 +190,7 @@ const adminPortalRoutes = (
                 <Route path=":id/*" element={<AdminAllSpacesPage />} />
             </Route>
             <Route path="my-courses" element={<AdminCoursesPage />} />
-            <Route path="courses/:id" element={<AdminCourseLayout />}>
+            <Route path="courses/:courseId" element={<AdminCourseLayout />}>
                 <Route index element={<Navigate replace to="content" />} />
                 <Route path="content" element={<AdminContentPage />} />
                 <Route path="members" element={<AdminMembersPage />} />

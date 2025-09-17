@@ -1,6 +1,6 @@
 export class LMSConst {
-    public static readonly MODULE_ID = "lms";
-    public static readonly ENTITY_COURSE_ID = "lms_course";
-    public static readonly ENTITY_MEMBER_ADMIN = "lms_member_admin";
-    public static readonly ENTITY_MEMBER_USER = "lms_member_user";
+    public static readonly MODULE = "lms";
+    public static readonly ENTITY_COURSE = "lms_course";
+    public static readonly ENTITY_ADMIN = "lms_course_admin";
+    public static readonly ENTITY_USER = "lms_course_user";
 }

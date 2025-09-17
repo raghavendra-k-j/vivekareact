@@ -102,5 +102,21 @@ export class DataState<Data> {
         }
     }
 
+    whenLoadedOtherWise<T>(handlers: {
+        loaded: (data: Data) => T;
+        otherwise: () => T;
+    }): T {
+        switch (this.stateValue) {
+            case DataStateState.DATA:
+                return handlers.loaded(this.dataValue as Data);
+            case DataStateState.INIT:
+            case DataStateState.LOADING:
+            case DataStateState.ERROR:
+                return handlers.otherwise();
+            default:
+                throw new Error('Unhandled state in DataState.easyStateWhen()');
+        }
+    }
+
 
 }

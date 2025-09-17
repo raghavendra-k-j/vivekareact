@@ -12,22 +12,26 @@
     align-items: center;
     justify-content: center;
     background: transparent;
-    font-weight: var(--font-weight-semibold);
+    font-size: 0.875rem;
+    font-weight: 500;
     color: var(--color-text-secondary);
     outline: none;
     position: relative;
     white-space: nowrap;
-    border-bottom-width: 3px;
+    border-bottom-width: 2px;
     border-bottom-style: solid;
     border-bottom-color: transparent;
-    transition: color 0.2s, border-color 0.2s;
+    transition: all 0.2s ease;
+    gap: 0.5rem;
 }
 
 .tabItem:hover {
     color: var(--color-primary);
+    background-color: var(--color-primary-50);
 }
 
 .tabItemActive {
     color: var(--color-primary);
     border-color: var(--color-primary);
+    background-color: var(--color-primary-100);
 }

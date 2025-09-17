@@ -1,7 +1,6 @@
-import { FileText, Plus } from "lucide-react";
+import { FileText } from "lucide-react";
 import { Observer } from "mobx-react-lite";
 import { useEffect, useRef } from "react";
-import { useParams } from "react-router";
 import { DateFmt } from "~/core/utils/DateFmt";
 import { AdminCCItem } from "~/domain/lms/models/AdminCCItem";
 import { Card, CardBody, CardHeader } from "~/ui/components/card";
@@ -11,13 +10,13 @@ import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppErr
 import { Input } from "~/ui/widgets/form/Input";
 import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { Pagination } from "~/ui/widgets/pagination/Pagination";
-import { useCoursePageStore } from "../CoursePageContext";
+import { useCourseLayoutStore } from "../layout/CourseLayoutContext";
 import { ContentContext, useContentStore } from "./ContentContext";
 import { ContentStore } from "./ContentStore";
 
 function ContentProvider({ children }: { children: React.ReactNode }) {
     const store = useRef<ContentStore | null>(null);
-    const layoutStore = useCoursePageStore();
+    const layoutStore = useCourseLayoutStore();
     if (store.current === null) {
         store.current = new ContentStore({
             layoutStore: layoutStore
@@ -36,15 +35,10 @@ export default function ContentPage() {
 
 function ContentPageInner() {
     const store = useContentStore();
-    const { id } = useParams<{ id: string }>();
 
     useEffect(() => {
-        if (id) {
-            const courseId = parseInt(id, 10);
-            store.setCourseId(courseId);
-            store.loadContents({ page: 1 });
-        }
-    }, [store, id]);
+        store.loadContents({ page: 1 });
+    }, [store]);
 
     return (
         <div className="w-full">

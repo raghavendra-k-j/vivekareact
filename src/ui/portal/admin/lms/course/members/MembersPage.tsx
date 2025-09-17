@@ -1,29 +1,34 @@
-import { User, UserPlus } from "lucide-react";
+import { User } from "lucide-react";
 import { Observer } from "mobx-react-lite";
 import { useEffect, useRef } from "react";
-import { useParams } from "react-router";
 import { DateFmt } from "~/core/utils/DateFmt";
 import { AdminCMItem } from "~/domain/lms/models/AdminCMItem";
-import { Card, CardBody, CardHeader } from "~/ui/components/card";
+import { LMSConst } from "~/domain/lms/models/LMSConst";
+import { SpaceMemberRole } from "~/domain/lms/models/SpaceMemberRole";
+import { Card, CardBody, CardFooter, CardHeader } from "~/ui/components/card";
 import { Badge } from "~/ui/widgets/badges/Badge";
 import { Button } from "~/ui/widgets/button/Button";
 import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 import { Input } from "~/ui/widgets/form/Input";
+import { ListBox } from "~/ui/widgets/form/ListBox";
 import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { Pagination } from "~/ui/widgets/pagination/Pagination";
-import { useCoursePageStore } from "../CoursePageContext";
+import { useCourseLayoutStore } from "../layout/CourseLayoutContext";
 import { MembersContext, useMembersStore } from "./MembersContext";
 import { MembersStore } from "./MembersStore";
 
 function MembersProvider({ children }: { children: React.ReactNode }) {
     const store = useRef<MembersStore | null>(null);
-    const layoutStore = useCoursePageStore();
+    const layoutStore = useCourseLayoutStore();
     if (store.current === null) {
         store.current = new MembersStore({
             layoutStore: layoutStore
         });
     }
-    return <MembersContext.Provider value={store.current}>{children}</MembersContext.Provider>;
+    return (<MembersContext.Provider
+        value={store.current}>
+        {children}
+    </MembersContext.Provider>);
 }
 
 export default function MembersPage() {
@@ -36,127 +41,125 @@ export default function MembersPage() {
 
 function MembersPageInner() {
     const store = useMembersStore();
-    const { id } = useParams<{ id: string }>();
 
     useEffect(() => {
-        if (id) {
-            const courseId = parseInt(id, 10);
-            store.setCourseId(courseId);
-            store.loadMembers({ page: 1 });
-        }
-    }, [store, id]);
+        store.loadMembers({ page: 1 });
+    }, [store]);
 
     return (
-        <div className="w-full">
-            <div className="p-6">
-                <Card>
-                    <CardHeader divider className="px-3 py-2">
-                        <div className="flex items-center justify-between gap-3">
-                            <SearchAndFilterBar />
-                            <div className="flex flex-row gap-2">
-                                <Button
-                                    color="primary"
-                                    variant="solid"
-                                    size="md"
-                                    onClick={() => console.log('Add Members clicked')}
-                                >
-                                    <UserPlus className="w-4 h-4 mr-2" />
-                                    Add Members
-                                </Button>
-                            </div>
-                        </div>
-                    </CardHeader>
-
-                    <CardBody className="p-0">
-                        <Observer>
-                            {() =>
-                                store.queryState.stateWhen({
-                                    initOrLoading: () => (
-                                        <div className="flex justify-center items-center p-8">
-                                            <LoaderView />
-                                        </div>
-                                    ),
-                                    error: () => <TableErrorView />,
-                                    loaded: () => <MembersTable />,
-                                })
-                            }
-                        </Observer>
-                    </CardBody>
-
-                    <Observer>
-                        {() =>
-                            store.queryState.stateWhen({
-                                loaded: () => {
-                                    const pageInfo = store.listVm.pageInfo;
-                                    return (
-                                        <div className="px-3 py-2 border-t border-default">
-                                            <Pagination
-                                                currentPage={store.currentPage}
-                                                totalPages={pageInfo.totalPages}
-                                                onNext={() => store.goToPage(store.currentPage + 1)}
-                                                onPrev={() => store.goToPage(store.currentPage - 1)}
-                                                onFirst={() => store.goToPage(1)}
-                                                onLast={() => store.goToPage(pageInfo.totalPages)}
-                                            />
-                                        </div>
-                                    );
-                                },
-                                initOrLoading: () => null,
-                                error: () => null,
-                            })
-                        }
-                    </Observer>
-                </Card>
-            </div>
-        </div>
+        <Card className="m-6">
+            <MembersHeader />
+            <CardBody>
+                <MembersTable />
+            </CardBody>
+            <Observer>{() => {
+                if (!store.queryState.isData) {
+                    return null;
+                }
+                return (<CardFooter className="px-3 py-2">
+                    <Pagination
+                        currentPage={store.listVm.pageInfo.page}
+                        totalPages={store.listVm.pageInfo.totalPages}
+                        onNext={() => store.goToPage(store.listVm.pageInfo.page + 1)}
+                        onPrev={() => store.goToPage(store.listVm.pageInfo.page - 1)}
+                        onFirst={() => store.goToPage(1)}
+                        onLast={() => store.goToPage(store.listVm.pageInfo.totalPages)}
+                    />
+                </CardFooter>);
+            }}</Observer>
+        </Card>
     );
 }
 
 function SearchAndFilterBar() {
     const store = useMembersStore();
-
     return (
-        <div className="flex items-center gap-3">
-            <div className="w-full max-w-md">
-                <Input
+        <div className="flex flex-1 items-center gap-3">
+            <Observer>
+                {() => (<Input
                     inputSize="md"
-                    placeholder="Search members by name or email..."
+                    placeholder="Search members by name, email or mobile number"
                     type="search"
-                    className="font-medium"
+                    className="font-medium w-full "
                     value={store.searchQuery}
                     onChange={(e) => store.setSearchQuery(e.target.value)}
-                />
-            </div>
+                />)}
+            </Observer>
+            <Observer>
+                {() => (
+                    <ListBox<SpaceMemberRole>
+                        className="min-w-36 shrink-0"
+                        items={[SpaceMemberRole.ADMIN, SpaceMemberRole.USER]}
+                        itemKey={item => item.role}
+                        itemRenderer={item => {
+                            if (item === SpaceMemberRole.ADMIN) {
+                                return store.layoutStore.entity(LMSConst.ENTITY_ADMIN).nameSingular;
+                            }
+                            else if (item === SpaceMemberRole.USER) {
+                                return store.layoutStore.entity(LMSConst.ENTITY_USER).nameSingular;
+                            }
+                            else {
+                                return item.label;
+                            }
+                        }}
+                        inputSize="md"
+                        placeholder="Select Role"
+                        onValueChange={(role) => store.setSelectedRole(role)}
+                        value={store.selectedRole}
+                    />
+                )}
+            </Observer>
         </div>
     );
 }
 
+function MembersHeader() {
+    const store = useMembersStore();
+    return (
+        <CardHeader className="px-3 py-2">
+            <div className="flex items-center justify-between gap-3">
+                <SearchAndFilterBar />
+                <Button
+                    size="md"
+                    onClick={() => store.showAddMembersDialog()}
+                >
+                    Add Members
+                </Button>
+            </div>
+        </CardHeader>
+    );
+}
+
+
+
+
+
+
+
 function MembersTable() {
     const store = useMembersStore();
-    const items = store.listVm.items;
-
     return (
-        <div className="overflow-x-auto datatable-scrollbar">
-            <table className="min-w-full text-[13px]">
-                <thead className="bg-content2">
+        <div className="overflow-x-auto datatable-scrollbar datatable datatable-bordered-h">
+            <table className="min-w-full w-full text-[13px]">
+                <thead className="datatable-head">
                     <tr>
                         <Th label="Member" />
                         <Th label="Email" />
                         <Th label="Role" />
-                        <Th label="Joined" className="min-w-[140px]" />
-                        <Th label="Actions" className="min-w-[100px]" />
+                        <Th label="Joined" />
+                        <Th label="Actions" />
                     </tr>
                 </thead>
                 <tbody>
-                    {items.length ? (
-                        items.map((item) => <MemberRow key={item.id} item={item} />)
-                    ) : (
-                        <tr>
-                            <td colSpan={5} className="px-3 py-8 text-center text-secondary">
-                                No members found
-                            </td>
-                        </tr>
-                    )}
+                    <Observer>
+                        {() => {
+                            if (store.queryState.isData) {
+                                return <MemberRows />;
+                            } else {
+                                return <MembersStatusView />;
+                            }
+                        }}
+                    </Observer>
                 </tbody>
             </table>
         </div>
@@ -168,6 +171,43 @@ function Th({ label, className = "" }: { label: string; className?: string }) {
         <th className={`font-semibold text-secondary uppercase whitespace-nowrap text-left align-middle px-3 py-1.5 text-[11px] ${className}`}>
             {label}
         </th>
+    );
+}
+
+function MemberRows() {
+    const store = useMembersStore();
+    const items = store.listVm.items;
+    return items.length ? (
+        <>
+            {items.map((item) => <MemberRow key={item.id} item={item} />)}
+        </>
+    ) : (
+        <tr>
+            <td colSpan={5} className="px-3 py-8 text-center text-secondary">
+                No members found
+            </td>
+        </tr>
+    );
+}
+
+function MembersStatusView() {
+    const store = useMembersStore();
+    return (
+        <tr>
+            <td colSpan={5} className="px-3 py-8">
+                <div className="flex justify-center items-center">
+                    {store.queryState.isError ? (
+                        <SimpleRetryableAppView
+                            appError={store.queryState.error!}
+                            onRetry={() => store.loadMembers({ page: store.currentPage })}
+                        />
+                    ) : (
+                        <LoaderView />
+                    )}
+                </div>
+            </td>
+        </tr>
+
     );
 }
 
@@ -215,15 +255,4 @@ function MemberRow({ item }: { item: AdminCMItem }) {
 
 function Td({ children, className = "" }: { children: React.ReactNode; className?: string }) {
     return <td className={`px-3 py-1.5 whitespace-nowrap align-middle text-default ${className}`}>{children}</td>;
-}
-
-function TableErrorView() {
-    const store = useMembersStore();
-    return (
-        <SimpleRetryableAppView
-            className="p-4 border-t border-default"
-            appError={store.queryState.error!}
-            onRetry={() => store.loadMembers({ page: store.currentPage })}
-        />
-    );
 }

@@ -1,10 +1,10 @@
 import { makeObservable } from "mobx";
-import { CoursePageStore } from "../CoursePageStore";
+import { CourseLayoutStore } from "../layout/CourseLayoutStore";
 
 export class SettingsStore {
-    layoutStore: CoursePageStore;
+    layoutStore: CourseLayoutStore;
 
-    constructor({ layoutStore }: { layoutStore: CoursePageStore }) {
+    constructor({ layoutStore }: { layoutStore: CourseLayoutStore }) {
         this.layoutStore = layoutStore;
         makeObservable(this, {
             // Add observable properties here

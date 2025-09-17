@@ -2,6 +2,7 @@
 import clsx from "clsx";
 import { ChevronDown, Power } from "lucide-react";
 import { useRef } from "react";
+import { NavLink } from "react-router";
 import { ProductLogoPng } from "~/ui/components/AppBarLogo";
 import { ProfileMenu } from "~/ui/portal/components/avatar/ProfileMenu";
 import { UserAvatar } from "~/ui/portal/components/avatar/UserAvatar";
@@ -11,7 +12,6 @@ import { SidebarContext, useSidebarStore } from "./SidebarContext";
 import { NavItem, NavItemActionType, NavItemType, NavSection } from "./SidebarModels";
 import { SidebarStore } from "./SidebarStore";
 import styles from "./styles.module.css";
-import { NavLink } from "react-router";
 
 const ICON_SIZE = 18;
 

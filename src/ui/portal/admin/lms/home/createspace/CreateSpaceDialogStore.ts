@@ -57,7 +57,7 @@ export class CreateSpaceDialogStore {
 
     get typeLabel(): string {
         if (this.type.isCourse) {
-            return this.layoutStore.entity(LMSConst.ENTITY_COURSE_ID).namePlural;
+            return this.layoutStore.entity(LMSConst.ENTITY_COURSE).namePlural;
         }
         else {
             return this.type.label;

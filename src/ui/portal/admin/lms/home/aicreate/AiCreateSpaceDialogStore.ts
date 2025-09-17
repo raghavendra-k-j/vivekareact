@@ -1,47 +1,38 @@
-import { makeObservable, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
-import { AiSpacesCreatorReq, AiSpacesCreatorRes, AiSpaceItem } from "~/domain/lms/models/AiSpacesCreatorModels";
+import { AiSpacesCreatorReq } from "~/domain/lms/models/AiSpacesCreatorModels";
 import { CreateSpaceReq } from "~/domain/lms/models/CreateSpaceModels";
 import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
 import { DataState } from "~/ui/utils/DataState";
 import { DialogManagerStore } from "~/ui/widgets/dialogmanager/DialogManagerStore";
-import { InputValue } from "~/ui/widgets/form/InputValue";
-import { InputValuesUtil } from "~/ui/widgets/form/InputValueUtil";
 import { showErrorToast, showSuccessToast } from "~/ui/widgets/toast/toast";
 import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
 import { AllSpacesStore } from "../allspaces/AllSpacesStore";
 import { aiCreateSpaceDialogId } from "./AiCreateSpaceDialogConst";
-
-export type ChatMessage = {
-    id: string;
-    type: 'user' | 'ai' | 'system';
-    content: string;
-    timestamp: Date;
-    structure?: AiSpacesCreatorRes;
-};
+import { AiSpaceItemVm, AiSpacesCreatorResVm } from "./models/AiSpacesCreatorResVm";
 
 export class AiCreateSpaceDialogStore {
-    
     layoutStore: LMSLayoutStore;
     allSpacesStore: AllSpacesStore;
     adminSpacesService: AdminSpacesService;
     dialogManager: DialogManagerStore;
     parentId: number | null = null;
 
-    promptField: InputValue<string> = new InputValue("");
-    
-    generateState: DataState<AiSpacesCreatorRes> = DataState.init();
-    createState: DataState<void> = DataState.init();
-    generatedStructure: AiSpacesCreatorRes | null = null;
-    
-    conversationHistory: ChatMessage[] = [];
+    promptString: string = "";
+    promptError: string | null = null;
 
-    constructor({ 
-        layoutStore, 
-        allSpacesStore, 
+    generateState: DataState<AiSpacesCreatorResVm> = DataState.init();
+    createState: DataState<void> = DataState.init();
+
+    private promptMinLength = 10;
+    private promptMaxLength = 400;
+
+    constructor({
+        layoutStore,
+        allSpacesStore,
         adminSpacesService,
         dialogManager,
-        parentId, 
+        parentId,
     }: {
         layoutStore: LMSLayoutStore;
         allSpacesStore: AllSpacesStore;
@@ -54,100 +45,117 @@ export class AiCreateSpaceDialogStore {
         this.adminSpacesService = adminSpacesService;
         this.dialogManager = dialogManager;
         this.parentId = parentId;
-        
-        this.promptField.validator = (value) => {
-            if (!value || value.trim().length === 0) {
-                return "Please enter a prompt for AI to generate the space structure";
-            }
-            if (value.trim().length < 10) {
-                return "Please provide a more detailed prompt (at least 10 characters)";
-            }
-            return null;
-        };
 
         makeObservable(this, {
             generateState: observable.ref,
             createState: observable.ref,
-            generatedStructure: observable,
-            conversationHistory: observable,
+            promptString: observable,
+            promptError: observable,
+            updatePrompt: action,
+            validatePromptInput: action,
         });
     }
 
-    async generateStructure(): Promise<void> {
-        const isValid = InputValuesUtil.validateAll([this.promptField]);
-        if (!isValid) {
-            showErrorToast({
-                message: "Please fix the errors in the form.",
-            });
-            return;
+    // -------------------------------
+    // Prompt Handling
+    // -------------------------------
+    updatePrompt(value: string): void {
+        this.promptString = value;
+        this.validatePromptInput();
+    }
+
+    validatePromptInput(): boolean {
+        this.promptError = null;
+        const length = this.promptString.trim().length;
+        if (length < this.promptMinLength) {
+            this.promptError = `Please provide a more detailed prompt (at least ${this.promptMinLength} characters).`;
+            return false;
         }
+        if (length > this.promptMaxLength) {
+            this.promptError = `Prompt exceeds maximum length of ${this.promptMaxLength} characters.`;
+            return false;
+        }
+        this.promptError = null;
+        return true;
+    }
 
-        const userMessage: ChatMessage = {
-            id: this.generateMessageId(),
-            type: 'user',
-            content: this.promptField.value.trim(),
-            timestamp: new Date(),
-        };
+    get canGenerateStructure(): boolean {
+        return this.promptString.trim().length >= this.promptMinLength && !this.generateState.isLoading;
+    }
 
+    get isInputScreen(): boolean {
+        return this.generateState.isInit;
+    }
+
+    get isOutputScreen(): boolean {
+        return !this.generateState.isInit;
+    }
+
+
+    resetToPromptView(): void {
         runInAction(() => {
-            this.conversationHistory.push(userMessage);
-            this.generateState = DataState.loading();
+            this.generateState = DataState.init();
+            this.createState = DataState.init();
         });
+    }
+
+    // -------------------------------
+    // Generation Flow
+    // -------------------------------
+    async generateStructureFromPrompt(): Promise<void> {
+        const isValid = this.validatePromptInput();
+        if (!isValid) return;
 
         try {
-            const req = new AiSpacesCreatorReq(
-                this.promptField.value.trim(),
-                this.parentId || 0
-            );
+            runInAction(() => {
+                this.generateState = DataState.loading();
+            });
+
+            const req = new AiSpacesCreatorReq({
+                userPrompt: this.promptString,
+                parentId: this.parentId,
+            });
+
 
             const res = (await this.adminSpacesService.aiGenerateSpaceStructure(req)).getOrError();
-            
-            const aiMessage: ChatMessage = {
-                id: this.generateMessageId(),
-                type: 'ai',
-                content: res.message,
-                timestamp: new Date(),
-                structure: res,
-            };
+            const vm = AiSpacesCreatorResVm.fromModel(res);
 
             runInAction(() => {
-                this.generateState = DataState.data(res);
-                this.generatedStructure = res;
-                this.conversationHistory.push(aiMessage);
-                this.promptField.set(""); // Clear the input field
+                this.generateState = DataState.data(vm);
             });
-
-            showSuccessToast({
-                message: "AI structure generated successfully!",
-            });
-
         } catch (error) {
             const appError = AppError.fromAny(error);
-            
-            const errorMessage: ChatMessage = {
-                id: this.generateMessageId(),
-                type: 'ai',
-                content: `Sorry, I encountered an error: ${appError.message || "Failed to generate structure"}`,
-                timestamp: new Date(),
-            };
-
             runInAction(() => {
                 this.generateState = DataState.error(appError);
-                this.conversationHistory.push(errorMessage);
-                this.promptField.set(""); // Clear the input field
             });
             showErrorToast({
-                message: appError.message || "Failed to generate AI structure",
+                message: appError.message,
+                description: appError.description,
             });
         }
     }
 
-    async createStructure(): Promise<void> {
-        if (!this.generatedStructure) {
-            showErrorToast({
-                message: "No structure to create. Please generate a structure first.",
-            });
+    // -------------------------------
+    // Creation Flow
+    // -------------------------------
+    async startStructureCreation(): Promise<void> {
+        return this.executeStructureCreation("create");
+    }
+
+    async retryStructureCreation(): Promise<void> {
+        return this.executeStructureCreation("retry");
+    }
+
+    private async executeStructureCreation(mode: "create" | "retry"): Promise<void> {
+        if (!this.hasGeneratedItems) {
+            showErrorToast({ message: "No items to create" });
             return;
+        }
+        if (this.createState.isLoading) {
+            return; // avoid parallel runs
+        }
+        if (mode === "create" && this.createState.isData) {
+            return; // already created
         }
 
         try {
@@ -155,20 +163,14 @@ export class AiCreateSpaceDialogStore {
                 this.createState = DataState.loading();
             });
 
-            // Recursively create spaces based on the AI-generated structure
-            await this.createSpacesRecursively(this.generatedStructure.items, this.parentId);
-            
+            await this.createSpacesRecursive({ items: this.generatedItems, parentId: this.parentId });
+
             runInAction(() => {
-                this.createState = DataState.init();
+                this.createState = DataState.data(undefined);
             });
 
-            showSuccessToast({
-                message: "AI-generated space structure created successfully!",
-            });
-            
-            // Reload the current folder to show newly created spaces
             this.allSpacesStore.reloadCurrentFolder();
-            
+            showSuccessToast({ message: "Items created successfully" });
             this.closeDialog();
         } catch (error) {
             const appError = AppError.fromAny(error);
@@ -176,57 +178,80 @@ export class AiCreateSpaceDialogStore {
                 this.createState = DataState.error(appError);
             });
             showErrorToast({
-                message: appError.message || "Failed to create structure",
+                message: appError.message,
+                description: appError.description,
             });
         }
     }
 
-    private async createSpacesRecursively(items: AiSpaceItem[], parentId: number | null): Promise<void> {
-        for (const item of items) {
+    private async createSpacesRecursive({ items, parentId }: { items: AiSpaceItemVm[]; parentId: number | null }): Promise<void> {
+        for (const itemVm of items) {
             try {
-                // Create the current space
-                const createReq = new CreateSpaceReq({
-                    name: item.name,
-                    type: item.type,
-                    parentId: parentId,
-                    internalName: null,
-                    code: null
-                });
+                let currentItemId: number | null = (itemVm as any).createdId as number | null;
 
-                const createRes = (await this.adminSpacesService.createSpace(createReq)).getOrError();
-                
-                // If this space has children, create them recursively
-                if (item.children && item.children.length > 0) {
-                    await this.createSpacesRecursively(item.children, createRes.id);
+                if (currentItemId == null) {
+                    if (itemVm.createState.isLoading) {
+                        throw new Error("Creation already in progress for an item");
+                    }
+
+                    runInAction(() => {
+                        itemVm.setCreating();
+                    });
+
+                    const createReq = new CreateSpaceReq({
+                        name: itemVm.name,
+                        type: itemVm.type,
+                        parentId: parentId,
+                        internalName: null,
+                        code: null,
+                    });
+
+                    const createRes = (await this.adminSpacesService.createSpace(createReq)).getOrError();
+
+                    runInAction(() => {
+                        itemVm.setCreated(createRes.id);
+                    });
+
+                    currentItemId = createRes.id;
+                }
+
+                if (itemVm.children && itemVm.children.length > 0) {
+                    await this.createSpacesRecursive({ items: itemVm.children, parentId: currentItemId });
                 }
             } catch (error) {
-                // Log the error for the specific item but continue with others
-                console.error(`Failed to create space "${item.name}":`, error);
-                throw error; // Re-throw to stop the entire process if any creation fails
+                const appError = AppError.fromAny(error);
+                runInAction(() => {
+                    itemVm.setCreateError(appError);
+                });
+                showErrorToast({
+                    message: appError.message,
+                    description: appError.description,
+                });
+                throw error; // stop at first failure
             }
         }
     }
 
-    clearGenerated(): void {
-        runInAction(() => {
-            this.generatedStructure = null;
-            this.generateState = DataState.init();
-        });
-    }
-
-    private generateMessageId(): string {
-        return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    }
-
+    // -------------------------------
+    // Dialog / State Getters
+    // -------------------------------
     closeDialog(): void {
         this.dialogManager.closeById(aiCreateSpaceDialogId);
     }
 
-    get hasGeneratedStructure(): boolean {
-        return this.generatedStructure !== null;
+    get isStructureGenerated(): boolean {
+        return this.generateState.isData;
     }
 
-    get canCreateStructure(): boolean {
-        return this.hasGeneratedStructure && !this.generateState.isLoading && !this.createState.isLoading;
+    get canStartCreation(): boolean {
+        return this.isStructureGenerated && !this.generateState.isLoading && !this.createState.isLoading;
+    }
+
+    get generatedItems() {
+        return this.generateState.data!.items;
+    }
+
+    get hasGeneratedItems() {
+        return this.generateState.isData && this.generateState.data!.items.length > 0;
     }
 }

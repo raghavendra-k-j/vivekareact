@@ -5,23 +5,33 @@ import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
 import { DataState } from "~/ui/utils/DataState";
 import { withMinDelay } from "~/infra/utils/withMinDelay";
 import { AdminCMListVm } from "./models/AdminCMListVm";
-import { CoursePageStore } from "../CoursePageStore";
+import { CourseLayoutStore } from "../layout/CourseLayoutStore";
+import { createSearchDebounce } from "~/core/utils/searchDebouce";
+import { SpaceMemberRole } from "~/domain/lms/models/SpaceMemberRole";
+import { addMembersDialogId } from "../addmembers/utils";
+import AddMembersDialog from "../addmembers/AddMembersDialog";
 
 export class MembersStore {
-    layoutStore: CoursePageStore;
+    layoutStore: CourseLayoutStore;
 
     searchQuery: string = "";
     queryState: DataState<AdminCMListVm> = DataState.init();
     pageSize: number = 50;
     currentPage: number = 1;
+    selectedRole: SpaceMemberRole | null = null;
 
-    constructor({ layoutStore }: { layoutStore: CoursePageStore }) {
+    private debouncedLoadMembers: () => void;
+
+    constructor({ layoutStore }: { layoutStore: CourseLayoutStore }) {
         this.layoutStore = layoutStore;
         makeObservable(this, {
             queryState: observable.ref,
             searchQuery: observable,
             currentPage: observable,
+            selectedRole: observable,
         });
+
+        this.debouncedLoadMembers = createSearchDebounce(() => this.loadMembers({ page: 1 })).invoke;
     }
 
     get adminSpacesService(): AdminSpacesService {
@@ -32,20 +42,11 @@ export class MembersStore {
         return this.queryState.data!;
     }
 
-    // This will need to be set from the component using URL params
-    private _courseId: number | null = null;
-
-    setCourseId(courseId: number) {
-        this._courseId = courseId;
-    }
-
-    get courseId(): number | null {
-        return this._courseId;
+    get courseId(): number {
+        return this.layoutStore.courseId;
     }
 
     async loadMembers({ page = 1 }: { page?: number } = {}) {
-        if (!this.courseId) return;
-
         try {
             runInAction(() => {
                 this.queryState = DataState.loading();
@@ -57,7 +58,7 @@ export class MembersStore {
                 page: page,
                 pageSize: this.pageSize,
                 searchQuery: this.searchQuery || null,
-                memberRole: null,
+                memberRole: this.selectedRole || null,
             });
 
             const res = (await withMinDelay(this.adminSpacesService.queryMembers(req), 300)).getOrError();
@@ -74,12 +75,39 @@ export class MembersStore {
         }
     }
 
+
     setSearchQuery(query: string) {
-        this.searchQuery = query;
-        this.loadMembers({ page: 1 });
+        runInAction(() => {
+            this.searchQuery = query;
+            this.currentPage = 1;
+        });
+        this.debouncedLoadMembers();
     }
 
     goToPage(page: number) {
+        if (page < 1 || (this.queryState.isData && page > this.listVm.pageInfo.totalPages)) {
+            return;
+        }
         this.loadMembers({ page });
     }
+
+    setSelectedRole(role: SpaceMemberRole | null) {
+        runInAction(() => {
+            this.selectedRole = role;
+        });
+        this.loadMembers({ page: 1 });
+    }
+
+
+    showAddMembersDialog() {
+        this.layoutStore.dialogManager.show({
+            id: addMembersDialogId,
+            component: AddMembersDialog,
+            props: {
+                membersStore: this,
+            },
+        });
+    }
+
+
 }

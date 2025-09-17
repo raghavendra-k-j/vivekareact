@@ -90,7 +90,7 @@ function AppBarView() {
                         onClick={() => store.showCreateDialog(SpaceType.COURSE)}
                         size="md"
                     >
-                        New {store.layoutStore.entity(LMSConst.ENTITY_COURSE_ID).nameSingular}
+                        New {store.layoutStore.entity(LMSConst.ENTITY_COURSE).nameSingular}
                     </Button>
                 </div>
             }

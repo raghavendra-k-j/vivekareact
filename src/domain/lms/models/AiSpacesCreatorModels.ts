@@ -3,15 +3,20 @@ import { JsonObj } from "~/core/types/Json";
 
 export class AiSpacesCreatorReq {
     public userPrompt: string;
-    public parentId: number;
+    public parentId: number | null;
 
-    constructor(userPrompt: string, parentId: number) {
+    constructor({ userPrompt, parentId }: { userPrompt: string; parentId: number | null }) {
         this.userPrompt = userPrompt;
         this.parentId = parentId;
     }
 
     public static fromJson(json: any): AiSpacesCreatorReq {
-        return new AiSpacesCreatorReq(json.userPrompt, json.parentId);
+        return new AiSpacesCreatorReq(
+            {
+                userPrompt: json.userPrompt,
+                parentId: json.parentId
+            }
+        );
     }
 
     public toJson(): JsonObj {
@@ -48,17 +53,18 @@ export class AiSpaceItem {
 }
 
 export class AiSpacesCreatorRes {
-    public message: string;
+    public message: string | null;
     public items: AiSpaceItem[];
 
-    constructor(message: string, items: AiSpaceItem[]) {
+    constructor({ message, items }: { message: string | null; items: AiSpaceItem[] }) {
         this.message = message;
         this.items = items;
     }
 
     public static fromJson(json: JsonObj): AiSpacesCreatorRes {
+        const message = json.message ? String(json.message) : null;
         const items = json.items ? json.items.map((item: JsonObj) => AiSpaceItem.fromJson(item)) : [];
-        return new AiSpacesCreatorRes(json.message, items);
+        return new AiSpacesCreatorRes({ message, items });
     }
 
     public toJson(): JsonObj {

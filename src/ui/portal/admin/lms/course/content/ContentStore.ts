@@ -5,17 +5,17 @@ import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
 import { DataState } from "~/ui/utils/DataState";
 import { withMinDelay } from "~/infra/utils/withMinDelay";
 import { AdminCCListVm } from "./models/AdminCCListVm";
-import { CoursePageStore } from "../CoursePageStore";
+import { CourseLayoutStore } from "../layout/CourseLayoutStore";
 
 export class ContentStore {
-    layoutStore: CoursePageStore;
+    layoutStore: CourseLayoutStore;
 
     searchQuery: string = "";
     queryState: DataState<AdminCCListVm> = DataState.init();
     pageSize: number = 50;
     currentPage: number = 1;
 
-    constructor({ layoutStore }: { layoutStore: CoursePageStore }) {
+    constructor({ layoutStore }: { layoutStore: CourseLayoutStore }) {
         this.layoutStore = layoutStore;
         makeObservable(this, {
             queryState: observable.ref,
@@ -32,20 +32,11 @@ export class ContentStore {
         return this.queryState.data!;
     }
 
-    // This will need to be set from the component using URL params
-    private _courseId: number | null = null;
-
-    setCourseId(courseId: number) {
-        this._courseId = courseId;
-    }
-
-    get courseId(): number | null {
-        return this._courseId;
+    get courseId(): number {
+        return this.layoutStore.courseId;
     }
 
     async loadContents({ page = 1 }: { page?: number } = {}) {
-        if (!this.courseId) return;
-
         try {
             runInAction(() => {
                 this.queryState = DataState.loading();
