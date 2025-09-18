@@ -1,21 +1,16 @@
-import { User } from "lucide-react";
 import { Observer } from "mobx-react-lite";
 import { useEffect, useRef } from "react";
-import { DateFmt } from "~/core/utils/DateFmt";
-import { AdminCMItem } from "~/domain/lms/models/AdminCMItem";
 import { LMSConst } from "~/domain/lms/models/LMSConst";
 import { SpaceMemberRole } from "~/domain/lms/models/SpaceMemberRole";
 import { Card, CardBody, CardFooter, CardHeader } from "~/ui/components/card";
-import { Badge } from "~/ui/widgets/badges/Badge";
 import { Button } from "~/ui/widgets/button/Button";
-import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 import { Input } from "~/ui/widgets/form/Input";
 import { ListBox } from "~/ui/widgets/form/ListBox";
-import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { Pagination } from "~/ui/widgets/pagination/Pagination";
 import { useCourseLayoutStore } from "../layout/CourseLayoutContext";
 import { MembersContext, useMembersStore } from "./MembersContext";
 import { MembersStore } from "./MembersStore";
+import { MembersTable } from "./components/TableView";
 
 function MembersProvider({ children }: { children: React.ReactNode }) {
     const store = useRef<MembersStore | null>(null);
@@ -50,9 +45,28 @@ function MembersPageInner() {
         <Card className="m-6">
             <MembersHeader />
             <CardBody>
-                <MembersTable />
+                <Observer>
+                    {() => {
+                        if (store.queryState.isData) {
+                            return <MembersTable />;
+                        }
+                        return null;
+                    }}
+                </Observer>
             </CardBody>
             <Observer>{() => {
+                if (store.selectedItems.size > 0) {
+                    return (<CardFooter className="px-3 py-2 flex items-center justify-between">
+                        <div className="text-sm text-secondary">{store.selectedItems.size} items selected</div>
+                        <Button
+                            color="danger"
+                            size="sm"
+                            onClick={() => store.removeSelectedItems()}
+                        >
+                            Remove Selected
+                        </Button>
+                    </CardFooter>);
+                }
                 if (!store.queryState.isData) {
                     return null;
                 }
@@ -128,131 +142,4 @@ function MembersHeader() {
             </div>
         </CardHeader>
     );
-}
-
-
-
-
-
-
-
-function MembersTable() {
-    const store = useMembersStore();
-    return (
-        <div className="overflow-x-auto datatable-scrollbar datatable datatable-bordered-h">
-            <table className="min-w-full w-full text-[13px]">
-                <thead className="datatable-head">
-                    <tr>
-                        <Th label="Member" />
-                        <Th label="Email" />
-                        <Th label="Role" />
-                        <Th label="Joined" />
-                        <Th label="Actions" />
-                    </tr>
-                </thead>
-                <tbody>
-                    <Observer>
-                        {() => {
-                            if (store.queryState.isData) {
-                                return <MemberRows />;
-                            } else {
-                                return <MembersStatusView />;
-                            }
-                        }}
-                    </Observer>
-                </tbody>
-            </table>
-        </div>
-    );
-}
-
-function Th({ label, className = "" }: { label: string; className?: string }) {
-    return (
-        <th className={`font-semibold text-secondary uppercase whitespace-nowrap text-left align-middle px-3 py-1.5 text-[11px] ${className}`}>
-            {label}
-        </th>
-    );
-}
-
-function MemberRows() {
-    const store = useMembersStore();
-    const items = store.listVm.items;
-    return items.length ? (
-        <>
-            {items.map((item) => <MemberRow key={item.id} item={item} />)}
-        </>
-    ) : (
-        <tr>
-            <td colSpan={5} className="px-3 py-8 text-center text-secondary">
-                No members found
-            </td>
-        </tr>
-    );
-}
-
-function MembersStatusView() {
-    const store = useMembersStore();
-    return (
-        <tr>
-            <td colSpan={5} className="px-3 py-8">
-                <div className="flex justify-center items-center">
-                    {store.queryState.isError ? (
-                        <SimpleRetryableAppView
-                            appError={store.queryState.error!}
-                            onRetry={() => store.loadMembers({ page: store.currentPage })}
-                        />
-                    ) : (
-                        <LoaderView />
-                    )}
-                </div>
-            </td>
-        </tr>
-
-    );
-}
-
-function MemberRow({ item }: { item: AdminCMItem }) {
-    return (
-        <tr className="border-t border-default/60 hover:bg-content2 transition-colors cursor-pointer">
-            <Td className="max-w-[300px]">
-                <div className="flex items-center gap-2.5">
-                    <div className="flex items-center justify-center w-8 h-8 bg-blue-50 rounded-lg ring-1 ring-blue-200/50">
-                        <User className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div className="min-w-0 leading-tight">
-                        <div className="text-sm font-medium text-default truncate">{item.name}</div>
-                    </div>
-                </div>
-            </Td>
-            <Td className="max-w-[250px]">
-                <div className="text-sm text-default truncate">{item.email}</div>
-            </Td>
-            <Td>
-                <Badge
-                    variant="soft"
-                    color={item.role.isAdmin ? "primary" : "secondary"}
-                    size="xs"
-                >
-                    {item.role.label}
-                </Badge>
-            </Td>
-            <Td>{DateFmt.datetime(item.joinedAt)}</Td>
-            <Td>
-                <div className="flex items-center gap-1">
-                    <Button
-                        color="secondary"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => console.log('Edit member', item.id)}
-                    >
-                        Edit
-                    </Button>
-                </div>
-            </Td>
-        </tr>
-    );
-}
-
-function Td({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-    return <td className={`px-3 py-1.5 whitespace-nowrap align-middle text-default ${className}`}>{children}</td>;
 }

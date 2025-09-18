@@ -8,6 +8,7 @@ import { copyToClipboard } from "~/core/utils/clipboard";
 import { showSuccessToast } from "~/ui/widgets/toast/toast";
 import { AdminRolesService } from "~/domain/users/services/AdminRolesService";
 import { DialogManagerStore } from "~/ui/widgets/dialogmanager";
+import { AdminFormsService } from "~/domain/forms/admin/services/AdminFormsService";
 
 export class CourseLayoutStore {
 
@@ -16,23 +17,27 @@ export class CourseLayoutStore {
     courseService: AdminCourseService;
     adminUserRolesService: AdminRolesService;
     dialogManager: DialogManagerStore;
+    formsService: AdminFormsService;
 
     courseDetailState: DataState<CourseDetailVM> = DataState.init();
 
     constructor({
         layoutStore,
         courseId,
-        dialogManager
+        dialogManager,
+        formsService,
     }: {
         layoutStore: LMSLayoutStore;
         courseId: number;
         dialogManager: DialogManagerStore;
+        formsService: AdminFormsService;
     }) {
         this.layoutStore = layoutStore;
         this.courseId = courseId;
         this.courseService = new AdminCourseService();
         this.adminUserRolesService = new AdminRolesService();
         this.dialogManager = dialogManager;
+        this.formsService = formsService;
         makeObservable(this, {
             courseDetailState: observable.ref,
         });

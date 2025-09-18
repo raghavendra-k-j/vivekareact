@@ -4,6 +4,9 @@ import { ApiClient } from "~/infra/datasources/ApiClient";
 import { ApiError } from "~/infra/errors/ApiError";
 import { AdminCourseDetail } from "../models/AdminCourseDetail";
 import { QueryAddMembersReq, QueryAddMembersRes } from "../models/QueryAddMembersModels";
+import { AddMembersReq, AddMembersRes, RemoveMembersReq, RemoveMembersRes } from "../models/AddRemoveMembersModels";
+import { AdminCMListReq, AdminCMListRes } from "../models/AdminCMListModels";
+import { AdminCCListReq, AdminCCListRes } from "../models/AdminQueryCCModels";
 
 export class AdminCourseService {
     private apiClient: ApiClient;
@@ -31,10 +34,60 @@ export class AdminCourseService {
         }
     }
 
+    async queryCourseContents(req: AdminCCListReq): Promise<ResEither<AppError, AdminCCListRes>> {
+        try {
+            const res = await this.axios.post(this.baseUrl(`/spaces/courses/${req.courseId}/contents/query`), req.toJson());
+            return ResEither.data(AdminCCListRes.fromJson(res.data, new Date()));
+        }
+        catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+
     async queryMembersToAdd(req: QueryAddMembersReq): Promise<ResEither<AppError, QueryAddMembersRes>> {
         try {
             const res = await this.axios.post(this.baseUrl(`/spaces/courses/${req.courseId}/members/add/query`), req.toJson());
             return ResEither.data(QueryAddMembersRes.fromJson(res.data));
+        }
+        catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+    async addMembers(req: AddMembersReq): Promise<ResEither<AppError, AddMembersRes>> {
+        try {
+            const res = await this.axios.post(this.baseUrl(`/spaces/courses/${req.courseId}/members/add`), req.toJson());
+            return ResEither.data(AddMembersRes.fromJson(res.data));
+        }
+        catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+    async removeMembers(req: RemoveMembersReq): Promise<ResEither<AppError, RemoveMembersRes>> {
+        try {
+            const res = await this.axios.post(this.baseUrl(`/spaces/courses/${req.courseId}/members/remove`), req.toJson());
+            return ResEither.data(RemoveMembersRes.fromJson(res.data));
+        }
+        catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+
+    async queryMembers(req: AdminCMListReq): Promise<ResEither<AppError, AdminCMListRes>> {
+        try {
+            const res = await this.axios.post(this.baseUrl(`/spaces/courses/${req.courseId}/members/query`), req.toJson());
+            return ResEither.data(AdminCMListRes.fromJson(res.data));
         }
         catch (err) {
             const apiError = ApiError.fromAny(err);

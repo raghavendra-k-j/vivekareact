@@ -164,7 +164,7 @@ const adminPortalRoutes = (
     <Route path="/console" element={<AdminPortalLayout />}>
         <Route index element={<AdminHomePage />} />
         <Route path="forms">
-            <Route index element={<div>All Forms</div>} />
+            <Route index element={<AdminFormsLayout />} />
             <Route path="categories" element={<AdminCategoriesPage />} />
             <Route path=":permalink">
                 <Route path="questions" element={<div>Sigle Form Details</div>} />

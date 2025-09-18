@@ -1,17 +1,17 @@
 import { JsonObj } from "~/core/types/Json";
 
 export class AddMembersReq {
-    public spaceId: number;
+    public courseId: number;
     public userIds: number[];
 
-    constructor({ spaceId, userIds }: { spaceId: number, userIds: number[] }) {
-        this.spaceId = spaceId;
+    constructor({ courseId, userIds }: { courseId: number, userIds: number[] }) {
+        this.courseId = courseId;
         this.userIds = userIds;
     }
 
     toJson(): JsonObj {
         return {
-            spaceId: this.spaceId,
+            courseId: this.courseId,
             userIds: this.userIds
         };
     }
@@ -48,17 +48,17 @@ export class AddMemberError {
 }
 
 export class RemoveMembersReq {
-    public spaceId: number;
+    public courseId: number;
     public userIds: number[];
 
-    constructor({ spaceId, userIds }: { spaceId: number, userIds: number[] }) {
-        this.spaceId = spaceId;
+    constructor({ courseId, userIds }: { courseId: number, userIds: number[] }) {
+        this.courseId = courseId;
         this.userIds = userIds;
     }
 
     toJson(): JsonObj {
         return {
-            spaceId: this.spaceId,
+            courseId: this.courseId,
             userIds: this.userIds
         };
     }

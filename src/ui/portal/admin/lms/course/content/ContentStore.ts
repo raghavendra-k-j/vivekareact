@@ -1,11 +1,15 @@
 import { makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
 import { AdminCCListReq } from "~/domain/lms/models/AdminQueryCCModels";
-import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
-import { DataState } from "~/ui/utils/DataState";
+import { AdminCourseService } from "~/domain/lms/services/AdminCourseService";
 import { withMinDelay } from "~/infra/utils/withMinDelay";
-import { AdminCCListVm } from "./models/AdminCCListVm";
+import { DataState } from "~/ui/utils/DataState";
 import { CourseLayoutStore } from "../layout/CourseLayoutStore";
+import { AdminCCListVm } from "./models/AdminCCListVm";
+import { FormType } from "~/domain/forms/models/FormType";
+import { showLoadingDialog } from "~/ui/components/dialogs/showLoadingDialog";
+import { CreateNewReq } from "~/domain/forms/admin/models/CreateNewReq";
+import { showErrorToast, showSuccessToast } from "~/ui/widgets/toast/toast";
 
 export class ContentStore {
     layoutStore: CourseLayoutStore;
@@ -24,8 +28,8 @@ export class ContentStore {
         });
     }
 
-    get adminSpacesService(): AdminSpacesService {
-        return this.layoutStore.layoutStore.adminSpacesService;
+    get courserService(): AdminCourseService {
+        return this.layoutStore.courseService;
     }
 
     get listVm(): AdminCCListVm {
@@ -53,7 +57,7 @@ export class ContentStore {
                 topicIds: null,
             });
 
-            const res = (await withMinDelay(this.adminSpacesService.queryCourseContents(req), 300)).getOrError();
+            const res = (await withMinDelay(this.courserService.queryCourseContents(req), 300)).getOrError();
             const vm = AdminCCListVm.fromModel(res);
 
             runInAction(() => {
@@ -75,4 +79,33 @@ export class ContentStore {
     goToPage(page: number) {
         this.loadContents({ page });
     }
+
+    async newForm({ type }: { type: FormType }) {
+        const dialogId = "course-content-new-form-dialog";
+        try {
+            showLoadingDialog({
+                dialogManager: this.layoutStore.dialogManager,
+                dialogId: dialogId,
+                message: "Preparing form...",
+            });
+            const req = new CreateNewReq({ type: type, languageId: null, spaceId: this.courseId });
+            const res = (await this.layoutStore.formsService.createNewForm(req)).getOrError();
+            showSuccessToast({
+                message: "Form created successfully",
+            });
+            window.location.href = "https://latest.vivekaa.in/admin/forms/83c9ec24ccc148ebbba3cdea9e616b75";
+        }
+        catch (error) {
+            const appError = AppError.fromAny(error);
+            showErrorToast({
+                message: appError.message,
+                description: appError.description,
+            });
+        }
+        finally {
+            this.layoutStore.dialogManager.closeById(dialogId);
+        }
+    }
+
+
 }

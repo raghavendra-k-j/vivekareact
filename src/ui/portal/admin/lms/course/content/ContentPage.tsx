@@ -13,6 +13,7 @@ import { Pagination } from "~/ui/widgets/pagination/Pagination";
 import { useCourseLayoutStore } from "../layout/CourseLayoutContext";
 import { ContentContext, useContentStore } from "./ContentContext";
 import { ContentStore } from "./ContentStore";
+import { FormType } from "~/domain/forms/models/FormType";
 
 function ContentProvider({ children }: { children: React.ReactNode }) {
     const store = useRef<ContentStore | null>(null);
@@ -49,20 +50,20 @@ function ContentPageInner() {
                             <SearchBar />
                             <div className="flex flex-row gap-2">
                                 <Button
-                                    color="primary"
+                                    color="success"
                                     variant="solid"
                                     size="md"
-                                    onClick={() => console.log('New Survey clicked')}
+                                    onClick={() => store.newForm({ type: FormType.Assessment })}
                                 >
-                                    New Survey
+                                    New Assessment
                                 </Button>
                                 <Button
                                     color="primary"
                                     variant="solid"
                                     size="md"
-                                    onClick={() => console.log('New Assessment clicked')}
+                                    onClick={() => store.newForm({ type: FormType.Survey })}
                                 >
-                                    New Assessment
+                                    New Survey
                                 </Button>
                             </div>
                         </div>

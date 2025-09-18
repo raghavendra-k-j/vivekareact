@@ -164,7 +164,7 @@ export class SidebarStore {
             label: `All Forms`,
             icon: FileText,
             actionType: NavItemActionType.LINK,
-            data: "/admin/forms",
+            data: "/console/forms",
         });
 
         const categories = new NavItem({

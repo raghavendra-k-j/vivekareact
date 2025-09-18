@@ -3,14 +3,17 @@ import { QueryAddMemberItem, QueryAddMembersRes } from "~/domain/lms/models/Quer
 
 export class QueryMembersVm {
     pageInfo: PageInfo;
-    members: QueryAddMemberItem[];
+    items: QueryAddMemberItem[];
 
-    constructor(pageInfo: PageInfo, members: QueryAddMemberItem[]) {
+    constructor(pageInfo: PageInfo, items: QueryAddMemberItem[]) {
         this.pageInfo = pageInfo;
-        this.members = members;
+        this.items = items;
     }
 
     static fromModel(model: QueryAddMembersRes): QueryMembersVm {
-        return new QueryMembersVm(model.pageInfo, model.items);
+        return new QueryMembersVm(
+            model.pageInfo,
+            model.items
+        );
     }
 }

@@ -88,12 +88,72 @@ type DialogFooterProps = {
     className?: string;
     actions?: ReactNode;
     actionsGap?: string,
+    start?: ReactNode;
     px?: string | number;
     py?: string | number;
     display?: string;
     align?: string;
     justify?: string;
 }
+
+type DialogCustomFooterProps = {
+    className?: string;
+    start?: ReactNode;
+    end?: ReactNode;
+    gap?: string,
+    px?: string | number;
+    py?: string | number;
+    display?: string;
+    align?: string;
+    justify?: string;
+}
+
+
+
+export function SelectAllCheckbox({ value, onChange }: { value: boolean, onChange: (checked: boolean) => void }) {
+    return (<div className="flex items-center gap-2 cursor-pointer" onClick={() => onChange(!value)}>
+        <input
+            checked={value}
+            onChange={e => onChange(e.target.checked)}
+            type="checkbox"
+            className="w-4 h-4 pointer-events-none"
+        />
+        <span className="text-sm text-default select-none">Select All</span>
+    </div>);
+}
+
+
+export function DialogCustomFooter(props: DialogCustomFooterProps) {
+    const {
+        className,
+        start,
+        end,
+        gap = "gap-2",
+        px = "px-4",
+        py = "py-2",
+        display = "flex",
+        align = "items-center",
+        justify = "justify-between"
+    } = props;
+
+    return (
+        <div
+            className={clsx(
+                px,
+                py,
+                gap,
+                display,
+                align,
+                justify,
+                className
+            )}
+        >
+            {start}
+            {end}
+        </div>
+    );
+}
+
 
 
 export function DialogFooter(props: DialogFooterProps) {

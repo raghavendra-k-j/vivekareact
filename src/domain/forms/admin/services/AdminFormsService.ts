@@ -17,6 +17,7 @@ import { AdminFormDetail } from "../models/AdminFormDetail";
 import { GetQuestionRes } from "../models/GetQuestionRes";
 import { FormTranslation } from "../models/translation/FormTranslation";
 import { SaveTranslationReq } from "../models/translation/SaveTranslationReq";
+import { CreateNewReq } from "../models/CreateNewReq";
 
 export class AdminFormsService {
 
@@ -83,5 +84,8 @@ export class AdminFormsService {
         return await this.adminFormRepo.getTranslation(formId, languageId);
     }
 
+    async createNewForm(req: CreateNewReq): Promise<ResEither<AppError, AdminFormDetail>> {
+        return await this.adminFormRepo.createNewForm(req);
+    }
 
 }

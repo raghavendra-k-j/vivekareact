@@ -1,12 +1,14 @@
-import { makeObservable, observable, action, computed, runInAction } from "mobx";
-import { UserRoleBase } from "~/domain/common/models/UserRoleBase";
+import { action, computed, makeObservable, observable, reaction, runInAction } from "mobx";
+import { AppError } from "~/core/error/AppError";
+import { createSearchDebounce } from "~/core/utils/searchDebouce";
+import { UserRoleType } from "~/domain/common/models/UserRoleType";
+import { QueryAddMembersReq } from "~/domain/lms/models/QueryAddMembersModels";
 import { DataState } from "~/ui/utils/DataState";
 import { MembersStore } from "../members/MembersStore";
 import { QueryMembersVm } from "./QueryMembersVm";
 import { addMembersDialogId } from "./utils";
-import { QueryAddMembersReq } from "~/domain/lms/models/QueryAddMembersModels";
-import { UserRoleType } from "~/domain/common/models/UserRoleType";
-import { AppError } from "~/core/error/AppError";
+import { AddMembersReq } from "~/domain/lms/models/AddRemoveMembersModels";
+import { showSuccessToast } from "~/ui/widgets/toast/toast";
 
 export class AddMembersDialogStore {
 
@@ -15,39 +17,40 @@ export class AddMembersDialogStore {
     searchText: string = "";
     selectedIds: Set<number> = new Set();
     selectedRoleType: UserRoleType | null = null;
-    rolesLoadState: DataState<UserRoleBase> = DataState.init();
     loadUsersState: DataState<QueryMembersVm> = DataState.init();
     addState: DataState<void> = DataState.init();
-
-    private currentPage: number = 1;
-    private pageSize: number = 20;
+    private pageSize: number = 100;
 
     constructor({ membersPageStore }: { membersPageStore: MembersStore }) {
         this.membersStore = membersPageStore;
+
+        const searchDebouce = createSearchDebounce(() => {
+            this.loadUsers({ page: 1 });
+        });
+
         makeObservable(this, {
             searchText: observable,
             selectedIds: observable.shallow,
             selectedRoleType: observable,
-            rolesLoadState: observable.ref,
             loadUsersState: observable.ref,
             addState: observable.ref,
             setSearchText: action,
-            setSelectedRoleType: action,
-            toggleUserSelection: action,
-            loadUsers: action,
-            loadNextPage: action,
-            resetSearch: action,
-            clearSelection: action,
-            addMembers: action,
-            dispose: action,
-            canAddMembers: computed,
-            hasSelectedUsers: computed,
-            isLoadingUsers: computed,
+            canEnableAddButton: computed,
             selectedUsersCount: computed,
-            hasMorePages: computed,
-            hasLoadedUsers: computed,
-            totalUsersCount: computed,
+            hasSelectedUsers: computed,
+            resetSearchAndFilters: action,
+            setSelectedRoleType: action,
+            clearSelection: action,
         });
+
+        reaction(
+            () => this.searchText,
+            () => searchDebouce.invoke()
+        );
+    }
+
+    get listVm() {
+        return this.loadUsersState.data!;
     }
 
     get layoutStore() {
@@ -62,7 +65,7 @@ export class AddMembersDialogStore {
         return this.membersStore.courseId;
     }
 
-    get canAddMembers(): boolean {
+    get canEnableAddButton(): boolean {
         return this.selectedIds.size > 0 && !this.addState.isLoading;
     }
 
@@ -70,48 +73,27 @@ export class AddMembersDialogStore {
         return this.selectedIds.size > 0;
     }
 
-    get isLoadingUsers(): boolean {
-        return this.loadUsersState.isLoading;
-    }
-
     get selectedUsersCount(): number {
         return this.selectedIds.size;
     }
 
-    get hasMorePages(): boolean {
-        return this.loadUsersState.isData && this.currentPage < this.loadUsersState.data!.pageInfo.totalPages;
+    resetSearchAndFilters() {
+        this.searchText = "";
+        this.selectedRoleType = null;
+        this.loadUsers({ page: 1 });
     }
 
-    get hasLoadedUsers(): boolean {
-        return this.loadUsersState.isData && this.loadUsersState.data!.members.length > 0;
+    clearSelection() {
+        this.selectedIds.clear();
     }
-
-    get totalUsersCount(): number {
-        return this.loadUsersState.isData ? this.loadUsersState.data!.members.length : 0;
-    }
-
-    private searchTimeoutId: number | null = null;
-    private readonly searchDebounceMs = 300;
 
     setSearchText(text: string) {
         this.searchText = text;
-        this.currentPage = 1; // Reset to first page when search changes
-
-        // Clear existing timeout
-        if (this.searchTimeoutId) {
-            clearTimeout(this.searchTimeoutId);
-        }
-
-        // Debounce the search
-        this.searchTimeoutId = window.setTimeout(() => {
-            this.loadUsers();
-        }, this.searchDebounceMs);
     }
 
     setSelectedRoleType(roleType: UserRoleType | null) {
         this.selectedRoleType = roleType;
-        this.currentPage = 1; // Reset to first page when filter changes
-        this.loadUsers();
+        this.loadUsers({ page: 1 });
     }
 
     toggleUserSelection(userId: number) {
@@ -122,92 +104,74 @@ export class AddMembersDialogStore {
         }
     }
 
-    resetSearch() {
-        this.searchText = "";
-        this.selectedRoleType = null;
-        this.currentPage = 1;
-        this.loadUsers();
-    }
-
-    clearSelection() {
-        this.selectedIds.clear();
-    }
-
     async addMembers() {
-        if (!this.canAddMembers) return;
-
+        if (!this.canEnableAddButton) return;
         runInAction(() => {
             this.addState = DataState.loading();
         });
-
         try {
-            // Here you would implement the actual API call to add members
-            // For now, we'll simulate it
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
+            const addMembersReq = new AddMembersReq({
+                courseId: this.courseId,
+                userIds: Array.from(this.selectedIds),
+            });
+            (await this.adminCourseService.addMembers(addMembersReq)).getOrError();
             runInAction(() => {
                 this.addState = DataState.data(undefined);
                 this.clearSelection();
             });
-
-            // Close dialog after successful addition
+            showSuccessToast({
+                message: "Added successfully"
+            });
+            this.membersStore.loadMembers({ page: 1 });
             this.closeDialog();
-        } catch (error) {
+        }
+        catch (error) {
+            const appError = AppError.fromAny(error);
             runInAction(() => {
-                this.addState = DataState.error(AppError.fromAny(error));
+                this.addState = DataState.error(appError);
             });
         }
     }
 
-    async loadUsers() {
+    async loadUsers({ page = 1 }: { page?: number } = {}) {
         runInAction(() => {
             this.loadUsersState = DataState.loading();
         });
-
         try {
             const req = new QueryAddMembersReq({
                 courseId: this.courseId,
-                page: this.currentPage,
+                page: page,
                 pageSize: this.pageSize,
                 searchQuery: this.searchText || undefined,
                 roleType: this.selectedRoleType || undefined,
                 excludeExisting: true,
             });
-
-            const result = await this.adminCourseService.queryMembersToAdd(req);
-
+            const result = (await this.adminCourseService.queryMembersToAdd(req)).getOrError();
             runInAction(() => {
-                if (result.isError) {
-                    this.loadUsersState = DataState.error(result.error);
-                } else {
-                    const vm = QueryMembersVm.fromModel(result.data);
-                    this.loadUsersState = DataState.data(vm);
-                }
+                const vm = QueryMembersVm.fromModel(result);
+                this.loadUsersState = DataState.data(vm);
             });
         } catch (error) {
+            const appError = AppError.fromAny(error);
             runInAction(() => {
-                this.loadUsersState = DataState.error(AppError.fromAny(error));
+                this.loadUsersState = DataState.error(appError);
             });
         }
     }
 
-    loadNextPage() {
-        if (this.hasMorePages) {
-            this.currentPage++;
-            this.loadUsers();
-        }
-    }
 
     closeDialog(): void {
-        this.dispose();
         this.layoutStore.dialogManager.closeById(addMembersDialogId);
     }
 
-    dispose(): void {
-        if (this.searchTimeoutId) {
-            clearTimeout(this.searchTimeoutId);
-            this.searchTimeoutId = null;
+    toggleSelectAll(checked: boolean): void {
+        if (checked) {
+            this.listVm.items.forEach(user => this.selectedIds.add(user.userBase.id));
+        }
+        else {
+            this.selectedIds.clear();
         }
     }
+
 
 }

@@ -17,6 +17,7 @@ import { FormCompareUserListReq } from "~/domain/forms/admin/models/compare/Form
 import { FormCompareUserList } from "~/domain/forms/admin/models/compare/FormCompareUserList";
 import { FormTranslation } from "~/domain/forms/admin/models/translation/FormTranslation";
 import { SaveTranslationReq } from "~/domain/forms/admin/models/translation/SaveTranslationReq";
+import { CreateNewReq } from "~/domain/forms/admin/models/CreateNewReq";
 
 
 export class AdminFormRepo {
@@ -213,5 +214,20 @@ export class AdminFormRepo {
             return ResEither.error(apiError);
         }
     }
+
+
+    async createNewForm(req: CreateNewReq): Promise<ResEither<ApiError, AdminFormDetail>> {
+        try {
+            const response = await this.axios.post(`/api/v1/admin/forms/create`, req.toJson());
+            const formDetail = AdminFormDetail.fromMap(response.data);
+            return ResEither.data(formDetail);
+        }
+        catch (error) {
+            logger.error("Error creating new form", error);
+            const apiError = ApiError.fromAny(error);
+            return ResEither.error(apiError);
+        }
+    }
+
 
 }

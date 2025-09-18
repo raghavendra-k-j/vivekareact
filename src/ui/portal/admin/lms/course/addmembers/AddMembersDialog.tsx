@@ -1,196 +1,167 @@
-import { useRef } from "react";
-import React from "react";
-import { Dialog, DialogContent, DialogOverlay, DialogScaffold } from "~/ui/widgets/dialogmanager";
-import { AddMembersDialogProvider, useAddMembersDialogStore } from "./AddMembersDialogContext";
-import { AddMembersDialogStore } from "./AddMembersDialogStore";
-import { MembersStore } from "../members/MembersStore";
-import { DialogCloseButton, DialogFooter, DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
-import { Button } from "~/ui/widgets/button/Button";
 import { Observer } from "mobx-react-lite";
-import { SearchInput } from "~/ui/widgets/search/SearchInput";
-import { FSelectField, FSelectOption } from "~/ui/widgets/form/SelectField";
-import { InputValue } from "~/ui/widgets/form/InputValue";
+import { useEffect, useRef } from "react";
 import { UserRoleType } from "~/domain/common/models/UserRoleType";
 import { QueryAddMemberItem } from "~/domain/lms/models/QueryAddMembersModels";
+import { FullCenteredView } from "~/ui/components/common/FullCenteredView";
+import { DialogCloseButton, DialogCustomFooter, DialogHeader, SelectAllCheckbox } from "~/ui/components/dialogs/DialogHeaderAndFooter";
+import { UserAvatar } from "~/ui/portal/components/avatar/UserAvatar";
+import { Button } from "~/ui/widgets/button/Button";
+import { Dialog, DialogContent, DialogOverlay, DialogScaffold } from "~/ui/widgets/dialogmanager";
+import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
+import { CheckMark } from "~/ui/widgets/form/CheckMark";
+import { Input } from "~/ui/widgets/form/Input";
+import { ListBox } from "~/ui/widgets/form/ListBox";
+import { LoaderView } from "~/ui/widgets/loader/LoaderView";
+import { Pagination } from "~/ui/widgets/pagination/Pagination";
+import { MembersStore } from "../members/MembersStore";
+import { AddMembersDialogProvider, useAddMembersDialogStore } from "./AddMembersDialogContext";
+import { AddMembersDialogStore } from "./AddMembersDialogStore";
 
 export type AddMembersDialogProps = {
     membersStore: MembersStore;
 }
 
-
 function DialogHeaderView() {
     const store = useAddMembersDialogStore();
-
-    const roleOptions: FSelectOption<UserRoleType>[] = UserRoleType.values.map(role => ({
-        data: role,
-        value: (data) => data.value,
-        label: (data) => data.label,
-    }));
-
-    const selectedRoleValue = new InputValue<string>(
-        store.selectedRoleType?.value || ""
-    );
-
-    // Update store when role selection changes
-    React.useEffect(() => {
-        const roleType = selectedRoleValue.value ? UserRoleType.fromValueStr(selectedRoleValue.value) : null;
-        if (roleType?.value !== store.selectedRoleType?.value) {
-            store.setSelectedRoleType(roleType);
-        }
-    }, [selectedRoleValue.value, store]);
-
-    return (
-        <Observer>
-            {() => (
-                <div className="space-y-4">
-                    <DialogHeader title="Add Members" onClose={<DialogCloseButton onClick={() => store.closeDialog()} />} />
-
-                    <div className="flex gap-3 items-end">
-                        <div className="flex-1">
-                            <SearchInput
-                                placeholder="Search users..."
-                                value={store.searchText}
-                                onChange={(e) => store.setSearchText(e.target.value)}
-                                inputSize="md"
-                                disabled={store.isLoadingUsers}
-                            />
-                        </div>
-
-                        <div className="w-48">
-                            <FSelectField
-                                label="Role"
-                                field={selectedRoleValue}
-                                options={roleOptions}
-                                placeholder="All roles"
-                                inputSize="md"
-                            />
-                        </div>
-
-                        {(store.searchText || store.selectedRoleType) && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => store.resetSearch()}
-                                disabled={store.isLoadingUsers}
-                            >
-                                Clear
-                            </Button>
-                        )}
-                    </div>
-                </div>
-            )}
-        </Observer>
-    );
+    return (<div className="border-b border-default">
+        <DialogHeader title="Add Members" onClose={<DialogCloseButton onClick={() => store.closeDialog()} />} />
+        <div className="flex flex-row gap-3 px-3 py-2">
+            <Observer>
+                {() => (<Input
+                    type="search"
+                    value={store.searchText}
+                    onChange={(e) => store.setSearchText(e.target.value)}
+                    placeholder="Search users by name, email or mobile number"
+                />)}
+            </Observer>
+            <Observer>
+                {() => (<ListBox<UserRoleType>
+                    items={[UserRoleType.admin, UserRoleType.user]}
+                    placeholder="All Role Types"
+                    itemRenderer={(role) => role.label}
+                    itemKey={(item) => item.value}
+                    value={store.selectedRoleType}
+                    onValueChange={(role) => store.setSelectedRoleType(role)}
+                    className="shrink-0 min-w-[150px]"
+                />)}
+            </Observer>
+        </div>
+    </div>);
 }
 
-function UserListItem({ user }: { user: QueryAddMemberItem }) {
+
+function DialogFooterView() {
     const store = useAddMembersDialogStore();
-
-    return (
-        <Observer>
-            {() => {
-                const isSelected = store.selectedIds.has(user.userBase.id);
-                return (
-                    <div className="flex items-center gap-3 p-3 border border-default rounded-md hover:bg-surface-secondary/50 transition-colors">
-                        <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => store.toggleUserSelection(user.userBase.id)}
-                            className="w-4 h-4 text-primary border-default rounded focus:ring-primary"
-                            disabled={store.isLoadingUsers}
-                        />
-                        <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                                <span className="font-medium text-default truncate">{user.userBase.name}</span>
-                                <span className="text-sm text-secondary">({user.userBase.email})</span>
-                            </div>
-                            <div className="flex items-center gap-2 mt-1">
-                                <span className="text-xs bg-surface-secondary px-2 py-1 rounded">
-                                    {user.roleType.label}
-                                </span>
-                                {user.joinedAt && (
-                                    <span className="text-xs text-secondary">
-                                        Joined: {user.joinedAt.toLocaleDateString()}
-                                    </span>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                );
-            }}
-        </Observer>
-    );
+    return (<DialogCustomFooter className="border-t border-default"
+        justify="justify-between"
+        start={<Observer>{() => {
+            return (<SelectAllCheckbox
+                value={store.hasSelectedUsers && store.selectedUsersCount === store.listVm.items.length}
+                onChange={(checked) => store.toggleSelectAll(checked)}
+            />);
+        }}</Observer>}
+        end={<div className="flex gap-2">
+            <Button
+                variant="outline"
+                color="secondary"
+                onClick={() => store.closeDialog()}
+            >
+                Cancel
+            </Button>
+            <Observer>
+                {() => (
+                    <Button
+                        disabled={!store.canEnableAddButton}
+                        variant="solid"
+                        color="primary"
+                        onClick={() => store.addMembers()}
+                    >
+                        {store.addState.isLoading ? "Adding..." : `Add Members${store.selectedUsersCount > 0 ? ` (${store.selectedUsersCount})` : ''}`}
+                    </Button>
+                )}
+            </Observer>
+        </div>}
+    />);
 }
+
+
+
+function UserItem({ user, store }: { user: QueryAddMemberItem, store: AddMembersDialogStore }) {
+    return (<div className="px-3 py-2 flex flex-row items-center gap-3 cursor-pointer hover:bg-hover select-none" onClick={() => store.toggleUserSelection(user.userBase.id)}>
+        <div className="flex flex-row items-center gap-3 flex-1">
+            <UserAvatar id={user.userBase.id} name={user.userBase.name} />
+            <div className="flex-1">
+                <div className="font-medium text-sm">{user.userBase.name}</div>
+                <div className="text-xs text-secondary">{user.userBase.email}</div>
+            </div>
+        </div>
+        <Observer>
+            {() => (<CheckMark
+                width="w-5" height="h-5"
+                onChange={() => store.toggleUserSelection(user.userBase.id)}
+                value={store.selectedIds.has(user.userBase.id)}
+            />)}
+        </Observer>
+    </div>);
+}
+
 
 function UserList() {
     const store = useAddMembersDialogStore();
+    const pageInfo = store.listVm.pageInfo;
 
+    if (store.listVm.items.length === 0) {
+        return (<FullCenteredView>
+            No results found
+        </FullCenteredView>);
+    }
     return (
-        <Observer>
-            {() => store.loadUsersState.stateWhen({
-                initOrLoading: () => (
-                    <div className="flex flex-col items-center justify-center py-12">
-                        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mb-3"></div>
-                        <div className="text-secondary">Loading users...</div>
-                    </div>
-                ),
-                loaded: (vm) => (
-                    <div className="space-y-2 max-h-96 overflow-y-auto">
-                        {vm.members.length === 0 ? (
-                            <div className="text-center py-12">
-                                <div className="text-secondary mb-2">No users found</div>
-                                <div className="text-xs text-secondary">
-                                    {store.searchText || store.selectedRoleType
-                                        ? "Try adjusting your search or filter criteria"
-                                        : "No users available to add"
-                                    }
-                                </div>
-                            </div>
-                        ) : (
-                            <>
-                                {vm.members.map(user => (
-                                    <UserListItem key={user.userBase.id} user={user} />
-                                ))}
-                                {store.hasMorePages && (
-                                    <div className="text-center pt-4">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => store.loadNextPage()}
-                                            disabled={store.isLoadingUsers}
-                                        >
-                                            {store.isLoadingUsers ? "Loading..." : "Load More"}
-                                        </Button>
-                                    </div>
-                                )}
-                            </>
-                        )}
-                    </div>
-                ),
-                error: (error) => (
-                    <div className="text-center py-12">
-                        <div className="text-error mb-2">Error loading users</div>
-                        <div className="text-xs text-secondary mb-4">{error.message}</div>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => store.loadUsers()}
-                            disabled={store.isLoadingUsers}
-                        >
-                            Try Again
-                        </Button>
-                    </div>
-                ),
-            })}
-        </Observer>
+        <div className="flex flex-col flex-1 min-h-0">
+            <div className="flex-1 overflow-y-auto divide-y divide-default">
+                {store.listVm.items.map((user) => (
+                    <UserItem
+                        key={user.userBase.id}
+                        user={user}
+                        store={store}
+                    />))}
+            </div>
+            {store.listVm.pageInfo.totalPages > 1 && (<div className="border-t border-default px-3 py-2 flex justify-center flex-shrink-0">
+                <Pagination
+                    currentPage={pageInfo.page}
+                    totalPages={pageInfo.totalPages}
+                    onNext={() => store.loadUsers({ page: pageInfo.page + 1 })}
+                    onPrev={() => store.loadUsers({ page: pageInfo.page - 1 })}
+                    onFirst={() => store.loadUsers({ page: 1 })}
+                    onLast={() => store.loadUsers({ page: pageInfo.totalPages })}
+                />
+            </div>)}
+        </div>
     );
 }
 
 function MainContent() {
+    const store = useAddMembersDialogStore();
     return (
-        <div className="space-y-4">
-            <UserList />
-        </div>
+        <Observer>
+            {() => {
+                if (store.loadUsersState.isData) {
+                    return (<UserList />);
+                }
+                else if (store.loadUsersState.isError) {
+                    return (<FullCenteredView className="overflow-y-auto">
+                        <SimpleRetryableAppView
+                            appError={store.loadUsersState.error}
+                            onRetry={() => store.loadUsers()}
+                        />
+                    </FullCenteredView>);
+                }
+                else {
+                    return (<FullCenteredView>
+                        <LoaderView />
+                    </FullCenteredView>);
+                }
+            }}
+        </Observer>
     );
 }
 
@@ -198,7 +169,7 @@ function MainContent() {
 function DialogInner() {
     const store = useAddMembersDialogStore();
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (store.loadUsersState.isInit) {
             store.loadUsers();
         }
@@ -208,33 +179,10 @@ function DialogInner() {
         <Dialog onClose={() => { }}>
             <DialogOverlay />
             <DialogScaffold className="p-4">
-                <DialogContent className="w-full max-w-xl">
+                <DialogContent className="w-full max-w-xl h-full max-h-[640px] flex flex-col overflow-y-hidden">
                     <DialogHeaderView />
                     <MainContent />
-                    <DialogFooter
-                        className="border-t border-default"
-                        actions={[
-                            <Button
-                                variant="outline"
-                                color="secondary"
-                                onClick={() => store.closeDialog()}
-                            >
-                                Cancel
-                            </Button>,
-                            <Observer>
-                                {() => (
-                                    <Button
-                                        disabled={!store.canAddMembers}
-                                        variant="solid"
-                                        color="primary"
-                                        onClick={() => store.addMembers()}
-                                    >
-                                        {store.addState.isLoading ? "Adding..." : `Add ${store.selectedUsersCount > 0 ? `${store.selectedUsersCount} ` : ''}Members`}
-                                    </Button>
-                                )}
-                            </Observer>
-                        ]}
-                    />
+                    <DialogFooterView />
                 </DialogContent>
             </DialogScaffold>
         </Dialog>

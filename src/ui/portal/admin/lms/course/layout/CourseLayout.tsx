@@ -16,6 +16,7 @@ import { Button } from "~/ui/widgets/button/Button";
 import { Copy } from "lucide-react";
 import { LMSConst } from "~/domain/lms/models/LMSConst";
 import { useDialogManager } from "~/ui/widgets/dialogmanager";
+import { AdminFormsService } from "~/domain/forms/admin/services/AdminFormsService";
 
 function PageProvider({ children }: { children: React.ReactNode }) {
     const storeRef = useRef<CourseLayoutStore | null>(null);
@@ -31,10 +32,12 @@ function PageProvider({ children }: { children: React.ReactNode }) {
         if (isNaN(courseId)) {
             throw new Error("Invalid course ID");
         }
+        const formService = new AdminFormsService();
         storeRef.current = new CourseLayoutStore({
             layoutStore: layoutStore,
             courseId: courseId,
-            dialogManager: dialogManager
+            dialogManager: dialogManager,
+            formsService: formService
         });
     }
     return (
