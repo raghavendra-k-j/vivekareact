@@ -18,6 +18,7 @@ import { GetQuestionRes } from "../models/GetQuestionRes";
 import { FormTranslation } from "../models/translation/FormTranslation";
 import { SaveTranslationReq } from "../models/translation/SaveTranslationReq";
 import { CreateNewReq } from "../models/CreateNewReq";
+import { AdminQueryFormsReq, AdminQueryFormsRes } from "../models/AdminQueryFormsModels";
 
 export class AdminFormsService {
 
@@ -86,6 +87,10 @@ export class AdminFormsService {
 
     async createNewForm(req: CreateNewReq): Promise<ResEither<AppError, AdminFormDetail>> {
         return await this.adminFormRepo.createNewForm(req);
+    }
+
+    async queryForms(req: AdminQueryFormsReq): Promise<ResEither<AppError, AdminQueryFormsRes>> {
+        return await this.adminFormRepo.queryForms(req);
     }
 
 }

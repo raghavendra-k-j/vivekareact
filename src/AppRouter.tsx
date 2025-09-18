@@ -27,13 +27,16 @@ const CoursesPage = lazy(() => import("./ui/portal/user/courses/CoursesPage"));
 const FormsPage = lazy(() => import("./ui/portal/user/forms/FormsPage"));
 
 
-
 // Admin Pages
 const AdminHomePage = lazy(() => import("./ui/portal/admin/home/HomePage"));
 const AdminUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/userslist/UsersPage"));
 const AdminRolesPage = lazy(() => import("./ui/portal/admin/usermgmt/roles/RolesPage"));
 const AdminImportUsersPage = lazy(() => import("./ui/portal/admin/usermgmt/import/ImportPage"));
 const AdminCategoriesPage = lazy(() => import("./ui/portal/admin/forms/categories/CategoriesPage"));
+
+const AdminFormsModuleLayout = lazy(() => import("./ui/portal/admin/forms/layout/AdminFormsLayout"));
+const AdminFormsListPage = lazy(() => import("./ui/portal/admin/forms/formslist/AdminFormsListPage"));
+
 
 const AdminLMSLayout = lazy(() => import("./ui/portal/admin/lms/layout/LMSLayout"));
 const AdminLMSHomePage = lazy(() => import("./ui/portal/admin/lms/home/LMSHomePage"));
@@ -162,9 +165,10 @@ const userPortalRoutes = (
 
 const adminPortalRoutes = (
     <Route path="/console" element={<AdminPortalLayout />}>
+
         <Route index element={<AdminHomePage />} />
-        <Route path="forms">
-            <Route index element={<AdminFormsLayout />} />
+        <Route path="forms" element={<AdminFormsModuleLayout />}>
+            <Route index element={<AdminFormsListPage />} />
             <Route path="categories" element={<AdminCategoriesPage />} />
             <Route path=":permalink">
                 <Route path="questions" element={<div>Sigle Form Details</div>} />

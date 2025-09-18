@@ -10,11 +10,14 @@ import { FormType } from "~/domain/forms/models/FormType";
 import { showLoadingDialog } from "~/ui/components/dialogs/showLoadingDialog";
 import { CreateNewReq } from "~/domain/forms/admin/models/CreateNewReq";
 import { showErrorToast, showSuccessToast } from "~/ui/widgets/toast/toast";
+import { AdminFormStatus } from "~/domain/forms/models/AdminFormStatus";
 
 export class ContentStore {
     layoutStore: CourseLayoutStore;
 
     searchQuery: string = "";
+    selectedFormType: FormType | null = null;
+    selectedAdminFormStatus: AdminFormStatus | null = null;
     queryState: DataState<AdminCCListVm> = DataState.init();
     pageSize: number = 50;
     currentPage: number = 1;
@@ -24,6 +27,8 @@ export class ContentStore {
         makeObservable(this, {
             queryState: observable.ref,
             searchQuery: observable,
+            selectedFormType: observable,
+            selectedAdminFormStatus: observable,
             currentPage: observable,
         });
     }
@@ -52,8 +57,8 @@ export class ContentStore {
                 page: page,
                 pageSize: this.pageSize,
                 searchQuery: this.searchQuery || null,
-                formType: null,
-                formStatus: null,
+                formType: this.selectedFormType?.type || null,
+                formStatus: this.selectedAdminFormStatus?.status || null,
                 topicIds: null,
             });
 
@@ -76,6 +81,16 @@ export class ContentStore {
         this.loadContents({ page: 1 });
     }
 
+    setSelectedFormType(type: FormType | null) {
+        this.selectedFormType = type;
+        this.loadContents({ page: 1 });
+    }
+
+    setSelectedAdminFormStatus(status: AdminFormStatus | null) {
+        this.selectedAdminFormStatus = status;
+        this.loadContents({ page: 1 });
+    }
+
     goToPage(page: number) {
         this.loadContents({ page });
     }
@@ -93,7 +108,14 @@ export class ContentStore {
             showSuccessToast({
                 message: "Form created successfully",
             });
-            window.location.href = "https://latest.vivekaa.in/admin/forms/83c9ec24ccc148ebbba3cdea9e616b75";
+
+            if(1 === 1) {
+                window.location.href = 'http://test.rklocal.com:8080/admin/forms/87a0a7acecb5494796076835df974234';
+                return;
+            }
+
+            const redirectUrl = `http://test.rklocal.com:8080/admin/forms/${res.permalink}`;
+            window.location.href = redirectUrl;
         }
         catch (error) {
             const appError = AppError.fromAny(error);

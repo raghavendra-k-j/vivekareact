@@ -32,6 +32,15 @@
   --color-input-border-disabled: var(--color-slate-300);
   --shadow-input: var(--shadow-xs);
   --shadow-input-focused: 0 0 0 1px var(--color-input-border-focus);
+
+  --color-assessments-bg: var(--color-blue-50);
+  --color-assessments-foreground: var(--color-blue-500);
+  --color-assessments-ring: var(--color-blue-200);
+  --color-surveys-bg: var(--color-orange-50);
+  --color-surveys-foreground: var(--color-orange-500);
+  --color-surveys-ring: var(--color-orange-200);
+
+
 }
 
 

@@ -36,6 +36,10 @@ export class AuthUser extends RegUser {
         return this._permissionIds.has(id);
     }
 
+    hasAnyPermission(ids: string[]): boolean {
+        return ids.some((id) => this._permissionIds.has(id));
+    }
+
     get appUserType(): AppUserType {
         return AppUserType.auth;
     }

@@ -7,7 +7,7 @@ export class LMSLayoutStore {
 
     appStore: AppStore;
     adminSpacesService: AdminSpacesService;
-    
+
     constructor({ appStore }: { appStore: AppStore }) {
         this.appStore = appStore;
         this.adminSpacesService = new AdminSpacesService();
@@ -32,6 +32,5 @@ export class LMSLayoutStore {
     get hasAnyPermission() {
         return this.hasAllPermission || this.hasAssignedPermission;
     }
-
 
 }

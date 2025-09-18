@@ -9,7 +9,10 @@ import { LMSLayoutStore } from "./LMSLayoutStore";
 function PageProvider() {
     const storeRef = useRef<LMSLayoutStore | null>(null);
     const appStore = useAppStore();
-    const hasLMSPermission = appStore.authUser.hasPermission(UserPermissions.ADMIN_SPACES_ALL) || appStore.authUser.hasPermission(UserPermissions.ADMIN_SPACES_ASSIGNED);
+    const hasLMSPermission = appStore.authUser.hasAnyPermission([
+        UserPermissions.ADMIN_SPACES_ALL,
+        UserPermissions.ADMIN_SPACES_ASSIGNED
+    ]);
 
     if (!hasLMSPermission) {
         return (<AdminForbiddenView />);

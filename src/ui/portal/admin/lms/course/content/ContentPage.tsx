@@ -8,8 +8,10 @@ import { Badge } from "~/ui/widgets/badges/Badge";
 import { Button } from "~/ui/widgets/button/Button";
 import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 import { Input } from "~/ui/widgets/form/Input";
+import { ListBox } from "~/ui/widgets/form/ListBox";
 import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { Pagination } from "~/ui/widgets/pagination/Pagination";
+import { AdminFormStatus } from "~/domain/forms/models/AdminFormStatus";
 import { useCourseLayoutStore } from "../layout/CourseLayoutContext";
 import { ContentContext, useContentStore } from "./ContentContext";
 import { ContentStore } from "./ContentStore";
@@ -47,7 +49,7 @@ function ContentPageInner() {
                 <Card>
                     <CardHeader divider className="px-3 py-2">
                         <div className="flex items-center justify-between gap-3">
-                            <SearchBar />
+                            <SearchAndFilterBar />
                             <div className="flex flex-row gap-2">
                                 <Button
                                     color="success"
@@ -115,18 +117,50 @@ function ContentPageInner() {
 }
 
 
-function SearchBar() {
+function SearchAndFilterBar() {
     const store = useContentStore();
     return (
-        <div className="w-full max-w-md">
-            <Input
-                inputSize="md"
-                placeholder="Search content by title..."
-                type="search"
-                className="font-medium"
-                value={store.searchQuery}
-                onChange={(e) => store.setSearchQuery(e.target.value)}
-            />
+        <div className="flex flex-1 items-center gap-3">
+            <Observer>
+                {() => (
+                    <Input
+                        inputSize="md"
+                        placeholder="Search content by title..."
+                        type="search"
+                        className="font-medium w-full max-w-md"
+                        value={store.searchQuery}
+                        onChange={(e) => store.setSearchQuery(e.target.value)}
+                    />
+                )}
+            </Observer>
+            <Observer>
+                {() => (
+                    <ListBox<FormType>
+                        className="min-w-36 shrink-0"
+                        items={[FormType.Assessment, FormType.Survey]}
+                        itemKey={item => item.type}
+                        itemRenderer={item => item.name}
+                        inputSize="md"
+                        placeholder="All Types"
+                        onValueChange={(type) => store.setSelectedFormType(type)}
+                        value={store.selectedFormType}
+                    />
+                )}
+            </Observer>
+            <Observer>
+                {() => (
+                    <ListBox<AdminFormStatus>
+                        className="min-w-36 shrink-0"
+                        items={AdminFormStatus.values}
+                        itemKey={item => item.status}
+                        itemRenderer={item => item.name}
+                        inputSize="md"
+                        placeholder="All Statuses"
+                        onValueChange={(status) => store.setSelectedAdminFormStatus(status)}
+                        value={store.selectedAdminFormStatus}
+                    />
+                )}
+            </Observer>
         </div>
     );
 }

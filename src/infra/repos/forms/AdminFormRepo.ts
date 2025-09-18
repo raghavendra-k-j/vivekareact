@@ -18,6 +18,7 @@ import { FormCompareUserList } from "~/domain/forms/admin/models/compare/FormCom
 import { FormTranslation } from "~/domain/forms/admin/models/translation/FormTranslation";
 import { SaveTranslationReq } from "~/domain/forms/admin/models/translation/SaveTranslationReq";
 import { CreateNewReq } from "~/domain/forms/admin/models/CreateNewReq";
+import { AdminQueryFormsReq, AdminQueryFormsRes } from "~/domain/forms/admin/models/AdminQueryFormsModels";
 
 
 export class AdminFormRepo {
@@ -228,6 +229,23 @@ export class AdminFormRepo {
             return ResEither.error(apiError);
         }
     }
+
+
+
+
+    async queryForms(req: AdminQueryFormsReq): Promise<ResEither<ApiError, AdminQueryFormsRes>> {
+        try {
+            const response = await this.axios.post(`/api/v1/admin/forms/query`, req.toJson());
+            const data = AdminQueryFormsRes.fromJson(response.data);
+            return ResEither.data(data);
+        }
+        catch (error) {
+            logger.error("Error querying forms", error);
+            const apiError = ApiError.fromAny(error);
+            return ResEither.error(apiError);
+        }
+    }
+
 
 
 }
