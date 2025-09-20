@@ -12,6 +12,7 @@ import { SidebarContext, useSidebarStore } from "./SidebarContext";
 import { NavItem, NavItemActionType, NavItemType, NavSection } from "./SidebarModels";
 import { SidebarStore } from "./SidebarStore";
 import styles from "./styles.module.css";
+import { logout } from "~/ui/utils/authRedirectUtils";
 
 const ICON_SIZE = 18;
 
@@ -197,7 +198,7 @@ function SidebarBottom() {
             <button
                 className={clsx(styles.navItem, styles.logoutButton)}
                 onClick={() => {
-                    portalStore.logout();
+                    logout({appStore: portalStore.appStore});
                 }}
             >
                 <Power size={ICON_SIZE} />

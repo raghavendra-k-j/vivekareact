@@ -20,25 +20,25 @@ export type AdminFormDetailProps = {
     createdAt: Date;
     updatedAt: Date;
     status: FormStatus;
-    language?: Language;
-    languages?: Language[];
-    verifyGuestEmail?: boolean;
+    language: Language | null;
+    languages: Language[];
+    verifyGuestEmail: boolean | null;
     title: string;
-    description?: string;
-    tags?: string[];
-    startDate?: Date;
-    endDate?: Date;
-    timeLimit?: number;
+    description: string | null;
+    tags: string[];
+    startDate: Date | null;
+    endDate: Date | null;
+    timeLimit: number | null;
     totalQuestions: number;
-    totalMarks?: number;
-    passingMarks?: number;
-    assessmentType?: AssmntType;
-    assmntTypeRef?: AssmntTypeRefItem;
+    totalMarks: number | null;
+    passingMarks: number | null;
+    assessmentType: AssmntType | null;
+    assmntTypeRef: AssmntTypeRefItem | null;
     assmntDomain: AssmntDomain | null;
-    shuffle?: boolean;
+    shuffle: boolean | null;
     visibility: FormVisibility;
-    hold4ManualEval?: boolean;
-    evalOeQsWtAi?: boolean;
+    hold4ManualEval: boolean | null;
+    evalOeQsWtAi: boolean | null;
 
     totalViews: number;
     totalInvites: number;
@@ -58,25 +58,25 @@ export class AdminFormDetail {
     public readonly createdAt: Date;
     public readonly updatedAt: Date;
     public readonly status: FormStatus;
-    public readonly language?: Language;
-    public readonly languages?: Language[];
-    public readonly verifyGuestEmail?: boolean;
+    public readonly language: Language | null;
+    public readonly languages: Language[];
+    public readonly verifyGuestEmail: boolean | null;
     public readonly title: string;
-    public readonly description?: string;
-    public readonly tags?: string[];
-    public readonly startDate?: Date;
-    public readonly endDate?: Date;
-    public readonly timeLimit?: number;
+    public readonly description: string | null;
+    public readonly tags: string[];
+    public readonly startDate: Date | null;
+    public readonly endDate: Date | null;
+    public readonly timeLimit: number | null;
     public readonly totalQuestions: number;
-    public readonly totalMarks?: number;
-    public readonly passingMarks?: number;
-    public readonly assessmentType?: AssmntType;
-    public readonly assmntTypeRef?: AssmntTypeRefItem;
+    public readonly totalMarks: number | null;
+    public readonly passingMarks: number | null;
+    public readonly assessmentType: AssmntType | null;
+    public readonly assmntTypeRef: AssmntTypeRefItem | null;
     public readonly assmntDomain: AssmntDomain | null;
-    public readonly shuffle?: boolean;
+    public readonly shuffle: boolean | null;
     public readonly visibility: FormVisibility;
-    public readonly hold4ManualEval?: boolean;
-    public readonly evalOeQsWtAi?: boolean;
+    public readonly hold4ManualEval: boolean | null;
+    public readonly evalOeQsWtAi: boolean | null;
     public readonly totalViews: number;
     public readonly totalInvites: number;
     public readonly totalResponses: number;
@@ -136,12 +136,12 @@ export class AdminFormDetail {
         const createdAt = new Date(map.createdAt);
         const updatedAt = new Date(map.updatedAt);
         const status = FormStatus.fromValue(map.status);
-        const language = map.language ? Language.fromJson(map.language) : undefined;
-        const languages = map.languages ? map.languages.map((lang: JsonObj) => Language.fromJson(lang)) : undefined;
-        const startDate = map.startDate ? new Date(map.startDate) : undefined;
-        const endDate = map.endDate ? new Date(map.endDate) : undefined;
-        const assessmentType = map.assessmentType ? AssmntType.fromType(map.assessmentType) : undefined;
-        const assmntTypeRef = map.assmntTypeRef ? AssmntTypeRefItem.fromJson(map.assmntTypeRef) : undefined;
+        const language = map.language ? Language.fromJson(map.language) : null;
+        const languages = map.languages ? map.languages.map((lang: JsonObj) => Language.fromJson(lang)) : [];
+        const startDate = map.startDate ? new Date(map.startDate) : null;
+        const endDate = map.endDate ? new Date(map.endDate) : null;
+        const assessmentType = map.assessmentType ? AssmntType.fromType(map.assessmentType) || null : null;
+        const assmntTypeRef = map.assmntTypeRef ? AssmntTypeRefItem.fromJson(map.assmntTypeRef) || null : null;
         const visibility = FormVisibility.fromVisibility(map.visibility)!;
         const assmntDomain = map.assmntDomain ? AssmntDomain.fromType(map.assmntDomain) : null;
 
@@ -158,23 +158,23 @@ export class AdminFormDetail {
             status,
             language,
             languages,
-            verifyGuestEmail: map.verifyGuestEmail,
+            verifyGuestEmail: map.verifyGuestEmail ?? null,
             title: map.title,
-            description: map.description,
-            tags: map.tags,
+            description: map.description ?? null,
+            tags: map.tags ?? [],
             startDate,
             endDate,
-            timeLimit: map.timeLimit,
+            timeLimit: map.timeLimit ?? null,
             totalQuestions: map.totalQuestions,
-            totalMarks: map.totalMarks,
-            passingMarks: map.passingMarks,
+            totalMarks: map.totalMarks ?? null,
+            passingMarks: map.passingMarks ?? null,
             assessmentType,
             assmntTypeRef,
             assmntDomain: assmntDomain,
-            shuffle: map.shuffle,
+            shuffle: map.shuffle ?? null,
             visibility,
-            hold4ManualEval: map.hold4ManualEval,
-            evalOeQsWtAi: map.evalOeQsWtAi,
+            hold4ManualEval: map.hold4ManualEval ?? null,
+            evalOeQsWtAi: map.evalOeQsWtAi ?? null,
             totalViews: map.totalViews,
             totalInvites: map.totalInvites,
             totalResponses: map.totalResponses,

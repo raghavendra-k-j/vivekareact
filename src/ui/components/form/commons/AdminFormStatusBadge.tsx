@@ -4,11 +4,11 @@ import { Badge, BadgeSize } from "~/ui/widgets/badges/Badge";
 
 type AdminFormStatusBadgeProps = {
     status: AdminFormStatus;
-    size: BadgeSize;
+    size?: BadgeSize
     className?: string;
 };
 
-export const AdminFormStatusBadge: React.FC<AdminFormStatusBadgeProps> = ({ status, size, className }) => {
+export const AdminFormStatusBadge: React.FC<AdminFormStatusBadgeProps> = ({ status, size = "sm", className }) => {
     return (
         <Badge
             variant="soft"

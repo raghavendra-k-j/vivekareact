@@ -9,6 +9,7 @@ import { GetAppUserRes } from "../models/submit/GetAppUserRes";
 import { FormResponseDetail } from "../models/FormResponseDetail";
 import { RDQuestionsReq } from "../models/RDQuestionsReq";
 import { RDQuestionsRes } from "../models/RDQuestionsRes";
+import { FormListingReq, FormListingRes } from "../models/FormListingModels";
 
 export class FormService {
 
@@ -64,6 +65,11 @@ export class FormService {
 
     async getFormResponseDetailQuestions(req: RDQuestionsReq): Promise<ResEither<AppError, RDQuestionsRes>> {
         const res = await this.formRepo.getFormResponseDetailQuestions(req);
+        return res;
+    }
+
+    async getFormList(req: FormListingReq): Promise<ResEither<AppError, FormListingRes>> {
+        const res = await this.formRepo.getFormList(req);
         return res;
     }
 

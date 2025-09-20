@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { Cropper, CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { FileSizeFmt } from "~/core/utils/FileSizeFmt";
-import { ServiceURL } from "~/infra/datasources/ServiceURL";
+import { ServiceUrl } from "~/infra/datasources/ServiceUrl";
 import Card, { CardBody } from "~/ui/components/card";
 import { Button } from "~/ui/widgets/button/Button";
 import { SettingsCardHeader } from "../../components/OrgSettingsHeader";
@@ -67,7 +67,7 @@ function HasLogoView() {
     const allowedExtensions = store.orgSettings.validationData.logoAllowedExtensions || [];
     const maxFileSizeMB = FileSizeFmt.humanReadable(store.orgSettings.validationData.logoMaxSizeInBytes);
     const formats = allowedExtensions.map((e) => e.toUpperCase()).join(", ");
-    const logoSrc = ServiceURL.getUrl("/" + store.orgSettings.logoUrl);
+    const logoSrc = ServiceUrl.getUrl("/" + store.orgSettings.logoUrl);
 
     return (
         <div className="space-y-4">

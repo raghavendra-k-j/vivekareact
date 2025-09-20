@@ -1,18 +1,19 @@
 import { CheckCircle2, Hourglass } from 'lucide-react';
-import { useSubmitStore } from '../SubmitContext';
-import { AppBar } from '../comp/AppBar';
-import AppBarLogo from '~/ui/components/AppBarLogo';
-import FilledButton from '~/ui/widgets/button/FilledButton';
-import OutlinedButton from '~/ui/widgets/button/OutlinedButton';
-import { Card, Title, Message } from './SubmitCommon';
+import { PortalAppBarLogo } from '~/ui/portal/components/appbar/PortalAppBarLogo';
+import { AppBarUserAvatar } from '~/ui/portal/components/avatar/AppBarUserAvatar';
 import { BasicBanner } from '~/ui/widgets/banner/BasicBanner';
-import { ProfileView } from '~/ui/components/appbar/profile/ProfileView';
+import { Button } from '~/ui/widgets/button/Button';
+import { useSubmitStore } from '../SubmitContext';
+import { SubmitPageAppBar } from '../components/SubmitPageAppBar';
+import { Card, Message, Title } from './SubmitCommon';
 import { useViewResponse } from './useViewResponse';
 
 export function SubmittedFragment() {
     return (
         <>
-            <AppBar leading={<AppBarLogo />} trailing={<ProfileView />} />
+            <SubmitPageAppBar
+                leading={<PortalAppBarLogo />}
+                trailing={<AppBarUserAvatar />} />
             <Body />
         </>
     );
@@ -39,9 +40,9 @@ function ReturnToHomeButton() {
         return null;
     }
     return (
-        <OutlinedButton onClick={() => (window.location.href = store.returnToHomeURL)}>
+        <Button variant="outline" color='secondary' onClick={() => (window.location.href = store.returnToHomeURL)}>
             Return to Home
-        </OutlinedButton>
+        </Button>
     );
 }
 
@@ -71,9 +72,9 @@ function Assessment() {
             )}
 
             <div className="flex flex-col gap-3 mt-8">
-                <FilledButton onClick={viewResponse} disabled={!isEvaluated}>
+                <Button onClick={viewResponse} disabled={!isEvaluated}>
                     {store.formDetail.type.isAssessment ? "View Result" : "View Response"}
-                </FilledButton>
+                </Button>
                 <ReturnToHomeButton />
             </div>
         </Card>
@@ -96,7 +97,7 @@ function Survey() {
             </Message>
 
             <div className="flex flex-col gap-3 mt-8">
-                <FilledButton onClick={viewResponse}>View Response</FilledButton>
+                <Button onClick={viewResponse}>View Response</Button>
                 {store.hasBackNavigation && <ReturnToHomeButton />}
             </div>
         </Card>

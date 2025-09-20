@@ -1,4 +1,4 @@
-import FilledButton from "~/ui/widgets/button/FilledButton";
+import { Button } from "~/ui/widgets/button/Button";
 import { QuestionPageProvider } from "./QuestionPageProvider";
 
 export default function QuestionsPage() {
@@ -14,7 +14,7 @@ function Body() {
     };
     return (
         <div>
-            <FilledButton onClick={handleOnClickQuestion}>Add Questions</FilledButton>
+            <Button onClick={handleOnClickQuestion}>Add Questions</Button>
         </div>
     );
 }

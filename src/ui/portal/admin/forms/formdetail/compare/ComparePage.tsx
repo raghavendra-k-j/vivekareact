@@ -1,16 +1,16 @@
+import { Observer } from "mobx-react-lite";
 import { useEffect } from "react";
+import { AppError } from "~/core/error/AppError";
+import { FormCompareConst } from "~/domain/forms/admin/models/compare/FormCompareConst";
+import { UnknowStateView } from "~/ui/components/errors/UnknowStateView";
 import { PageLoader } from "~/ui/components/loaders/PageLoader";
+import { Button } from "~/ui/widgets/button/Button";
+import { SimpleErrorView } from "~/ui/widgets/error/SimpleErrorView";
+import { CompareResultTab } from "./comp/CompareResultTab";
+import SelectFormTab from "./comp/SelectFormTab";
 import { useAdminFormCompareStore } from "./ComparePageContext";
 import { AdminFormCompareStoreProvider } from "./ComparePageProvider";
-import { Observer } from "mobx-react-lite";
-import { AppError } from "~/core/error/AppError";
-import { SimpleErrorView } from "~/ui/widgets/error/SimpleErrorView";
-import FilledButton from "~/ui/widgets/button/FilledButton";
-import { FormCompareConst } from "~/domain/forms/admin/models/compare/FormCompareConst";
 import { CompareCurrentPageState } from "./models/CompareTabFragment";
-import { UnknowStateView } from "~/ui/components/errors/UnknowStateView";
-import SelectFormTab from "./comp/SelectFormTab";
-import { CompareResultTab } from "./comp/CompareResultTab";
 
 export default function AdminFormComparePage() {
     return (<AdminFormCompareStoreProvider>
@@ -60,7 +60,7 @@ function ErrorView({ error }: { error: AppError }) {
                 actions={
                     error.errorCode !== FormCompareConst.ERROR_COMPARE_COMMONS_FORM_NOT_ELIGIBLE
                         ? [
-                            <FilledButton key="retry" onClick={() => store.fetchMetadata()}>Retry</FilledButton>
+                            <Button key="retry" onClick={() => store.fetchMetadata()}>Retry</Button>
                         ]
                         : undefined
                 }

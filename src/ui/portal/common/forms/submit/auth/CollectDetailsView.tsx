@@ -1,11 +1,10 @@
+import { Observer } from "mobx-react-lite";
+import { Button } from "~/ui/widgets/button/Button";
+import { useDialogManager } from "~/ui/widgets/dialogmanager";
 import { FTextField } from "~/ui/widgets/form/TextField";
 import { FormAuthCard } from "./FormAuthCard";
 import { useFormAuthStore } from "./FormAuthContext";
-import FilledButton from "~/ui/widgets/button/FilledButton";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { HeaderView } from "./HeaderView";
-import { useDialogManager } from "~/ui/widgets/dialogmanager";
-import { Observer } from "mobx-react-lite";
 
 export function CollectDetailsView() {
     const store = useFormAuthStore();
@@ -55,21 +54,23 @@ export function CollectDetailsView() {
                 </div>
 
                 <div className="flex justify-end gap-4 px-6 py-4 mt-6">
-                    <OutlinedButton
+                    <Button
+                        variant="outline"
+                        color="secondary"
                         type="button"
                         onClick={() => store.onClickBackInCollectDetails()}>
                         Back
-                    </OutlinedButton>
+                    </Button>
 
                     <Observer>
                         {() => (
-                            <FilledButton
+                            <Button
                                 type="submit"
                                 disabled={store.submitState.isLoading}
                                 onClick={() => store.onClickNextInCollectDetails(dialogManager)}
                             >
                                 Continue
-                            </FilledButton>
+                            </Button>
                         )}
                     </Observer>
                 </div>

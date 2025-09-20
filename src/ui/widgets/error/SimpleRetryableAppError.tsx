@@ -1,6 +1,6 @@
 import { AppError } from "~/core/error/AppError";
 import { SimpleErrorView } from "./SimpleErrorView";
-import FilledButton from "../button/FilledButton";
+import { Button } from "../button/Button";
 
 export type SimpleRetryableAppErrorViewProps = {
     appError: AppError;
@@ -18,9 +18,9 @@ export function SimpleRetryableAppView({
             message={appError.message}
             description={appError.description}
             actions={[
-                <FilledButton onClick={onRetry} key="retry" >
+                <Button onClick={onRetry} key="retry" >
                     Retry
-                </FilledButton>
+                </Button>
             ]}
             className={className}
         />

@@ -2,12 +2,12 @@ import React from "react";
 import { AssmntType } from "~/domain/forms/models/AssmntType";
 import { Badge } from "~/ui/widgets/badges/Badge";
 
-type AssmntTypeBadgeProps = {
+type Props = {
     type: AssmntType;
     className?: string;
 };
 
-export const AssmntTypeBadge: React.FC<AssmntTypeBadgeProps> = ({ type, className }) => {
+export const AssmntTypeBadge: React.FC<Props> = ({ type, className }) => {
     return (
         <Badge
             variant="soft"

@@ -1,6 +1,4 @@
-import FilledButton from "~/ui/widgets/button/FilledButton";
 import { useFormAuthStore } from "./FormAuthContext";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { FormAuthCard } from "./FormAuthCard";
 import { FTextField } from "~/ui/widgets/form/TextField";
 import { HeaderView } from "./HeaderView";
@@ -8,6 +6,7 @@ import { Observer } from "mobx-react-lite";
 import { useDialogManager } from "~/ui/widgets/dialogmanager";
 import { TimeFmt } from "~/core/utils/TimeFmt";
 import { EmailOTPConst } from "~/core/const/EmailOTPConst";
+import { Button } from "~/ui/widgets/button/Button";
 
 export function VerifyEmailView() {
     const store = useFormAuthStore();
@@ -63,18 +62,19 @@ export function VerifyEmailView() {
                 </div>
 
                 <div className="px-6 py-4 mt-4 gap-4 flex justify-end">
-                    <OutlinedButton type="button" onClick={() => store.onClickBackInVerifyEmail()}>
+                    <Button variant="outline" color="secondary" type="button" onClick={() => store.onClickBackInVerifyEmail()}>
                         Back
-                    </OutlinedButton>
+                    </Button>
 
                     <Observer>
                         {() => (
-                            <FilledButton
+                            <Button
+
                                 disabled={store.verifyState.isLoading}
                                 type="submit"
                             >
                                 Verify Email
-                            </FilledButton>
+                            </Button>
                         )}
                     </Observer>
                 </div>

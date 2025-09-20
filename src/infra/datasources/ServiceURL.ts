@@ -1,20 +1,20 @@
-export class ServiceURL {
-    private static instance: ServiceURL;
+export class ServiceUrl {
+    private static instance: ServiceUrl;
     private readonly baseUrl: string;
 
     private constructor({ baseUrl }: { baseUrl: string }) {
         this.baseUrl = baseUrl;
     }
 
-    public static createInstance({ baseUrl }: { baseUrl: string }): ServiceURL {
+    public static createInstance({ baseUrl }: { baseUrl: string }): ServiceUrl {
         if (!this.instance) {
-            this.instance = new ServiceURL({ baseUrl });
+            this.instance = new ServiceUrl({ baseUrl });
         }
         return this.instance;
     }
 
 
-    public static findInstance(): ServiceURL {
+    public static findInstance(): ServiceUrl {
         return this.instance!;
     }
 

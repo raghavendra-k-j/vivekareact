@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import AppRouter from "./AppRouter";
 import { BaseEnv } from "./core/config/BaseEnv";
 import { BaseApiClient } from "./infra/datasources/BaseApiClient";
-import { ServiceURL } from "./infra/datasources/ServiceURL";
+import { ServiceUrl } from "./infra/datasources/ServiceUrl";
 import { AppUrl } from "./infra/utils/AppUrl";
 import MainRouter from "./MainRouter";
 import { DialogManagerProvider } from "./ui/widgets/dialogmanager";
@@ -23,7 +23,7 @@ async function bootstrap() {
   BaseApiClient.createInstace({ baseURL: baseEnv.apiUrl });
 
   const ResolvedRouter = baseEnv.isMainSite ? MainRouter : AppRouter;
-  ServiceURL.createInstance({ baseUrl: baseEnv.apiUrl });
+  ServiceUrl.createInstance({ baseUrl: baseEnv.apiUrl });
   AppUrl.createInstance({ baseUrl: baseEnv.websiteBaseUrl });
 
   const rootElement = document.getElementById("root");
@@ -44,4 +44,5 @@ async function bootstrap() {
 
 bootstrap().catch((err) => {
   console.error("Failed to bootstrap app", err);
+  document.write("Failed to load app");
 });

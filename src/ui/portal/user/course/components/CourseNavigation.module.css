@@ -1,0 +1,65 @@
+.navigationContainer {
+    background-color: var(--bc-bg);
+    border-bottom: 1px solid var(--bc-border-default);
+    padding: 12px 0;
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 220ms ease;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--bc-text-tertiary);
+    flex-shrink: 0;
+}
+
+.backButton:hover {
+    background-color: var(--bc-bg-hover);
+    color: var(--bc-text-default);
+}
+
+.navItem {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 8px 16px;
+    font-weight: 500;
+    border-bottom: 0;
+    transition: color 220ms ease, background-color 220ms ease;
+    cursor: pointer;
+    flex-shrink: 0;
+    min-height: 40px;
+}
+
+.inactive {
+    color: var(--bc-tab-fg);
+    background-color: var(--bc-tab-bg);
+}
+
+.navItem:hover {
+    background-color: var(--bc-tab-bg-hover);
+    color: var(--bc-tab-fg-hover);
+}
+
+.active {
+    color: var(--bc-tab-active-fg);
+    background-color: var(--bc-tab-active-bg);
+    border-radius: 8px 8px 0 0;
+}
+
+.underline {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 0;
+    height: 4px;
+    border-radius: 999px 999px 0 0;
+    background: var(--bc-tab-active-border);
+    pointer-events: none;
+}

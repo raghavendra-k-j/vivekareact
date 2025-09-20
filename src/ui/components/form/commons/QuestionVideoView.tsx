@@ -1,5 +1,5 @@
 import { QMediaTile } from "~/domain/forms/models/qmedia/QMediaTile";
-import { ServiceURL } from "~/infra/datasources/ServiceURL";
+import { ServiceUrl } from "~/infra/datasources/ServiceUrl";
 
 export type QuestionVideoViewProps = {
     media: QMediaTile;
@@ -11,7 +11,7 @@ export function QuestionVideoView(props: QuestionVideoViewProps) {
         <video
             className="w-full h-full object-cover rounded-sm"
             controls
-            src={ServiceURL.getBaseUrl() + "/" + props.media.path}
+            src={ServiceUrl.getBaseUrl() + "/" + props.media.path}
         >
             Your browser does not support the video tag.
         </video>

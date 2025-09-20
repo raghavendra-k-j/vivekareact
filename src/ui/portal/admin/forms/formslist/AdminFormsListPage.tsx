@@ -5,7 +5,7 @@ import { AdminFormListTile } from "~/domain/forms/admin/models/AdminQueryFormsMo
 import { AdminFormStatus } from "~/domain/forms/models/AdminFormStatus";
 import { FormType } from "~/domain/forms/models/FormType";
 import { Card, CardBody } from "~/ui/components/card";
-import { FormAvatar } from "~/ui/components/forms/FormAvatar";
+import { FormAvatar } from "~/ui/components/form/commons/FormAvatar";
 import { Badge } from "~/ui/widgets/badges/Badge";
 import { Button } from "~/ui/widgets/button/Button";
 import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
@@ -14,13 +14,13 @@ import { ListBox } from "~/ui/widgets/form/ListBox";
 import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { Pagination } from "~/ui/widgets/pagination/Pagination";
 import { AdminPageAppBar, AdminPageAppBarTitle } from "../../components/PageAppBar";
-import { useAdminFormsModuleLayoutStore } from "../layout/AdminFormsLayoutContext";
+import { useAdminFormsModuleStore } from "../layout/FormsLayoutContext";
 import { AdminFormsListContext, useAdminFormsListStore } from "./AdminFormsListContext";
 import { AdminFormsListStore } from "./AdminFormsListStore";
 
 function PageProvider({ children }: { children: React.ReactNode }) {
     const storeRef = useRef<AdminFormsListStore | null>(null);
-    const layoutStore = useAdminFormsModuleLayoutStore();
+    const layoutStore = useAdminFormsModuleStore();
     if (!storeRef.current) {
         storeRef.current = new AdminFormsListStore({
             layoutStore: layoutStore,
@@ -59,7 +59,7 @@ function AdminFormsListPageInner() {
                             color="success"
                             variant="solid"
                             size="md"
-                            onClick={() => store.layoutStore.newForm({ type: FormType.Assessment })}
+                            onClick={() => store.newForm({ type: FormType.Assessment })}
                         >
                             New Assessment
                         </Button>
@@ -67,7 +67,7 @@ function AdminFormsListPageInner() {
                             color="primary"
                             variant="solid"
                             size="md"
-                            onClick={() => store.layoutStore.newForm({ type: FormType.Survey })}
+                            onClick={() => store.newForm({ type: FormType.Survey })}
                         >
                             New Survey
                         </Button>

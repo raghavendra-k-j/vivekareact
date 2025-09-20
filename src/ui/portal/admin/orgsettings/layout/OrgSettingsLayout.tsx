@@ -39,11 +39,10 @@ function PageInner() {
 
     return (<div className="w-full h-full overflow-y-hidden flex flex-col">
         <AdminPageAppBar
-        className="min-h-16"
-        start={
-            <AdminPageAppBarTitle
-                title="Organization Settings"
-            />}
+            start={
+                <AdminPageAppBarTitle
+                    title="Organization Settings"
+                />}
             bottom={<Tabs />}
         />
         <Observer>

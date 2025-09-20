@@ -1,8 +1,7 @@
 import { FramedDialog } from "~/ui/widgets/dialogmanager";
-import FilledButton from "~/ui/widgets/button/FilledButton";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { AlarmClockOff } from "lucide-react";
 import { InteractionStore } from "../InteractionStore";
+import { Button } from "~/ui/widgets/button/Button";
 
 export interface TimesUpDialogProps {
     store: InteractionStore;
@@ -28,12 +27,12 @@ export function TimesUpDialog({ onSubmit, onQuit }: TimesUpDialogProps) {
             </div>
 
             <div className="flex justify-end gap-2 mt-6">
-                <OutlinedButton onClick={onQuit}>
+                <Button variant="outline" color="secondary" onClick={onQuit}>
                     Cancel
-                </OutlinedButton>
-                <FilledButton onClick={onSubmit}>
+                </Button>
+                <Button onClick={onSubmit}>
                     Submit Assessment
-                </FilledButton>
+                </Button>
             </div>
         </FramedDialog>
     );

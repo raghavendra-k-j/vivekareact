@@ -166,22 +166,22 @@
 .questionCardChild {
   background-color: var(--color-surface);
 }
-
 /* TIMER */
+
 .timer {
   display: flex;
   align-items: center;
-  color: var(--color-text-default);
-  background-color: var(--color-primary-600);
-  border-radius: 4px;
-  padding: 0 0.25rem;
-  color: var(--color-white);
+  background-color: var(--bc-tab-active-bg);
+  border-radius: 6px;
+  padding: 0 0.5rem;
+  color: var(--bc-tab-active-fg);
 }
 
 .timerIcon {
   width: 28px;
   height: 28px;
   padding: 4px;
+  color: var(--bc-icon-fg-hover);
 }
 
 .timerText {
@@ -190,17 +190,21 @@
   font-weight: 600;
   gap: 0.25rem;
   padding: 0.25rem 0.5rem;
+  color: var(--bc-tab-fg-hover);
 }
 
 .timerNumber {
   text-align: center;
   font-size: 1rem;
   font-weight: 600;
+  color: var(--bc-tab-active-fg);
 }
 
 .timerColon {
   font-weight: 500;
+  color: var(--bc-text-secondary);
 }
+
 
 /* TIMER END */
 

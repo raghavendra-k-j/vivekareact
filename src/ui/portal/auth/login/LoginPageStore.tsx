@@ -2,12 +2,12 @@ import { action, makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
 import { LoginRes } from "~/domain/auth/models/LoginRes";
 import { AuthService } from "~/domain/auth/services/AuthService";
+import { navigateToPortal } from "~/ui/utils/authRedirectUtils";
 import { DataState } from "~/ui/utils/DataState";
 import { InputValue } from "~/ui/widgets/form/InputValue";
 import { InputValuesUtil } from "~/ui/widgets/form/InputValueUtil";
 import { showErrorToast, showSuccessToast } from "~/ui/widgets/toast/toast";
 import { AppStore } from "../../layout/app/AppStore";
-import { RootLayoutStore } from "../../layout/root/RootLayoutStore";
 
 export class LoginPageStore {
 
@@ -18,10 +18,8 @@ export class LoginPageStore {
     loginState: DataState<LoginRes> = DataState.init();
     authService: AuthService;
     appStore: AppStore;
-    rootLayoutStore: RootLayoutStore;
 
-    constructor({ authService, appStore, rootLayoutStore }: { authService: AuthService, appStore: AppStore, rootLayoutStore: RootLayoutStore }) {
-        this.rootLayoutStore = rootLayoutStore;
+    constructor({ authService, appStore }: { authService: AuthService, appStore: AppStore }) {
         this.authService = authService;
         this.appStore = appStore;
         makeObservable(this, {
@@ -67,7 +65,7 @@ export class LoginPageStore {
                 this.loginState = DataState.data(res);
             });
             showSuccessToast({ message: "Login successful" });
-            this.rootLayoutStore.navigateToPortal({ appStore: this.appStore });
+            navigateToPortal({ appStore: this.appStore });
         }
         catch (e) {
             const appError = AppError.fromAny(e);

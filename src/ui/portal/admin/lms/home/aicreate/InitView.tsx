@@ -18,7 +18,7 @@ function HeaderSection() {
 }
 
 // Main IntroView Component
-export function IntroView({ onPromptSelect }: IntroViewProps) {
+export function IntroView({ onPromptSelect }: { onPromptSelect: (prompt: string) => void }) {
     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
             <HeaderSection />

@@ -1,17 +1,16 @@
 import { Outlet } from "react-router";
+import { logout } from "~/ui/utils/authRedirectUtils";
 import { AuthNavigate } from "../../components/nav/AuthNavigate";
-import { usePortalLayoutStore } from "../../layout/portal/PortalLayoutContext";
 import { useAppStore } from "../../layout/app/AppContext";
 import { AdminSidebar } from "../components/sidebar/AdminSidebar";
 
 export default function AdminPortalLayout() {
     const appStore = useAppStore();
-    const portalLayout = usePortalLayoutStore();
     if (!appStore.hasLoggedInUser) {
         return <AuthNavigate />;
     }
     if (appStore.authUser.role.isAdmin !== true) {
-        portalLayout.logout();
+        logout({appStore: appStore});
         return null;
     }
     return (

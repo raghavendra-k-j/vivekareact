@@ -1,9 +1,9 @@
 import { Upload } from "lucide-react";
-import { useQMediaPickerStore } from "../QMediaPickerContext";
-import { QMediaExtension } from "~/domain/forms/models/qmedia/QMediaExtension";
-import { FileSizeFmt } from "~/core/utils/FileSizeFmt";
-import FilledButton from "~/ui/widgets/button/FilledButton";
 import { Observer } from "mobx-react-lite";
+import { FileSizeFmt } from "~/core/utils/FileSizeFmt";
+import { QMediaExtension } from "~/domain/forms/models/qmedia/QMediaExtension";
+import { Button } from "~/ui/widgets/button/Button";
+import { useQMediaPickerStore } from "../QMediaPickerContext";
 
 export function UploadMediaView() {
     const store = useQMediaPickerStore();
@@ -33,9 +33,9 @@ export function UploadMediaView() {
                 <Observer>
                     {() => {
                         return (
-                            <FilledButton isLoading={store.uploadState.isLoading} disabled={store.isUploadButtonDisabled} onClick={() => store.openFilePicker()} className="mt-4">
+                            <Button loading={store.uploadState.isLoading} disabled={store.isUploadButtonDisabled} onClick={() => store.openFilePicker()} className="mt-4">
                                 {store.uploadState.isLoading ? "Uploading..." : "Select File"}
-                            </FilledButton>
+                            </Button>
                         );
                     }}
                 </Observer>

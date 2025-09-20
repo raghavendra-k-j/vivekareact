@@ -1,4 +1,4 @@
-import { ServiceURL } from "~/infra/datasources/ServiceURL";
+import { ServiceUrl } from "~/infra/datasources/ServiceUrl";
 import { BaseEnv } from "~/core/config/BaseEnv";
 import { useAppStore } from "../portal/layout/app/AppContext";
 import { CssSize, toCssSize } from "../types/css";
@@ -33,7 +33,7 @@ function LogoPng() {
     let logoUrl = "./logo_sidebar.png";
     let altText = `${BaseEnv.instance.productName} Logo`;
     if (appStore.orgConfig.org.hasLogoUrl) {
-        logoUrl = ServiceURL.getUrl(`/${appStore.orgConfig.org.logoUrl!}`);
+        logoUrl = ServiceUrl.getUrl(`/${appStore.orgConfig.org.logoUrl!}`);
         altText = `${appStore.orgConfig.org.name} Logo`;
     }
     return (

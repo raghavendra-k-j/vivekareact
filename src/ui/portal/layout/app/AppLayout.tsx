@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { AppEnv } from "~/core/config/AppEnv";
 import type { OrgConfig } from "~/domain/common/models/OrgConfig";
 import { PageLoader } from "~/ui/components/loaders/PageLoader";
@@ -27,7 +27,11 @@ export default function AppLayout(props: AppLayoutProps) {
         return null;
     }
 
-    return (<AppProvider softLogin={props.softLogin} appEnv={AppEnv.instance} orgConfig={getOrgConfig()}>
+    return (<AppProvider
+        softLogin={props.softLogin}
+        appEnv={AppEnv.instance}
+        orgConfig={getOrgConfig()}
+    >
         <Outlet />
     </AppProvider>);
 }
@@ -41,21 +45,21 @@ export type AppProviderProps = {
 }
 
 export function AppProvider(props: AppProviderProps) {
-
     const appStoreRef = useRef<AppStore | null>(null);
     const [isInitialized, setIsInitialized] = useState(false);
+    const navigate = useNavigate();
+
     if (!appStoreRef.current) {
         appStoreRef.current = new AppStore({
             appEnv: props.appEnv,
             orgConfig: props.orgConfig,
             configService: getConfigService(),
             authService: getAuthService(),
+            navigate: navigate
         });
     }
 
     useEffect(() => {
-        const location = window.location.href;
-        console.info("AppProvider: softLogin=", props.softLogin, " location=", location);
         if (props.softLogin === true) {
             (async () => {
                 await appStoreRef.current?.trySoftLogin();

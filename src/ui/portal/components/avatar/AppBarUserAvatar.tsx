@@ -7,8 +7,6 @@ export const AppBarUserAvatar = () => {
     if (!appStore.hasUser) {
         return null;
     }
-
-
     const user = appStore.appUser;
     return (<ProfileMenu>
         <UserAvatar id={user.id} name={user.name} />

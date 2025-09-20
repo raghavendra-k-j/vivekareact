@@ -1,12 +1,11 @@
 import { ReactNode } from "react";
+import { Button } from "~/ui/widgets/button/Button";
 import {
     Dialog,
     DialogContent,
     DialogOverlay,
     DialogScaffold
 } from "~/ui/widgets/dialogmanager";
-import FilledButton from "~/ui/widgets/button/FilledButton";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 
 export type BasicErrorDialogButton =
     | ReactNode
@@ -33,9 +32,9 @@ export function BasicErrorDialog(props: BasicErrorDialogProps) {
 
         if (typeof button === "object" && "text" in button && "onClick" in button) {
             return isPrimary ? (
-                <FilledButton onClick={button.onClick}>{button.text}</FilledButton>
+                <Button onClick={button.onClick}>{button.text}</Button>
             ) : (
-                <OutlinedButton onClick={button.onClick}>{button.text}</OutlinedButton>
+                <Button variant="outline" color="secondary" onClick={button.onClick}>{button.text}</Button>
             );
         }
 

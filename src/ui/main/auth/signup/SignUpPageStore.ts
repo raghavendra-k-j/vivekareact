@@ -1,6 +1,6 @@
 import { makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
-import { PasswordOk, validateEmail, validateEmailOtp, validateMobile, validatePassword, validatePersonName } from "~/domain/common/services/CommonIdentityValidator";
+import { PasswordOk, validateEmail, validateEmailOtp, validateMobile, validatePassword, validatePersonName } from "~/domain/common/services/commonValidationUtils";
 import { validateOrgCustomType, validateOrgName, validateSubdomain } from "~/domain/common/services/OrgDetailsValidator";
 import { SignUpFinishSetupReq, SignUpFinishSetupRes } from "~/domain/main/auth/models/FinishSetupModels";
 import { PreSignUpData } from "~/domain/main/auth/models/PreSignUpData";

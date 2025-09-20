@@ -1,17 +1,17 @@
-import React, { ReactNode } from "react";
 import {
     FileText,
     ListChecks,
-    Users,
-    ShieldCheck,
     MoveUp,
+    ShieldCheck,
+    Users,
 } from "lucide-react";
-import { AdminFormCompareStore } from "../ComparePageStore";
-import { useAdminFormCompareStore } from "../ComparePageContext";
-import { FormCompareDetail } from "~/domain/forms/admin/models/compare/FormCompareDetail";
-import { NumFmt } from "~/core/utils/NumFmt";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
+import React, { ReactNode } from "react";
 import { DateFmt } from "~/core/utils/DateFmt";
+import { NumFmt } from "~/core/utils/NumFmt";
+import { FormCompareDetail } from "~/domain/forms/admin/models/compare/FormCompareDetail";
+import { Button } from "~/ui/widgets/button/Button";
+import { useAdminFormCompareStore } from "../ComparePageContext";
+import { AdminFormCompareStore } from "../ComparePageStore";
 import { FormLabelView } from "./FormLabelView";
 
 type FormMetaItemProps = {
@@ -144,9 +144,9 @@ export function CompareHeader() {
             {/* Centered Column for Circle + Button */}
             <div className="flex flex-col items-center justify-center space-y-3 px-2 z-10">
                 <ImprovementCircle store={store} />
-                <OutlinedButton size="sm" onClick={() => store.reverseComparision()}>
+                <Button variant="outline" color="secondary" size="sm" onClick={() => store.reverseComparision()}>
                     Reverse Comparison
-                </OutlinedButton>
+                </Button>
             </div>
 
             {/* Form B Block */}

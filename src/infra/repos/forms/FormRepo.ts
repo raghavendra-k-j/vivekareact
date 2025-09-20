@@ -10,6 +10,7 @@ import { GetAppUserReq } from "~/domain/forms/models/submit/GetAppUserReq";
 import { FormResponseDetail } from "~/domain/forms/models/FormResponseDetail";
 import { RDQuestionsReq } from "~/domain/forms/models/RDQuestionsReq";
 import { RDQuestionsRes } from "~/domain/forms/models/RDQuestionsRes";
+import { FormListingReq, FormListingRes } from "~/domain/forms/models/FormListingModels";
 
 export class FormRepo {
 
@@ -146,7 +147,17 @@ export class FormRepo {
         }
     }
 
-
-
+    async getFormList(req: FormListingReq): Promise<ResEither<ApiError, FormListingRes>> {
+        try {
+            const params = req.toJson();
+            const response = await this.axios.get('/api/v1/forms', { params });
+            const formListRes = FormListingRes.fromJson(response.data);
+            return ResEither.data(formListRes);
+        } catch (error) {
+            const apiError = ApiError.fromAny(error);
+            logger.error("Error in getFormList:", { error: apiError, req });
+            return ResEither.error(apiError);
+        }
+    }
 
 }

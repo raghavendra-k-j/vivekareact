@@ -130,7 +130,7 @@ export const Button = ({
     size = "md",
     variant,
     color,
-    shadow,
+    shadow = "sm",
     loading = false,
     disabled = false,
     icon,

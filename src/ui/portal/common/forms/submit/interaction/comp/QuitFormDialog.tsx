@@ -1,7 +1,6 @@
+import { Button } from "~/ui/widgets/button/Button";
 import { FramedDialog } from "~/ui/widgets/dialogmanager";
 import { InteractionStore } from "../InteractionStore";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
-import FilledButton from "~/ui/widgets/button/FilledButton";
 
 export interface QuitFormDialogProps {
     store: InteractionStore;
@@ -47,8 +46,8 @@ export function QuitFormDialog(props: QuitFormDialogProps) {
             </div>
 
             <div className="flex justify-end gap-2 mt-6">
-                <OutlinedButton onClick={onCancel}>Cancel</OutlinedButton>
-                <FilledButton onClick={onConfirmQuit}>{confirmLabel}</FilledButton>
+                <Button variant="outline" color="secondary" onClick={onCancel}>Cancel</Button>
+                <Button onClick={onConfirmQuit}>{confirmLabel}</Button>
             </div>
         </FramedDialog>
     );

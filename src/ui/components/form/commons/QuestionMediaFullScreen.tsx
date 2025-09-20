@@ -1,8 +1,8 @@
 import { QMediaTile } from "~/domain/forms/models/qmedia/QMediaTile";
-import { ServiceURL } from "~/infra/datasources/ServiceURL";
+import { ServiceUrl } from "~/infra/datasources/ServiceUrl";
+import { Button } from "~/ui/widgets/button/Button";
 import { FramedDialog } from "~/ui/widgets/dialogmanager";
 import { DialogFooter } from "../../dialogs/DialogHeaderAndFooter";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 
 export type QuestionMediaFullScreenProps = {
     media: QMediaTile;
@@ -19,7 +19,7 @@ export function QuestionMediaFullScreen({ media, onClose }: QuestionMediaFullScr
             <div className="w-full h-full flex items-center justify-center">
                 {type.isImage && (
                     <img
-                        src={ServiceURL.getBaseUrl() + "/" + media.path}
+                        src={ServiceUrl.getBaseUrl() + "/" + media.path}
                         className="w-full h-full object-contain block"
                     />
                 )}
@@ -27,7 +27,7 @@ export function QuestionMediaFullScreen({ media, onClose }: QuestionMediaFullScr
                     <video
                         className="w-full h-full object-contain block"
                         controls
-                        src={ServiceURL.getBaseUrl() + "/" + media.path}
+                        src={ServiceUrl.getBaseUrl() + "/" + media.path}
                     >
                         Your browser does not support the video tag.
                     </video>
@@ -35,9 +35,9 @@ export function QuestionMediaFullScreen({ media, onClose }: QuestionMediaFullScr
             </div>
             <DialogFooter
                 actions={[
-                    <OutlinedButton key="close" onClick={onClose} className="w-full">
+                    <Button variant="outline" color="secondary" key="close" onClick={onClose} className="w-full">
                         Close
-                    </OutlinedButton>
+                    </Button>
                 ]}
             />
         </FramedDialog>

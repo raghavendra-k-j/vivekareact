@@ -1,11 +1,17 @@
 import { useEffect } from "react";
-import { useHomeLayoutStore } from "./HomeLayoutContext";
+import { useAppStore } from "../../layout/app/AppContext";
+import { useUserPortalStore } from "../root/UserPortalContext";
+import { navigateToDefault } from "./navigateUtils";
 
 export default function HomeIndexPage() {
-  const homeStore = useHomeLayoutStore();
+  const appStore = useAppStore();
+  const userPortal = useUserPortalStore();
+
   useEffect(() => {
-    if (!homeStore.layoutDataState.isData) return;
-    homeStore.rootLayoutStore.navigate(homeStore.homeLayout.navigation.defaultItemId);
-  }, [homeStore]);
+    if (!userPortal.userAppConfigState.isData) return;
+    navigateToDefault({ appStore: appStore, userPortalStore: userPortal });
+  }, [appStore, userPortal]);
+
+
   return null;
 }

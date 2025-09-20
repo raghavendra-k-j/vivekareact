@@ -1,5 +1,4 @@
-import FilledButton from "../button/FilledButton";
-import OutlinedButton from "../button/OutlinedButton";
+import { Button } from "../button/Button";
 
 export type ToastViewProps = {
     message?: string | null;
@@ -28,18 +27,18 @@ export function ToastView({
             {(primaryButton || secondaryButton) && (
                 <div className="mt-2 flex gap-3">
                     {secondaryButton && (
-                        <OutlinedButton size="sm" onClick={secondaryButton.onClick} type="button">
+                        <Button variant="outline" color="secondary" size="sm" onClick={secondaryButton.onClick} type="button">
                             {secondaryButton.text}
-                        </OutlinedButton>
+                        </Button>
                     )}
                     {primaryButton && (
-                        <FilledButton
+                        <Button
                             size="sm"
                             onClick={primaryButton.onClick}
                             type="button"
                         >
                             {primaryButton.text}
-                        </FilledButton>
+                        </Button>
                     )}
                 </div>
             )}

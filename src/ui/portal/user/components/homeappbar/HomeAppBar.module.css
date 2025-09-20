@@ -1,0 +1,63 @@
+.header {
+    background-color: var(--bc-bg);
+    color: var(--bc-text-default);
+    box-shadow: var(--shadow-sm);
+    z-index: 10;
+}
+
+.navItems {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.navItem {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 8px 16px 8px;
+    font-weight: 500;
+    border-bottom: 0;
+    transition: color 220ms ease, background-color 220ms ease, transform 180ms ease;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.inactive {
+    color: var(--bc-tab-fg);
+    background-color: var(--bc-tab-bg);
+}
+
+.navItem:hover {
+    background-color: var(--bc-tab-bg-hover);
+    color: var(--bc-tab-fg-hover);
+}
+
+.active {
+    color: var(--bc-tab-active-fg);
+    background-color: var(--bc-tab-active-bg);
+    border-radius: 8px 8px 0 0;
+}
+
+.navItem:active {
+    transform: translateY(0);
+    filter: saturate(1.1);
+}
+
+.underline {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 0;
+    height: 4px;
+    border-radius: 999px 999px 0 0;
+    background: var(--bc-tab-active-border);
+    pointer-events: none;
+}

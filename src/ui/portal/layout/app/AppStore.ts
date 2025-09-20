@@ -1,4 +1,5 @@
 import { makeObservable, observable, runInAction } from "mobx";
+import { NavigateFunction } from "react-router";
 import type { AppEnv } from "~/core/config/AppEnv";
 import { AppError } from "~/core/error/AppError";
 import { logger } from "~/core/utils/logger";
@@ -26,12 +27,15 @@ export class AppStore {
     private _configService: ConfigService;
     public _appUser: AbsUser | null = null;
     private _authToken: AuthToken | null = null;
+    public navigate: NavigateFunction;
 
     public _authState: DataState<void> = DataState.init();
     public _planAndUsage: PlanAndUsage | null = null;
     public _planAndUsageState: DataState<void> = DataState.init();
     public _entityDictResState: DataState<void> = DataState.init();
     public _entityCatalog: EntityCatalog | null = null;
+
+
     static Provider: any;
 
     get entityCatalog() {
@@ -130,9 +134,10 @@ export class AppStore {
     }
 
 
-    constructor({ appEnv, orgConfig, configService, authService }: { appEnv: AppEnv, orgConfig: OrgConfig, configService: ConfigService, authService: AuthService }) {
+    constructor({ appEnv, orgConfig, configService, authService, navigate }: { appEnv: AppEnv, orgConfig: OrgConfig, configService: ConfigService, authService: AuthService, navigate: NavigateFunction }) {
         this._appEnv = appEnv;
         this._orgConfig = orgConfig;
+        this.navigate = navigate;
         addAuthInterceptor({ appStore: this });
         makeObservable(this, {
             _appUser: observable.ref,

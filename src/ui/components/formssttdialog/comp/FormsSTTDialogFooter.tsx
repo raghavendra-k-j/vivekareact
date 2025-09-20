@@ -1,13 +1,12 @@
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { Observer } from "mobx-react-lite";
 import { useMemo, useState } from "react";
 import { Language } from "~/domain/forms/models/Language";
-import FilledButton from "~/ui/widgets/button/FilledButton";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
+import { Badge } from "~/ui/widgets/badges/Badge";
+import { Button } from "~/ui/widgets/button/Button";
+import { IconButton } from "~/ui/widgets/button/IconButton";
 import { FSelectField, FSelectOption } from "~/ui/widgets/form/SelectField";
 import { useFormsSTTDialogStore } from "../FormSTTDialogContext";
-import { IconButton } from "~/ui/widgets/button/IconButton";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { Badge } from "~/ui/widgets/badges/Badge";
 
 export function FormsSTTDialogFooter() {
     const store = useFormsSTTDialogStore();
@@ -22,17 +21,17 @@ function FooterActions() {
     return (
         <div className="flex flex-row items-center justify-end px-4 py-3 border-t border-default">
             <div className="flex justify-end gap-2">
-                <OutlinedButton onClick={() => store.handleOnClickCancel()}>
+                <Button variant="outline" color="secondary" onClick={() => store.handleOnClickCancel()}>
                     Cancel
-                </OutlinedButton>
+                </Button>
                 <Observer>
                     {() => (
-                        <FilledButton
+                        <Button
                             disabled={!store.isDoneButtonEnabled}
                             onClick={() => store.handleOnClickDone()}
                         >
                             Done
-                        </FilledButton>
+                        </Button>
                     )}
                 </Observer>
             </div>

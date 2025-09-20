@@ -1,11 +1,10 @@
-import { Upload, X } from "lucide-react";
+import { File, Upload, X } from "lucide-react";
 import { Observer } from "mobx-react-lite";
+import { useCallback, useState } from "react";
+import { Button } from "~/ui/widgets/button/Button";
 import { IconButton } from "~/ui/widgets/button/IconButton";
 import { PipelineStep } from "../models/UploadFileStep";
 import { useQPGenPageStore } from "../QPGenPageContext";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
-import { useCallback, useState } from "react";
-import { File } from 'lucide-react';
 
 
 export function FileUploadView() {
@@ -133,13 +132,12 @@ function PipelineStepsView() {
               ))}
               {hasAnyError && (
                 <div className="px-4 py-3 flex justify-start items-center gap-3">
-                  <OutlinedButton
+                  <Button variant="outline" color="secondary"
                     size="sm"
-                    color="secondary"
                     onClick={() => store.inputStore.clearFile()}
                   >
                     Clear File
-                  </OutlinedButton>
+                  </Button>
                 </div>
               )}
             </div>

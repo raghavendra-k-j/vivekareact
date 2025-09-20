@@ -2,31 +2,28 @@ import { ArrowRight } from "lucide-react";
 import { Observer } from "mobx-react-lite";
 import { useRef } from "react";
 import { AuthCard, AuthFooter, AuthFormContainer, AuthHeader } from "~/ui/components/auth/AuthCard";
+import { navigateToPortal } from "~/ui/utils/authRedirectUtils";
 import { Button } from "~/ui/widgets/button/Button";
 import { Checkbox } from "~/ui/widgets/form/Checkbox";
 import { PasswordField } from "~/ui/widgets/form/PasswordField";
 import { FTextField } from "~/ui/widgets/form/TextField";
 import { useAppStore } from "../../layout/app/AppContext";
 import { getAuthService } from "../../layout/bootApp";
-import { useRootLayoutStore } from "../../layout/root/RootLayoutContext";
 import AuthLayout from "../layout/AuthLayout";
 import { LoginPageContext, useLoginPageStore } from "./LoginPageContext";
 import { LoginPageStore } from "./LoginPageStore";
 
-
 function LoginPageProvider({ children }: { children: React.ReactNode }) {
     const storeRef = useRef<LoginPageStore | null>(null);
     const appStore = useAppStore();
-    const rootLayout = useRootLayoutStore();
     if (appStore.hasLoggedInUser) {
-        rootLayout.navigateToPortal({ appStore: appStore });
+        navigateToPortal({ appStore: appStore });
         return;
     }
     if (storeRef.current === null) {
         storeRef.current = new LoginPageStore({
             authService: getAuthService(),
             appStore: appStore,
-            rootLayoutStore: rootLayout,
         });
     }
     return <LoginPageContext.Provider value={storeRef.current}>

@@ -1,7 +1,7 @@
 import { Observer } from "mobx-react-lite";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { ChoiceEnAView } from "./ChoiceEnAVm";
 import { ObjectiveEnAVm } from "./ObjectiveEnAVm";
+import { Button } from "~/ui/widgets/button/Button";
 
 export function ObjectiveEnAView(vm: ObjectiveEnAVm) {
     const isMultiple = vm.type.isCheckBoxes;
@@ -34,9 +34,9 @@ export function ObjectiveEnAView(vm: ObjectiveEnAVm) {
         </Observer>
         {!isTrueFalse && (
             <div>
-                <OutlinedButton size="sm" onClick={() => vm.addChoice()}>
+                <Button variant="outline" color="secondary" size="sm" onClick={() => vm.addChoice()}>
                     Add Choice
-                </OutlinedButton>
+                </Button>
             </div>
         )}
 

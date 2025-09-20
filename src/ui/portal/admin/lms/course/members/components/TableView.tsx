@@ -1,14 +1,13 @@
 import { Observer } from "mobx-react-lite";
 import { DateFmt } from "~/core/utils/DateFmt";
 import { AdminCMItem } from "~/domain/lms/models/AdminCMItem";
+import { UserAvatar } from "~/ui/portal/components/avatar/UserAvatar";
 import { Badge } from "~/ui/widgets/badges/Badge";
 import { Button } from "~/ui/widgets/button/Button";
 import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
+import { CheckMark } from "~/ui/widgets/form/CheckMark";
 import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { useMembersStore } from "../MembersContext";
-import { UserAvatar } from "~/ui/portal/components/avatar/UserAvatar";
-import { Checkbox } from "~/ui/widgets/form/Checkbox";
-import { CheckMark } from "~/ui/widgets/form/CheckMark";
 
 export function MembersTable() {
     const store = useMembersStore();

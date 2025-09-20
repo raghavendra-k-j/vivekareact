@@ -1,13 +1,13 @@
-import { FormAuthProvider } from "./FormAuthProvider";
 import { Observer } from "mobx-react-lite";
-import { useFormAuthStore } from "./FormAuthContext";
-import { FormCurrentAuthFragment } from "./FormCurrentAuthFragment";
-import { AppBar } from "../../../../../portal/common/forms/submit/comp/AppBar";
 import AppBarLogo from "~/ui/components/AppBarLogo";
-import { CollectDetailsView } from "./CollectDetailsView";
-import { VerifyEmailView } from "./VerifyEmailView";
 import { UnknowStateView } from "~/ui/components/errors/UnknowStateView";
-import { ProfileView } from "~/ui/components/appbar/profile/ProfileView";
+import { AppBarUserAvatar } from "~/ui/portal/components/avatar/AppBarUserAvatar";
+import { SubmitPageAppBar } from "../components/SubmitPageAppBar";
+import { CollectDetailsView } from "./CollectDetailsView";
+import { useFormAuthStore } from "./FormAuthContext";
+import { FormAuthProvider } from "./FormAuthProvider";
+import { FormCurrentAuthFragment } from "./FormCurrentAuthFragment";
+import { VerifyEmailView } from "./VerifyEmailView";
 
 
 export function FormAuthFragment() {
@@ -23,9 +23,9 @@ function Body() {
     const store = useFormAuthStore();
     return (
         <div className="h-screen flex flex-col">
-            <AppBar
+            <SubmitPageAppBar
                 leading={<AppBarLogo />}
-                trailing={<ProfileView />}
+                trailing={<AppBarUserAvatar />}
             />
             <main className="overflow-y-auto p-4 sm:p-6">
                 <Observer>

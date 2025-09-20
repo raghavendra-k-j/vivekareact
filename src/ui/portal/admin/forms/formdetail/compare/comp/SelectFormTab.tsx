@@ -1,10 +1,9 @@
-import { useAdminFormCompareStore } from "../ComparePageContext";
-import { FormCompareItem } from "~/domain/forms/admin/models/compare/FormCompareItem";
-import FilledButton from "~/ui/widgets/button/FilledButton";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { ChartNoAxesCombined } from "lucide-react";
 import { NumFmt } from "~/core/utils/NumFmt";
+import { FormCompareItem } from "~/domain/forms/admin/models/compare/FormCompareItem";
 import { AssmntTypeBadge } from "~/ui/components/form/commons/AssmntTypeBadge";
+import { Button } from "~/ui/widgets/button/Button";
+import { useAdminFormCompareStore } from "../ComparePageContext";
 
 export default function SelectFormTab() {
     const store = useAdminFormCompareStore();
@@ -34,9 +33,9 @@ function SelectFormIntro({ onSelect }: { onSelect: () => void }) {
             <p className="text-base text-secondary mt-1">
                 Compare marks, time taken, and pass rate between two assessments to see how users have improved
             </p>
-            <FilledButton className="mt-6" onClick={onSelect}>
+            <Button className="mt-6" onClick={onSelect}>
                 Select Assessment to Compare
-            </FilledButton>
+            </Button>
         </div>
     );
 }
@@ -94,7 +93,7 @@ function RecommendationItem({ form, onClick }: RecommendationItemProps) {
                 </p>
             </div>
 
-            <OutlinedButton
+            <Button variant="outline" color="secondary"
                 size="md"
                 onClick={(e) => {
                     e.stopPropagation();
@@ -102,7 +101,7 @@ function RecommendationItem({ form, onClick }: RecommendationItemProps) {
                 }}
             >
                 Select
-            </OutlinedButton>
+            </Button>
         </div>
     );
 }

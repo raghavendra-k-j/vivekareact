@@ -1,7 +1,6 @@
 import { FramedDialog } from "~/ui/widgets/dialogmanager";
 import { InteractionStore } from "../InteractionStore";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
-import FilledButton from "~/ui/widgets/button/FilledButton";
+import { Button } from "~/ui/widgets/button/Button";
 
 export interface SubmitConfirmDialogProps {
     store: InteractionStore;
@@ -43,8 +42,8 @@ export function SubmitConfirmDialog(props: SubmitConfirmDialogProps) {
             </div>
 
             <div className="flex justify-end gap-2 mt-6">
-                <OutlinedButton onClick={onCancel}>Go Back</OutlinedButton>
-                <FilledButton onClick={onConfirm}>{confirmLabel}</FilledButton>
+                <Button variant="outline" color="secondary" onClick={onCancel}>Go Back</Button>
+                <Button onClick={onConfirm}>{confirmLabel}</Button>
             </div>
         </FramedDialog>
     );

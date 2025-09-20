@@ -1,8 +1,8 @@
 import { Observer } from "mobx-react-lite";
 import { MdClose } from "react-icons/md";
 import { QMediaTile } from "~/domain/forms/models/qmedia/QMediaTile";
-import { ServiceURL } from "~/infra/datasources/ServiceURL";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
+import { ServiceUrl } from "~/infra/datasources/ServiceUrl";
+import { Button } from "~/ui/widgets/button/Button";
 import { useUpsertQuestionStore } from "./UpsertQuestionContext";
 import { UpsertQuestionStore } from "./UpsertQuestionStore";
 
@@ -13,7 +13,7 @@ export function QuestionTextOptions() {
             <div className="flex flex-row items-center justify-start gap-2">
                 {store.vm.questionOptionsVm ? store.vm.questionOptionsVm.render() : null}
                 <div>
-                    <OutlinedButton onClick={() => store.handleOnAddMedia()} size="sm">Add Images or Videos</OutlinedButton>
+                    <Button variant="outline" color="secondary" onClick={() => store.handleOnAddMedia()} size="sm">Add Images or Videos</Button>
                 </div>
             </div>
             <Observer>
@@ -37,7 +37,7 @@ export function QuestionTextOptions() {
 
 
 function MediaItemPreview({ item, store }: { item: QMediaTile, store: UpsertQuestionStore }) {
-    const thumbnailURL = ServiceURL.getUrl(`/${item.type.isImage ? item.path : item.thumbnail || ''}`);
+    const thumbnailURL = ServiceUrl.getUrl(`/${item.type.isImage ? item.path : item.thumbnail || ''}`);
     return (
         <div className="w-36 h-36 flex-shrink-0 gap-2 relative p-2 bg-surface rounded-sm shadow-sm border border-default">
             <img src={thumbnailURL} className="w-full h-full object-cover rounded-sm" />

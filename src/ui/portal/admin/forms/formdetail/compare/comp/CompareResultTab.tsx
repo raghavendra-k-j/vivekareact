@@ -1,13 +1,13 @@
+import { ArrowLeft } from "lucide-react";
 import { Observer } from "mobx-react-lite";
-import { useAdminFormCompareStore } from "../ComparePageContext";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
-import { CompareHeader } from "./CompareHeader";
 import { useEffect } from "react";
+import { Button } from "~/ui/widgets/button/Button";
+import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
+import { LoaderView } from "~/ui/widgets/loader/LoaderView";
+import { useAdminFormCompareStore } from "../ComparePageContext";
+import { CompareHeader } from "./CompareHeader";
 import { CompareOverviewSection } from "./OverviewSection";
 import { UserListSection } from "./UserListSection";
-import { ArrowLeft } from "lucide-react";
-import { LoaderView } from "~/ui/widgets/loader/LoaderView";
-import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 
 
 export function CompareResultTab() {
@@ -58,13 +58,13 @@ export function Header() {
     return (
         <header className="flex items-center justify-between px-6 py-3 bg-surface shadow-xs border-b border-strong">
             <div className="flex items-center space-x-4">
-                <OutlinedButton
+                <Button variant="outline" color="secondary"
                     size="sm"
                     onClick={() => store.resetComparison()}
                     className="flex items-center space-x-1"
                 >
                     <ArrowLeft className="w-4 h-4" />
-                </OutlinedButton>
+                </Button>
                 <div>
                     <h1 className="text-base font-semibold text-default">Assessment Comparison Results</h1>
                 </div>

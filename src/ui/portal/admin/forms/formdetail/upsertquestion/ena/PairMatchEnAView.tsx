@@ -1,20 +1,20 @@
+import { Trash2 } from "lucide-react";
 import { Observer } from "mobx-react-lite";
-import { PairMatchEnAVm } from "./PairMatchEnAVm";
-import { PairMatchItemVm } from "./PairMatchItemVm";
 import React from "react";
+import { Button } from "~/ui/widgets/button/Button";
 import { Input } from "~/ui/widgets/form/Input";
 import { SelectInput } from "~/ui/widgets/form/SelectInput";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
-import { Trash2 } from "lucide-react";
+import { PairMatchEnAVm } from "./PairMatchEnAVm";
+import { PairMatchItemVm } from "./PairMatchItemVm";
 
 export function PairMatchEnAView(vm: PairMatchEnAVm) {
     return (
         <div className="overflow-x-auto">
             <PairMatchTable vm={vm} />
             <div className="mt-2 flex justify-end">
-                <OutlinedButton size="sm" onClick={() => vm.addRow()}>
+                <Button variant="outline" color="secondary" size="sm" onClick={() => vm.addRow()}>
                     Add Row
-                </OutlinedButton>
+                </Button>
             </div>
         </div>
     );

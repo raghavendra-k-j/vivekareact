@@ -15,7 +15,7 @@
     "preview:tenant": "vite preview --host --outDir dist/tenant"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.4",
+    "@headlessui/react": "^2.2.8",
     "@heroui/button": "^2.2.24",
     "@heroui/card": "^2.2.23",
     "@heroui/input": "^2.4.25",

@@ -6,9 +6,13 @@ import { AdminFormStatus } from "~/domain/forms/models/AdminFormStatus";
 import { FormType } from "~/domain/forms/models/FormType";
 import { withMinDelay } from "~/infra/utils/withMinDelay";
 import { DataState } from "~/ui/utils/DataState";
-import { AdminFormsLayoutStore } from "../layout/AdminFormsLayoutStore";
+import { AdminFormsLayoutStore } from "../layout/FormsLayoutStore";
+import { CreateNewReq } from "~/domain/forms/admin/models/CreateNewReq";
+import { showLoadingDialog } from "~/ui/components/dialogs/showLoadingDialog";
+import { showErrorToast } from "~/ui/widgets/toast/toast";
 
 export class AdminFormsListStore {
+
     layoutStore: AdminFormsLayoutStore;
 
     searchQuery: string = "";
@@ -89,4 +93,35 @@ export class AdminFormsListStore {
         }
         this.loadForms({ page });
     }
+
+    async newForm({ type }: { type: FormType; }) {
+        const dialogId = "create-new-form-dialog";
+        try {
+            showLoadingDialog({
+                dialogId: dialogId,
+                dialogManager: this.layoutStore.dialogManager,
+                message: `Creating new ${type.name}...`,
+            });
+            const req: CreateNewReq = new CreateNewReq({
+                type: type,
+                languageId: null,
+                spaceId: null,
+            });
+            const res = (await this.layoutStore.formsService.createNewForm(req)).getOrError();
+            this.layoutStore.goToFormDetails({ permalink: res.permalink });
+        }
+        catch (error) {
+            const appError = AppError.fromAny(error);
+            this.layoutStore.dialogManager.closeById(dialogId);
+            showErrorToast({
+                message: appError.message,
+                description: appError.description
+            });
+        }
+        finally {
+            this.layoutStore.dialogManager.closeById(dialogId);
+        }
+
+    }
+
 }

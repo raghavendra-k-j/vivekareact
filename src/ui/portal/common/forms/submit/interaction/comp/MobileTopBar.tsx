@@ -1,5 +1,3 @@
-import FilledButton from "~/ui/widgets/button/FilledButton";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { useInteractionStore } from "../InteractionContext";
 import { DialogEntry, useDialogManager } from "~/ui/widgets/dialogmanager";
 import { Info } from "lucide-react";
@@ -7,6 +5,7 @@ import { Observer } from "mobx-react-lite";
 import styles from "./../styles.module.css";
 import { scrollToQuestion } from "../utils/questionScrollUtil";
 import { FormDetailBottomSheet, FormDetailBottomSheetProps, QuestionsBottomSheet, QuestionsBottomSheetProps } from "./FooterBottomSheet";
+import { Button } from "~/ui/widgets/button/Button";
 
 
 export function MobileTopBar() {
@@ -48,17 +47,17 @@ export function MobileTopBar() {
     return (
         <div className={styles.mobileFooter}>
             <div className="flex gap-2">
-                <OutlinedButton onClick={openQuestionList}>
+                <Button variant="outline" shadow="none" color="secondary" onClick={openQuestionList}>
                     Questions
-                </OutlinedButton>
-                <OutlinedButton onClick={openInfo}>
+                </Button>
+                <Button variant="outline" shadow="none" color="secondary" onClick={openInfo}>
                     <Info size={16} />
-                </OutlinedButton>
+                </Button>
             </div>
             <Observer>
-                {() => <FilledButton isLoading={store.submitState.isLoading} disabled={store.submitState.isLoading} onClick={() => store.onClickSubmitButton()}>
+                {() => <Button loading={store.submitState.isLoading} disabled={store.submitState.isLoading} onClick={() => store.onClickSubmitButton()}>
                     Submit
-                </FilledButton>}
+                </Button>}
             </Observer>
         </div>
     );

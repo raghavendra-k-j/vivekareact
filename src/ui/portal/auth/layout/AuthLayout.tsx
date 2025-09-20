@@ -17,7 +17,7 @@ export function AuthLayoutProvider({ children }: { children: React.ReactNode }) 
 
 export default function AuthLayout({ children, className }: { children: React.ReactNode, className?: string }) {
     return (
-        <div className={clsx("bg-brand-gradient h-full flex flex-col", className)}>
+        <div className={clsx("h-full flex flex-col", className)}>
             <AuthAppBar />
             <div className="flex-1 overflow-y-auto">
                 <div className="min-h-[80vh]">{children}</div>

@@ -1,12 +1,12 @@
 import { TextareaField } from "~/ui/widgets/form/TextareaField";
 import { useQPGenPageStore } from "../QPGenPageContext";
-import FilledButton from "~/ui/widgets/button/FilledButton";
 import { Observer } from "mobx-react-lite";
 import { UnknowStateView } from "~/ui/components/errors/UnknowStateView";
 import { FileUploadView } from "./FileUploadView";
 import { InputSourceType } from "../models/InputSourceType";
 import clsx from "clsx";
 import { PasteTextView } from "./PasteContentView";
+import { Button } from "~/ui/widgets/button/Button";
 
 export function QPGenInputFormView() {
     return (
@@ -134,11 +134,11 @@ function FooterView() {
     const store = useQPGenPageStore();
     return (
         <div className="flex justify-end px-6 pb-4">
-            <FilledButton
+            <Button
                 onClick={() => store.generatePaper()}
             >
                 Generate Question Paper
-            </FilledButton>
+            </Button>
         </div>
     );
 }

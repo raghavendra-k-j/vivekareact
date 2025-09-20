@@ -1,17 +1,16 @@
-import { UpsertQuestionProvider } from "./UpsertQuestionProvider";
-import { useUpsertQuestionStore } from "./UpsertQuestionContext";
-import FilledButton from "~/ui/widgets/button/FilledButton";
 import { Observer } from "mobx-react-lite";
-import { UpsertQuestionForm } from "./UpsertQuestionForm";
 import { useSearchParams } from "react-router";
-import { useAdminFormStore } from "../layout/AdminFormContext";
-import { DialogManagerStore, useDialogManager } from "~/ui/widgets/dialogmanager";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
 import { AdminFormsService } from "~/domain/forms/admin/services/AdminFormsService";
 import { FormType } from "~/domain/forms/models/FormType";
-import { AdminFormStore } from "../layout/AdminFormStore";
-import { AppStore } from "~/ui/portal/layout/app/AppStore";
 import { useAppStore } from "~/ui/portal/layout/app/AppContext";
+import { AppStore } from "~/ui/portal/layout/app/AppStore";
+import { Button } from "~/ui/widgets/button/Button";
+import { DialogManagerStore, useDialogManager } from "~/ui/widgets/dialogmanager";
+import { useAdminFormStore } from "../layout/AdminFormContext";
+import { AdminFormStore } from "../layout/AdminFormStore";
+import { useUpsertQuestionStore } from "./UpsertQuestionContext";
+import { UpsertQuestionForm } from "./UpsertQuestionForm";
+import { UpsertQuestionProvider } from "./UpsertQuestionProvider";
 
 
 export type UpsertQuestionDialogProps = {
@@ -69,20 +68,22 @@ function Footer() {
     const store = useUpsertQuestionStore();
     return (
         <div className="flex rounded-b-sm justify-end gap-3 px-3 py-2 border-t border-default">
-            <OutlinedButton
+            <Button
+                variant="outline"
+                color="secondary"
                 onClick={() => store.sendCloseDialogMessage()}
             >
                 Cancel
-            </OutlinedButton>
+            </Button>
             <Observer>
                 {() => (
-                    <FilledButton
-                        isLoading={store.saveState.isLoading}
+                    <Button
+                        loading={store.saveState.isLoading}
                         disabled={store.saveState.isLoading}
                         onClick={() => store.saveQuestion()}
                     >
                         Save
-                    </FilledButton>
+                    </Button>
                 )}
             </Observer>
         </div>

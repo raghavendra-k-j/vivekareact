@@ -1,14 +1,13 @@
-import { DialogCloseButton, DialogFooter, DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
-import { useEditTranslationStore } from "./EditTranslationContext";
-import { EditTranslationProvider } from "./EditTranslationProvider";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
-import FilledButton from "~/ui/widgets/button/FilledButton";
-import { Fragment, useEffect } from "react";
 import { Observer } from "mobx-react-lite";
-import { LoaderView } from "~/ui/widgets/loader/LoaderView";
+import { Fragment, useEffect } from "react";
+import { DialogCloseButton, DialogFooter, DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
+import { Button } from "~/ui/widgets/button/Button";
 import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 import { FTextField } from "~/ui/widgets/form/TextField";
 import { TextareaField } from "~/ui/widgets/form/TextareaField";
+import { LoaderView } from "~/ui/widgets/loader/LoaderView";
+import { useEditTranslationStore } from "./EditTranslationContext";
+import { EditTranslationProvider } from "./EditTranslationProvider";
 
 export default function EditTranslationView() {
     return (
@@ -40,11 +39,11 @@ function EditTranslationInner() {
                             <DialogFooter
                                 className="border-t border-default"
                                 actions={[
-                                    <OutlinedButton key="cancel" onClick={() => store.sendCloseDialogMessage()}>Cancel</OutlinedButton>,
+                                    <Button variant="outline" color="secondary" key="cancel" onClick={() => store.sendCloseDialogMessage()}>Cancel</Button>,
                                     <Observer key="save">
-                                        {() => (<FilledButton isLoading={store.saveState.isLoading} onClick={() => { store.saveTranslation(); }}>
+                                        {() => (<Button loading={store.saveState.isLoading} onClick={() => { store.saveTranslation(); }}>
                                             Save
-                                        </FilledButton>)}
+                                        </Button>)}
                                     </Observer>
                                 ]} /></>),
                     });

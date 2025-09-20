@@ -1,8 +1,8 @@
-import { ProfileView } from "~/ui/components/appbar/profile/ProfileView";
-import AppBarLogo from "~/ui/components/AppBarLogo";
-import FilledButton from "~/ui/widgets/button/FilledButton";
+import { PortalAppBarLogo } from "~/ui/portal/components/appbar/PortalAppBarLogo";
+import { AppBarUserAvatar } from "~/ui/portal/components/avatar/AppBarUserAvatar";
+import { Button } from "~/ui/widgets/button/Button";
 import { ReadMoreText } from "~/ui/widgets/text/ReadMoreText";
-import { AppBar } from "../comp/AppBar";
+import { SubmitPageAppBar } from "../components/SubmitPageAppBar";
 import { useSubmitStore } from "../SubmitContext";
 import { DetailView } from "./DetailView";
 import { ClosedInfoView, NotStartedInfoView } from "./NotStartedInfoView";
@@ -12,7 +12,10 @@ import { SelectLanguageInput } from "./SelectLanguageInput";
 export function PreviewFragment() {
     return (
         <div className="flex flex-col h-screen">
-            <AppBar leading={<AppBarLogo />} trailing={<ProfileView />} />
+            <SubmitPageAppBar
+                leading={<PortalAppBarLogo />}
+                trailing={<AppBarUserAvatar />}
+            />
             <main className="flex justify-center overflow-y-auto p-4 sm:p-6">
                 <MainCard />
             </main>
@@ -63,9 +66,9 @@ function Footer() {
             {hasEnded && <ClosedInfoView />}
             {store.formDetail.languages.length > 0 && showStartButton && <SelectLanguageInput />}
             {showStartButton && (
-                <FilledButton onClick={() => store.onClickStart()} disabled={isButtonDisabled}>
+                <Button onClick={() => store.onClickStart()} disabled={isButtonDisabled}>
                     {buttonText}
-                </FilledButton>
+                </Button>
             )}
         </div>
     );

@@ -1,9 +1,9 @@
 import * as RadixPopover from "@radix-ui/react-popover";
 import clsx from "clsx";
+import { changePassword, logout } from "~/ui/utils/authRedirectUtils";
 import { Badge } from "~/ui/widgets/badges/Badge";
-import { UserAvatar } from "./UserAvatar";
 import { useAppStore } from "../../layout/app/AppContext";
-import { usePortalLayoutStore } from "../../layout/portal/PortalLayoutContext";
+import { UserAvatar } from "./UserAvatar";
 
 function MenuItems({ children }: { children: React.ReactNode }) {
     return <div className="p-2">{children}</div>;
@@ -36,7 +36,6 @@ export type ProfileMenuProps = {
 
 export const ProfileMenu = ({ children }: ProfileMenuProps) => {
     const appStore = useAppStore();
-    const portalStore = usePortalLayoutStore();
     return (
         <RadixPopover.Root>
             <RadixPopover.Trigger>
@@ -46,10 +45,10 @@ export const ProfileMenu = ({ children }: ProfileMenuProps) => {
                 <RadixPopover.Content className="bg-surface shadow-xl border border-strong rounded m-2 z-50">
                     <ProfileMenuUserDetails />
                     <MenuItems>
-                        {appStore.appUser.appUserType.isAuthUser && (<MenuItem onClick={() => portalStore.changePassword()}>
+                        {appStore.appUser.appUserType.isAuthUser && (<MenuItem onClick={() => changePassword({ appStore: appStore })}>
                             Change Password
                         </MenuItem>)}
-                        <MenuItem onClick={() => portalStore.logout()} colorClass="text-red-600" hoverBg="hover:bg-red-50">
+                        <MenuItem onClick={() => logout({ appStore: appStore })} colorClass="text-red-600" hoverBg="hover:bg-red-50">
                             Logout
                         </MenuItem>
                     </MenuItems>

@@ -12,9 +12,8 @@ import clsx from "clsx";
 import { QMediaPickerStore } from "../QMediaPickerStore";
 import { observer } from "mobx-react-lite";
 import { DialogFooter } from "~/ui/components/dialogs/DialogHeaderAndFooter";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
-import FilledButton from "~/ui/widgets/button/FilledButton";
 import { Input } from "~/ui/widgets/form/Input";
+import { Button } from "~/ui/widgets/button/Button";
 
 export function BrowseMediaView() {
     const store = useQMediaPickerStore();
@@ -50,9 +49,9 @@ function Footer() {
     return (
         <DialogFooter
             actions={[
-                <OutlinedButton key="cancel" onClick={() => store.onClose()}>Cancel</OutlinedButton>,
+                <Button variant="outline" color="secondary" key="cancel" onClick={() => store.onClose()}>Cancel</Button>,
                 <Observer key="confirm">
-                    {() => <FilledButton onClick={() => store.onClickConfirm()} disabled={store.isConfirmDisabled}>Confirm</FilledButton>}
+                    {() => <Button onClick={() => store.onClickConfirm()} disabled={store.isConfirmDisabled}>Confirm</Button>}
                 </Observer>
             ]}
         />

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { InteractionProvider } from "./InteractionProvider";
-import { AppBarView } from "./comp/AppBarView";
+import { InteractionAppBarView } from "../components/InteractionAppBarView";
 import { QuestionListView } from "./comp/QuestionListView";
 import { LeftSidebar } from "./comp/LeftSidebar";
 import { RightSidebar } from "./comp/RightSidebar";
@@ -16,7 +16,7 @@ export function InteractionFragment() {
     return (
         <InteractionProvider>
             <div id="interaction-fragment" className="flex flex-col shrink-0 h-screen overflow-hidden">
-                <AppBarView />
+                <InteractionAppBarView />
                 <ResponsiveBody />
             </div>
         </InteractionProvider>

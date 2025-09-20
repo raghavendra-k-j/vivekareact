@@ -1,10 +1,10 @@
+import { Button } from "~/ui/widgets/button/Button";
 import { Dialog, DialogBottomSheetScaffold, DialogContent, DialogOverlay } from "~/ui/widgets/dialogmanager";
-import { InteractionStore } from "../InteractionStore";
 import { InteractionContext } from "../InteractionContext";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
+import { InteractionStore } from "../InteractionStore";
 import { QuestionVm } from "../models/QuestionVm";
-import { QIndexPanel } from "./QIndexPanel";
 import { FormDetailSection } from "./FormDetailComponent";
+import { QIndexPanel } from "./QIndexPanel";
 
 
 
@@ -28,9 +28,9 @@ export function BottomSheetDialog({ store, onClickClose, children }: BottomSheet
 
                         {/* Fixed button at the bottom */}
                         <div className="p-4 border-t border-gray-200 bg-white">
-                            <OutlinedButton className="w-full" onClick={onClickClose}>
+                            <Button variant="outline" color="secondary" className="w-full" onClick={onClickClose}>
                                 Close
-                            </OutlinedButton>
+                            </Button>
                         </div>
                     </DialogContent>
                 </DialogBottomSheetScaffold>

@@ -1,5 +1,5 @@
 import { QMediaTile } from "~/domain/forms/models/qmedia/QMediaTile";
-import { ServiceURL } from "~/infra/datasources/ServiceURL";
+import { ServiceUrl } from "~/infra/datasources/ServiceUrl";
 import { DialogEntry, useDialogManager } from "~/ui/widgets/dialogmanager";
 import { QuestionMediaFullScreen, QuestionMediaFullScreenProps } from "./QuestionMediaFullScreen";
 
@@ -27,7 +27,7 @@ export function QuestionImageView(props: QuestionImageViewProps) {
     return (
         <img
             onClick={() => handleFullscreen()}
-            src={ServiceURL.getBaseUrl() + "/" + props.media.path}
+            src={ServiceUrl.getBaseUrl() + "/" + props.media.path}
             className="w-full h-full object-contain block rounded-sm"
         />
     );

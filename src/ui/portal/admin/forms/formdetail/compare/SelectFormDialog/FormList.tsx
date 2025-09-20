@@ -1,16 +1,16 @@
-import React from "react";
-import { FormCompareItemVm } from "../models/FormCompareItemVm";
-import { useSelectFormDialogStore } from "./SelectFormDialogStore";
-import { Observer } from "mobx-react-lite";
-import { LoaderView } from "~/ui/widgets/loader/LoaderView";
-import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
-import { Pagination } from "~/ui/widgets/pagination/Pagination";
 import clsx from "clsx";
-import OutlinedButton from "~/ui/widgets/button/OutlinedButton";
+import { Observer } from "mobx-react-lite";
+import React from "react";
 import { DateFmt } from "~/core/utils/DateFmt";
 import { NumFmt } from "~/core/utils/NumFmt";
 import { AdminFormStatusBadge } from "~/ui/components/form/commons/AdminFormStatusBadge";
 import { AssmntTypeBadge } from "~/ui/components/form/commons/AssmntTypeBadge";
+import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
+import { LoaderView } from "~/ui/widgets/loader/LoaderView";
+import { Pagination } from "~/ui/widgets/pagination/Pagination";
+import { FormCompareItemVm } from "../models/FormCompareItemVm";
+import { useSelectFormDialogStore } from "./SelectFormDialogStore";
+import { Button } from "~/ui/widgets/button/Button";
 
 const CenteredContent = ({ children }: { children: React.ReactNode, }) => (
     <div className={clsx("p-6 flex justify-center items-center flex-1 overflow-y-auto")}>
@@ -128,7 +128,7 @@ function ListItem({ form, onClick }: FormItemProps) {
 
             <Observer>
                 {() => (
-                    <OutlinedButton
+                    <Button variant="outline" color="secondary"
                         size="sm"
                         disabled={form.isSelectBtnDisabled}
                         onClick={(e) => {
@@ -137,7 +137,7 @@ function ListItem({ form, onClick }: FormItemProps) {
                         }}
                     >
                         Select
-                    </OutlinedButton>
+                    </Button>
                 )}
             </Observer>
         </div>
