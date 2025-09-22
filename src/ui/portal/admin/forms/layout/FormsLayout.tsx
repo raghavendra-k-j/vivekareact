@@ -13,7 +13,7 @@ function PageProvider() {
     const dialogManager = useDialogManager();
     const navigation = useNavigate();
     const hasFormsPermission = appStore.authUser.hasAnyPermission(
-        [UserPermissions.ADMIN_FORMS, UserPermissions.ADMIN_SPACES_ALL, UserPermissions.ADMIN_SPACES_ASSIGNED]
+        [UserPermissions.ADMIN_FORMS, UserPermissions.ADMIN_LMS_ALL, UserPermissions.ADMIN_LMS_ASSIGNED]
     );
 
     if (!hasFormsPermission) {

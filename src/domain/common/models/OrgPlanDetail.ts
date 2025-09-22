@@ -7,9 +7,9 @@ import { PlanType } from "./PlanType";
 export type OrgPlanDetailProps = {
     id: number;
     orgId: number;
-    orderId?: number;
-    planId?: number;
-    planPriceId?: number;
+    orderId: number | null;
+    planId: number | null;
+    planPriceId: number | null;
     planType: PlanType;
     name: string;
 
@@ -29,11 +29,13 @@ export type OrgPlanDetailProps = {
     formsAiEqnAdminEnabled: boolean;
     formsAiEqnUserEnabled: boolean;
 
-    spacesFeatureEnabled: boolean;
-    spacesLimit: number;
-    spacesMaxMembersPerSpace: number;
-    spacesMaxTopicsPerSpace: number;
-    spacesMaxFormsPerSpace: number;
+    lmsFeatureEnabled: boolean;
+    lmsMaxFolders: number;
+    lmsMaxCourses: number;
+    lmsMaxMembersPerCourse: number;
+    lmsMaxTopicsPerCourse: number;
+    lmsAiStructureGenUnits: number;
+    lmsMaxFormsPerCourse: number;
 
     summarizerSummaries: number;
     summarizerMaxFileSize: number;
@@ -45,13 +47,13 @@ export type OrgPlanDetailProps = {
     qpAiGenMaxFileSize: number;
 
     status: OrgPlanStatus;
-    startsAt?: Date | null;
-    endsAt?: Date | null;
-    activatedAt?: Date | null;
-    activationMethod?: ActivationMethod | null;
-    activatedByUserId?: number | null;
-    canceledAt?: Date | null;
-    cancelReason?: CancelReason | null;
+    startsAt: Date | null;
+    endsAt: Date | null;
+    activatedAt: Date | null;
+    activationMethod: ActivationMethod | null;
+    activatedByUserId: number | null;
+    canceledAt: Date | null;
+    cancelReason: CancelReason | null;
 
     createdAt: Date;
     updatedAt: Date;
@@ -60,9 +62,9 @@ export type OrgPlanDetailProps = {
 export class OrgPlanDetail {
     readonly id: number;
     readonly orgId: number;
-    readonly orderId?: number;
-    readonly planId?: number;
-    readonly planPriceId?: number;
+    readonly orderId: number | null;
+    readonly planId: number | null;
+    readonly planPriceId: number | null;
     readonly planType: PlanType;
     readonly name: string;
 
@@ -83,11 +85,13 @@ export class OrgPlanDetail {
     readonly formsAiEqnAdminEnabled: boolean;
     readonly formsAiEqnUserEnabled: boolean;
 
-    readonly spacesFeatureEnabled: boolean;
-    readonly spacesLimit: number;
-    readonly spacesMaxMembersPerSpace: number
-    readonly spacesMaxTopicsPerSpace: number;
-    readonly spacesMaxFormsPerSpace: number;
+    readonly lmsFeatureEnabled: boolean;
+    readonly lmsMaxFolders: number;
+    readonly lmsMaxCourses: number;
+    readonly lmsMaxMembersPerCourse: number;
+    readonly lmsMaxTopicsPerCourse: number;
+    readonly lmsAiStructureGenUnits: number;
+    readonly lmsMaxFormsPerCourse: number;
 
     readonly summarizerSummaries: number;
     readonly summarizerMaxFileSize: number;
@@ -99,13 +103,13 @@ export class OrgPlanDetail {
     readonly qpAiGenMaxFileSize: number;
 
     readonly status: OrgPlanStatus;
-    readonly startsAt?: Date | null;
-    readonly endsAt?: Date | null;
-    readonly activatedAt?: Date | null;
-    readonly activationMethod?: ActivationMethod | null;
-    readonly activatedByUserId?: number | null;
-    readonly canceledAt?: Date | null;
-    readonly cancelReason?: CancelReason | null;
+    readonly startsAt: Date | null;
+    readonly endsAt: Date | null;
+    readonly activatedAt: Date | null;
+    readonly activationMethod: ActivationMethod | null;
+    readonly activatedByUserId: number | null;
+    readonly canceledAt: Date | null;
+    readonly cancelReason: CancelReason | null;
 
     readonly createdAt: Date;
     readonly updatedAt: Date;
@@ -136,11 +140,13 @@ export class OrgPlanDetail {
         this.formsAiEqnAdminEnabled = props.formsAiEqnAdminEnabled;
         this.formsAiEqnUserEnabled = props.formsAiEqnUserEnabled;
 
-        this.spacesFeatureEnabled = props.spacesFeatureEnabled;
-        this.spacesLimit = props.spacesLimit;
-        this.spacesMaxMembersPerSpace = props.spacesMaxMembersPerSpace;
-        this.spacesMaxTopicsPerSpace = props.spacesMaxTopicsPerSpace;
-        this.spacesMaxFormsPerSpace = props.spacesMaxFormsPerSpace;
+        this.lmsFeatureEnabled = props.lmsFeatureEnabled;
+        this.lmsMaxFolders = props.lmsMaxFolders;
+        this.lmsMaxCourses = props.lmsMaxCourses;
+        this.lmsMaxMembersPerCourse = props.lmsMaxMembersPerCourse;
+        this.lmsMaxTopicsPerCourse = props.lmsMaxTopicsPerCourse;
+        this.lmsAiStructureGenUnits = props.lmsAiStructureGenUnits;
+        this.lmsMaxFormsPerCourse = props.lmsMaxFormsPerCourse;
 
         this.summarizerSummaries = props.summarizerSummaries;
         this.summarizerMaxFileSize = props.summarizerMaxFileSize;
@@ -166,56 +172,58 @@ export class OrgPlanDetail {
 
     static fromJson(json: JsonObj): OrgPlanDetail {
         return new OrgPlanDetail({
-            id: json.id,
-            orgId: json.orgId,
-            orderId: json.orderId,
-            planId: json.planId,
-            planPriceId: json.planPriceId,
-            planType: PlanType.fromValue(json.planType),
-            name: json.name,
+            id: Number(json.id),
+            orgId: Number(json.orgId),
+            orderId: json.orderId == null ? null : Number(json.orderId),
+            planId: json.planId == null ? null : Number(json.planId),
+            planPriceId: json.planPriceId == null ? null : Number(json.planPriceId),
+            planType: PlanType.fromValue(String(json.planType)),
+            name: String(json.name),
 
-            creditsCarryOver: json.creditsCarryOver,
-            usersLimit: json.usersLimit,
+            creditsCarryOver: Boolean(json.creditsCarryOver),
+            usersLimit: Number(json.usersLimit),
 
-            formsLimit: json.formsLimit,
-            formsAiGenUnits: json.formsAiGenUnits,
-            formsAiTransUnits: json.formsAiTransUnits,
-            formsAiEvaluationUnits: json.formsAiEvaluationUnits,
+            formsLimit: Number(json.formsLimit),
+            formsAiGenUnits: Number(json.formsAiGenUnits),
+            formsAiTransUnits: Number(json.formsAiTransUnits),
+            formsAiEvaluationUnits: Number(json.formsAiEvaluationUnits),
 
-            formsAiGenMaxFileSize: json.formsAiGenMaxFileSize,
-            formsImageMaxFileSize: json.formsImageMaxFileSize,
-            formsVideoMaxFileSize: json.formsVideoMaxFileSize,
-            formsAiGenMaxContextChars: json.formsAiGenMaxContextChars,
-            formsAiMaxQuestions: json.formsAiMaxQuestions,
-            formsAiEqnAdminEnabled: json.formsAiEqnAdminEnabled,
-            formsAiEqnUserEnabled: json.formsAiEqnUserEnabled,
+            formsAiGenMaxFileSize: Number(json.formsAiGenMaxFileSize),
+            formsImageMaxFileSize: Number(json.formsImageMaxFileSize),
+            formsVideoMaxFileSize: Number(json.formsVideoMaxFileSize),
+            formsAiGenMaxContextChars: Number(json.formsAiGenMaxContextChars),
+            formsAiMaxQuestions: Number(json.formsAiMaxQuestions),
+            formsAiEqnAdminEnabled: Boolean(json.formsAiEqnAdminEnabled),
+            formsAiEqnUserEnabled: Boolean(json.formsAiEqnUserEnabled),
 
-            spacesFeatureEnabled: json.spacesFeatureEnabled,
-            spacesLimit: json.spacesLimit,
-            spacesMaxMembersPerSpace: json.spacesMaxMembersPerSpace,
-            spacesMaxTopicsPerSpace: json.spacesMaxTopicsPerSpace,
-            spacesMaxFormsPerSpace: json.spacesMaxFormsPerSpace,
+            lmsFeatureEnabled: Boolean(json.lmsFeatureEnabled),
+            lmsMaxFolders: Number(json.lmsMaxFolders),
+            lmsMaxCourses: Number(json.lmsMaxCourses),
+            lmsMaxMembersPerCourse: Number(json.lmsMaxMembersPerCourse),
+            lmsMaxTopicsPerCourse: Number(json.lmsMaxTopicsPerCourse),
+            lmsAiStructureGenUnits: Number(json.lmsAiStructureGenUnits),
+            lmsMaxFormsPerCourse: Number(json.lmsMaxFormsPerCourse),
 
-            summarizerSummaries: json.summarizerSummaries,
-            summarizerMaxFileSize: json.summarizerMaxFileSize,
-            summarizerMaxContextChars: json.summarizerMaxContextChars,
-            summarizerMaxWords: json.summarizerMaxWords,
+            summarizerSummaries: Number(json.summarizerSummaries),
+            summarizerMaxFileSize: Number(json.summarizerMaxFileSize),
+            summarizerMaxContextChars: Number(json.summarizerMaxContextChars),
+            summarizerMaxWords: Number(json.summarizerMaxWords),
 
-            lrMaxFileSize: json.lrMaxFileSize,
-            qpFeatureEnabled: json.qpFeatureEnabled,
-            qpAiGenMaxFileSize: json.qpAiGenMaxFileSize,
+            lrMaxFileSize: Number(json.lrMaxFileSize),
+            qpFeatureEnabled: Boolean(json.qpFeatureEnabled),
+            qpAiGenMaxFileSize: Number(json.qpAiGenMaxFileSize),
 
-            status: OrgPlanStatus.fromValue(json.status),
-            startsAt: json.startsAt ? new Date(json.startsAt) : null,
-            endsAt: json.endsAt ? new Date(json.endsAt) : null,
-            activatedAt: json.activatedAt ? new Date(json.activatedAt) : null,
-            activationMethod: json.activationMethod ? ActivationMethod.fromValue(json.activationMethod) : null,
-            activatedByUserId: json.activatedByUserId,
-            canceledAt: json.canceledAt ? new Date(json.canceledAt) : null,
-            cancelReason: json.cancelReason ? CancelReason.fromValue(json.cancelReason) : null,
+            status: OrgPlanStatus.fromValue(String(json.status)),
+            startsAt: json.startsAt == null ? null : new Date(String(json.startsAt)),
+            endsAt: json.endsAt == null ? null : new Date(String(json.endsAt)),
+            activatedAt: json.activatedAt == null ? null : new Date(String(json.activatedAt)),
+            activationMethod: json.activationMethod == null ? null : ActivationMethod.fromValue(String(json.activationMethod)),
+            activatedByUserId: json.activatedByUserId == null ? null : Number(json.activatedByUserId),
+            canceledAt: json.canceledAt == null ? null : new Date(String(json.canceledAt)),
+            cancelReason: json.cancelReason == null ? null : CancelReason.fromValue(String(json.cancelReason)),
 
-            createdAt: new Date(json.createdAt),
-            updatedAt: new Date(json.updatedAt),
+            createdAt: new Date(String(json.createdAt)),
+            updatedAt: new Date(String(json.updatedAt)),
         });
     }
 }

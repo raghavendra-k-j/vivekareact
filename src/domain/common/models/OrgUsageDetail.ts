@@ -14,7 +14,11 @@ export type OrgUsageDetailProps = {
     formsAiEvaluationPlanUnitsRemaining: number;
     formsAiEvaluationAddonUnitsRemaining: number;
 
-    spacesCount: number;
+    lmsFoldersCount: number;
+    lmsCoursesCount: number;
+
+    lmsAiStructureGenPlanUnitsRemaining: number;
+    lmsAiStructureGenAddonUnitsRemaining: number;
 
     summarizerSummariesPlanRemaining: number;
     summarizerSummariesAddonRemaining: number;
@@ -36,7 +40,11 @@ export class OrgUsageDetail {
     readonly formsAiEvaluationPlanUnitsRemaining: number;
     readonly formsAiEvaluationAddonUnitsRemaining: number;
 
-    readonly spacesCount: number;
+    readonly lmsFoldersCount: number;
+    readonly lmsCoursesCount: number;
+
+    readonly lmsAiStructureGenPlanUnitsRemaining: number;
+    readonly lmsAiStructureGenAddonUnitsRemaining: number;
 
     readonly summarizerSummariesPlanRemaining: number;
     readonly summarizerSummariesAddonRemaining: number;
@@ -57,7 +65,11 @@ export class OrgUsageDetail {
         this.formsAiEvaluationPlanUnitsRemaining = props.formsAiEvaluationPlanUnitsRemaining;
         this.formsAiEvaluationAddonUnitsRemaining = props.formsAiEvaluationAddonUnitsRemaining;
 
-        this.spacesCount = props.spacesCount;
+        this.lmsFoldersCount = props.lmsFoldersCount;
+        this.lmsCoursesCount = props.lmsCoursesCount;
+
+        this.lmsAiStructureGenPlanUnitsRemaining = props.lmsAiStructureGenPlanUnitsRemaining;
+        this.lmsAiStructureGenAddonUnitsRemaining = props.lmsAiStructureGenAddonUnitsRemaining;
 
         this.summarizerSummariesPlanRemaining = props.summarizerSummariesPlanRemaining;
         this.summarizerSummariesAddonRemaining = props.summarizerSummariesAddonRemaining;
@@ -77,31 +89,39 @@ export class OrgUsageDetail {
         return this.formsAiEvaluationPlanUnitsRemaining + this.formsAiEvaluationAddonUnitsRemaining;
     }
 
+    get lmsAiStructureGenUnitsRemaining(): number {
+        return this.lmsAiStructureGenPlanUnitsRemaining + this.lmsAiStructureGenAddonUnitsRemaining;
+    }
+
     get summarizerSummariesRemaining(): number {
         return this.summarizerSummariesPlanRemaining + this.summarizerSummariesAddonRemaining;
     }
 
     static fromJson(json: JsonObj): OrgUsageDetail {
         return new OrgUsageDetail({
-            orgId: json.orgId,
-            usersCount: json.usersCount,
+            orgId: Number(json.orgId),
+            usersCount: Number(json.usersCount),
 
-            formsCount: json.formsCount,
-            formsAiGenPlanUnitsRemaining: json.formsAiGenPlanUnitsRemaining ?? 0,
-            formsAiGenAddonUnitsRemaining: json.formsAiGenAddonUnitsRemaining ?? 0,
+            formsCount: Number(json.formsCount),
+            formsAiGenPlanUnitsRemaining: Number(json.formsAiGenPlanUnitsRemaining),
+            formsAiGenAddonUnitsRemaining: Number(json.formsAiGenAddonUnitsRemaining),
 
-            formsAiTransPlanUnitsRemaining: json.formsAiTransPlanUnitsRemaining ?? 0,
-            formsAiTransAddonUnitsRemaining: json.formsAiTransAddonUnitsRemaining ?? 0,
+            formsAiTransPlanUnitsRemaining: Number(json.formsAiTransPlanUnitsRemaining),
+            formsAiTransAddonUnitsRemaining: Number(json.formsAiTransAddonUnitsRemaining),
 
-            formsAiEvaluationPlanUnitsRemaining: json.formsAiEvaluationPlanUnitsRemaining ?? 0,
-            formsAiEvaluationAddonUnitsRemaining: json.formsAiEvaluationAddonUnitsRemaining ?? 0,
+            formsAiEvaluationPlanUnitsRemaining: Number(json.formsAiEvaluationPlanUnitsRemaining),
+            formsAiEvaluationAddonUnitsRemaining: Number(json.formsAiEvaluationAddonUnitsRemaining),
 
-            spacesCount: json.spacesCount,
+            lmsFoldersCount: Number(json.lmsFoldersCount),
+            lmsCoursesCount: Number(json.lmsCoursesCount),
 
-            summarizerSummariesPlanRemaining: json.summarizerSummariesPlanRemaining ?? 0,
-            summarizerSummariesAddonRemaining: json.summarizerSummariesAddonRemaining ?? 0,
+            lmsAiStructureGenPlanUnitsRemaining: Number(json.lmsAiStructureGenPlanUnitsRemaining),
+            lmsAiStructureGenAddonUnitsRemaining: Number(json.lmsAiStructureGenAddonUnitsRemaining),
 
-            updatedAt: new Date(json.updatedAt),
+            summarizerSummariesPlanRemaining: Number(json.summarizerSummariesPlanRemaining),
+            summarizerSummariesAddonRemaining: Number(json.summarizerSummariesAddonRemaining),
+
+            updatedAt: new Date(String(json.updatedAt)),
         });
     }
 }

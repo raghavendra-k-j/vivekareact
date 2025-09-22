@@ -184,8 +184,8 @@ export class SidebarStore {
 
     private initSpacesSection(): BaseNavItem | null {
         if (
-            !this.hasPermission(UserPermissions.ADMIN_SPACES_ALL) && 
-            !this.hasPermission(UserPermissions.ADMIN_SPACES_ASSIGNED)
+            !this.hasPermission(UserPermissions.ADMIN_LMS_ALL) && 
+            !this.hasPermission(UserPermissions.ADMIN_LMS_ASSIGNED)
         ) {
             return null;
         }

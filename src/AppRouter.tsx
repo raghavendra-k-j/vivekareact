@@ -48,7 +48,8 @@ const AdminFormDetailLayout = lazy(() => import("./ui/portal/admin/forms/details
 const AdminLMSLayout = lazy(() => import("./ui/portal/admin/lms/layout/LMSLayout"));
 const AdminLMSHomePage = lazy(() => import("./ui/portal/admin/lms/home/LMSHomePage"));
 const AdminAllSpacesPage = lazy(() => import("./ui/portal/admin/lms/home/allspaces/AllSpacesPage"));
-const AdminCoursesPage = lazy(() => import("./ui/portal/admin/lms/home/AdminCoursesPage"));
+const AdminMyCoursesPage = lazy(() => import("./ui/portal/admin/lms/home/mycourses/MyCoursesPage"));
+
 const AdminCourseLayout = lazy(() => import("./ui/portal/admin/lms/course/layout/CourseLayout"));
 const AdminContentPage = lazy(() => import("./ui/portal/admin/lms/course/content/ContentPage"));
 const AdminMembersPage = lazy(() => import("./ui/portal/admin/lms/course/members/MembersPage"));
@@ -145,7 +146,9 @@ const adminPortalRoutes = (
                 <Route index element={<AdminAllSpacesPage />} />
                 <Route path=":id/*" element={<AdminAllSpacesPage />} />
             </Route>
-            <Route path="my-courses" element={<AdminCoursesPage />} />
+            <Route path="my-courses" element={<AdminMyCoursesPage />} />
+
+
             <Route path="courses/:courseId" element={<AdminCourseLayout />}>
                 <Route index element={<Navigate replace to="content" />} />
                 <Route path="content" element={<AdminContentPage />} />
@@ -153,6 +156,7 @@ const adminPortalRoutes = (
                 <Route path="reports" element={<AdminReportsPage />} />
                 <Route path="settings" element={<AdminSettingsPage />} />
             </Route>
+
         </Route>
 
         <Route path="users" element={<AdminUsersPage />} />

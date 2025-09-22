@@ -1,15 +1,17 @@
-import { Navigate } from "react-router";
+import { FullCenteredView } from "~/ui/components/common/FullCenteredView";
 import { useLMSStore } from "../layout/LMSLayoutContext";
+import { navigateToLMSAdminHome } from "../utils/lmsNavUtils";
+import { LoaderView } from "~/ui/widgets/loader/LoaderView";
+import { useEffect } from "react";
 
 export default function AdminLMSHomePageNavigator() {
     const lmsStore = useLMSStore();
-    if (lmsStore.hasAllPermission) {
-        return (<Navigate to="/console/lms/spaces" replace={true} />);
-    }
-    else if (lmsStore.hasAssignedPermission) {
-        return (<Navigate to="/console/lms/my-courses" replace={true} />);
-    }
-    else {
-        return null;
-    }
+    useEffect(() => {
+        navigateToLMSAdminHome({ appStore: lmsStore.appStore });
+    },
+    [lmsStore]);
+
+    return (<FullCenteredView>
+        <LoaderView />
+    </FullCenteredView>);
 }

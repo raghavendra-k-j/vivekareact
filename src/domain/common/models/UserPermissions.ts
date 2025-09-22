@@ -1,8 +1,8 @@
 export class UserPermissions {
 
     static readonly ADMIN_FORMS = "admin.forms";
-    static readonly ADMIN_SPACES_ALL = "admin.spaces.all";
-    static readonly ADMIN_SPACES_ASSIGNED = "admin.spaces.assigned";
+    static readonly ADMIN_LMS_ALL = "admin.spaces.all";
+    static readonly ADMIN_LMS_ASSIGNED = "admin.spaces.assigned";
 
     static readonly ADMIN_LEARNING_RESOURCES = "admin.learning-resources";
 

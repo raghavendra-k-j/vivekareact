@@ -7,7 +7,7 @@ import { LMSConst } from "~/domain/lms/models/LMSConst";
 
 export class LMSHomePageStore {
     layoutStore: LMSLayoutStore;
-    currentView!: HomeCurrentView;
+    currentView: HomeCurrentView;
 
     constructor({ layoutStore }: { layoutStore: LMSLayoutStore }) {
         this.layoutStore = layoutStore;
@@ -26,7 +26,7 @@ export class LMSHomePageStore {
     }
 
     initCurrentView(): HomeCurrentView {
-        if (this.user.hasPermission(UserPermissions.ADMIN_SPACES_ALL)) {
+        if (this.user.hasPermission(UserPermissions.ADMIN_LMS_ALL)) {
             return HomeCurrentView.allspaces;
         }
         else {

@@ -18,11 +18,11 @@ export class LMSLayoutStore {
     }
 
     get hasAllPermission() {
-        return this.appStore.authUser.hasPermission(UserPermissions.ADMIN_SPACES_ALL);
+        return this.appStore.authUser.hasPermission(UserPermissions.ADMIN_LMS_ALL);
     }
 
     get hasAssignedPermission() {
-        return this.appStore.authUser.hasPermission(UserPermissions.ADMIN_SPACES_ASSIGNED);
+        return this.appStore.authUser.hasPermission(UserPermissions.ADMIN_LMS_ASSIGNED);
     }
 
     get hasBothPermissions() {

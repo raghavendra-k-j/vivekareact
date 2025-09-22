@@ -5,17 +5,20 @@ import { useAppStore } from "~/ui/portal/layout/app/AppContext";
 import { AdminForbiddenView } from "../../components/AdminForbiddenView";
 import { LMSLayoutContext } from "./LMSLayoutContext";
 import { LMSLayoutStore } from "./LMSLayoutStore";
+import { FullCenteredView } from "~/ui/components/common/FullCenteredView";
 
 function PageProvider() {
     const storeRef = useRef<LMSLayoutStore | null>(null);
     const appStore = useAppStore();
     const hasLMSPermission = appStore.authUser.hasAnyPermission([
-        UserPermissions.ADMIN_SPACES_ALL,
-        UserPermissions.ADMIN_SPACES_ASSIGNED
+        UserPermissions.ADMIN_LMS_ALL,
+        UserPermissions.ADMIN_LMS_ASSIGNED
     ]);
 
     if (!hasLMSPermission) {
-        return (<AdminForbiddenView />);
+        return (<FullCenteredView>
+            <AdminForbiddenView />
+        </FullCenteredView>);
     }
 
     if (!storeRef.current) {

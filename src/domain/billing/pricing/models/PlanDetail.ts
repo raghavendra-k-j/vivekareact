@@ -29,11 +29,13 @@ export type PlanDetailProps = {
     formsAiEqnAdminEnabled: boolean;
     formsAiEqnUserEnabled: boolean;
 
-    spacesFeatureEnabled: boolean;
-    spacesLimit: number;
-    spacesMaxMembersPerSpace: number;
-    spacesMaxTopicsPerSpace: number;
-    spacesMaxFormsPerSpace: number;
+    lmsFeatureEnabled: boolean;
+    lmsMaxFolders: number;
+    lmsMaxCourses: number;
+    lmsMaxMembersPerCourse: number;
+    lmsMaxTopicsPerCourse: number;
+    lmsAiStructureGenUnits: number;
+    lmsMaxFormsPerCourse: number;
 
     summarizerSummaries: number;
     summarizerMaxFileSize: number;
@@ -71,11 +73,13 @@ export class PlanDetail {
     readonly formsAiEqnAdminEnabled: boolean;
     readonly formsAiEqnUserEnabled: boolean;
 
-    readonly spacesFeatureEnabled: boolean;
-    readonly spacesLimit: number;
-    readonly spacesMaxMembersPerSpace: number;
-    readonly spacesMaxTopicsPerSpace: number;
-    readonly spacesMaxFormsPerSpace: number;
+    readonly lmsFeatureEnabled: boolean;
+    readonly lmsMaxFolders: number;
+    readonly lmsMaxCourses: number;
+    readonly lmsMaxMembersPerCourse: number;
+    readonly lmsMaxTopicsPerCourse: number;
+    readonly lmsAiStructureGenUnits: number;
+    readonly lmsMaxFormsPerCourse: number;
 
     readonly summarizerSummaries: number;
     readonly summarizerMaxFileSize: number;
@@ -113,11 +117,13 @@ export class PlanDetail {
         this.formsAiEqnAdminEnabled = props.formsAiEqnAdminEnabled;
         this.formsAiEqnUserEnabled = props.formsAiEqnUserEnabled;
 
-        this.spacesFeatureEnabled = props.spacesFeatureEnabled;
-        this.spacesLimit = props.spacesLimit;
-        this.spacesMaxMembersPerSpace = props.spacesMaxMembersPerSpace;
-        this.spacesMaxTopicsPerSpace = props.spacesMaxTopicsPerSpace;
-        this.spacesMaxFormsPerSpace = props.spacesMaxFormsPerSpace;
+        this.lmsFeatureEnabled = props.lmsFeatureEnabled;
+        this.lmsMaxFolders = props.lmsMaxFolders;
+        this.lmsMaxCourses = props.lmsMaxCourses;
+        this.lmsMaxMembersPerCourse = props.lmsMaxMembersPerCourse;
+        this.lmsMaxTopicsPerCourse = props.lmsMaxTopicsPerCourse;
+        this.lmsAiStructureGenUnits = props.lmsAiStructureGenUnits;
+        this.lmsMaxFormsPerCourse = props.lmsMaxFormsPerCourse;
 
         this.summarizerSummaries = props.summarizerSummaries;
         this.summarizerMaxFileSize = props.summarizerMaxFileSize;
@@ -131,47 +137,48 @@ export class PlanDetail {
 
     static fromJson(json: JsonObj): PlanDetail {
         return new PlanDetail({
-            id: json.id,
-            name: json.name,
-            description: json.description ?? null,
+            id: Number(json.id),
+            name: String(json.name),
+            description: json.description == null ? null : String(json.description),
 
-            planType: PlanType.fromValue(json.planType),
-            billingInterval: BillingInterval.fromValue(json.billingInterval),
-            intervalCount: json.intervalCount,
+            planType: PlanType.fromValue(String(json.planType)),
+            billingInterval: BillingInterval.fromValue(String(json.billingInterval)),
+            intervalCount: Number(json.intervalCount),
 
-            creditsCarryOver: json.creditsCarryOver,
+            creditsCarryOver: Boolean(json.creditsCarryOver),
 
-            usersLimit: json.usersLimit,
+            usersLimit: Number(json.usersLimit),
 
-            formsLimit: json.formsLimit,
-            formsAiGenUnits: json.formsAiGenUnits,
-            formsAiTransUnits: json.formsAiTransUnits,
-            formsAiEvaluationUnits: json.formsAiEvaluationUnits,
+            formsLimit: Number(json.formsLimit),
+            formsAiGenUnits: Number(json.formsAiGenUnits),
+            formsAiTransUnits: Number(json.formsAiTransUnits),
+            formsAiEvaluationUnits: Number(json.formsAiEvaluationUnits),
 
+            formsAiGenMaxFileSize: Number(json.formsAiGenMaxFileSize),
+            formsImageMaxFileSize: Number(json.formsImageMaxFileSize),
+            formsVideoMaxFileSize: Number(json.formsVideoMaxFileSize),
 
-            formsAiGenMaxFileSize: json.formsAiGenMaxFileSize,
-            formsImageMaxFileSize: json.formsImageMaxFileSize,
-            formsVideoMaxFileSize: json.formsVideoMaxFileSize,
+            formsAiGenMaxContextChars: Number(json.formsAiGenMaxContextChars),
+            formsAiMaxQuestions: Number(json.formsAiMaxQuestions),
+            formsAiEqnAdminEnabled: Boolean(json.formsAiEqnAdminEnabled),
+            formsAiEqnUserEnabled: Boolean(json.formsAiEqnUserEnabled),
 
-            formsAiGenMaxContextChars: json.formsAiGenMaxContextChars,
-            formsAiMaxQuestions: json.formsAiMaxQuestions,
-            formsAiEqnAdminEnabled: json.formsAiEqnAdminEnabled,
-            formsAiEqnUserEnabled: json.formsAiEqnUserEnabled,
+            lmsFeatureEnabled: Boolean(json.lmsFeatureEnabled),
+            lmsMaxFolders: Number(json.lmsMaxFolders),
+            lmsMaxCourses: Number(json.lmsMaxCourses),
+            lmsMaxMembersPerCourse: Number(json.lmsMaxMembersPerCourse),
+            lmsMaxTopicsPerCourse: Number(json.lmsMaxTopicsPerCourse),
+            lmsAiStructureGenUnits: Number(json.lmsAiStructureGenUnits),
+            lmsMaxFormsPerCourse: Number(json.lmsMaxFormsPerCourse),
 
-            spacesFeatureEnabled: json.spacesFeatureEnabled,
-            spacesLimit: json.spacesLimit,
-            spacesMaxMembersPerSpace: json.spacesMaxMembersPerSpace,
-            spacesMaxTopicsPerSpace: json.spacesMaxTopicsPerSpace,
-            spacesMaxFormsPerSpace: json.spacesMaxFormsPerSpace,
+            summarizerSummaries: Number(json.summarizerSummaries),
+            summarizerMaxFileSize: Number(json.summarizerMaxFileSize),
+            summarizerMaxContextChars: Number(json.summarizerMaxContextChars),
+            summarizerMaxWords: Number(json.summarizerMaxWords),
 
-            summarizerSummaries: json.summarizerSummaries,
-            summarizerMaxFileSize: json.summarizerMaxFileSize,
-            summarizerMaxContextChars: json.summarizerMaxContextChars,
-            summarizerMaxWords: json.summarizerMaxWords,
-
-            lrMaxFileSize: json.lrMaxFileSize,
-            qpFeatureEnabled: json.qpFeatureEnabled,
-            qpAiGenMaxFileSize: json.qpAiGenMaxFileSize,
+            lrMaxFileSize: Number(json.lrMaxFileSize),
+            qpFeatureEnabled: Boolean(json.qpFeatureEnabled),
+            qpAiGenMaxFileSize: Number(json.qpAiGenMaxFileSize),
         });
     }
 }

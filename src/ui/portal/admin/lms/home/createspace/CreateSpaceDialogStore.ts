@@ -10,7 +10,7 @@ import { InputValue } from "~/ui/widgets/form/InputValue";
 import { InputValuesUtil } from "~/ui/widgets/form/InputValueUtil";
 import { showErrorToast } from "~/ui/widgets/toast/toast";
 import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
-import { validateInternalName, validateSpaceCode, validateSpaceName } from "../../utils/space_validators";
+import { validateInternalName, validateSpaceCode, validateSpaceName } from "../../utils/spaceValidation";
 import { AllSpacesStore } from "../allspaces/AllSpacesStore";
 import { createSpaceDialogId } from "./CreateSpaceDialogConst";
 
