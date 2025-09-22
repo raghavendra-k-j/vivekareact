@@ -7,6 +7,12 @@ import { QueryAddMembersReq, QueryAddMembersRes } from "../models/QueryAddMember
 import { AddMembersReq, AddMembersRes, RemoveMembersReq, RemoveMembersRes } from "../models/AddRemoveMembersModels";
 import { AdminCMListReq, AdminCMListRes } from "../models/AdminCMListModels";
 import { AdminCCListReq, AdminCCListRes } from "../models/AdminQueryCCModels";
+import { AdminQueryMyCoursesReq, AdminQueryMyCoursesRes } from "../models/AdminMyCoursesListingModels";
+import { UpsertTopicReq } from "../models/UpsertTopicReq";
+import { AdminTopicListReq } from "../models/AdminTopicListReq";
+import { AdminTopicListRes } from "../models/AdminTopicListRes";
+import { AdminTopicItem } from "../models/AdminTopicItem";
+import { BoolResult } from "~/domain/common/models/BoolResult";
 
 export class AdminCourseService {
     private apiClient: ApiClient;
@@ -26,6 +32,17 @@ export class AdminCourseService {
     async getCourseDetails(courseId: number): Promise<ResEither<AppError, AdminCourseDetail>> {
         try {
             const res = await this.axios.get(this.baseUrl(`/spaces/courses/${courseId}/details`));
+            return ResEither.data(AdminCourseDetail.fromJson(res.data));
+        } catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+    async getCourseDetailsByPermalink(permalink: string): Promise<ResEither<AppError, AdminCourseDetail>> {
+        try {
+            const res = await this.axios.get(this.baseUrl(`/spaces/courses/${permalink}/details`));
             return ResEither.data(AdminCourseDetail.fromJson(res.data));
         } catch (err) {
             const apiError = ApiError.fromAny(err);
@@ -96,6 +113,49 @@ export class AdminCourseService {
         }
     }
 
+    async queryMyCourses(req: AdminQueryMyCoursesReq): Promise<ResEither<AppError, AdminQueryMyCoursesRes>> {
+        try {
+            const res = await this.axios.post(this.baseUrl('/spaces/my-courses/query'), req ? req.toJson() : {});
+            return ResEither.data(AdminQueryMyCoursesRes.fromJson(res.data));
+        } catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+    async upsertTopic(req: UpsertTopicReq): Promise<ResEither<AppError, AdminTopicItem>> {
+        try {
+            const res = await this.axios.post(this.baseUrl(`/spaces/courses/${req.spaceId}/topics/upsert`), req.toJson());
+            return ResEither.data(AdminTopicItem.fromJson(res.data));
+        } catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+    async queryTopics(req: AdminTopicListReq): Promise<ResEither<AppError, AdminTopicListRes>> {
+        try {
+            const res = await this.axios.post(this.baseUrl(`/spaces/courses/${req.spaceId}/topics/query`), req.toJson());
+            return ResEither.data(AdminTopicListRes.fromJson(res.data));
+        } catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
+
+    async deleteTopic(courseId: number, topicId: number): Promise<ResEither<AppError, BoolResult>> {
+        try {
+            const res = await this.axios.delete(this.baseUrl(`/spaces/courses/${courseId}/topics/${topicId}`));
+            return ResEither.data(BoolResult.fromJson(res.data));
+        } catch (err) {
+            const apiError = ApiError.fromAny(err);
+            const appError = AppError.fromAny(apiError);
+            return ResEither.error(appError);
+        }
+    }
 
 }
 

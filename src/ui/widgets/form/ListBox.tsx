@@ -13,6 +13,7 @@ export interface ListBoxProps<T> extends React.HTMLAttributes<HTMLDivElement> {
   inputSize?: InputSize;
   placeholder?: string | React.ReactNode;
   allowEmpty?: boolean;
+  hidePlaceholder?: boolean;
 }
 
 function ListBox<T>({
@@ -27,6 +28,7 @@ function ListBox<T>({
   inputSize = "md",
   placeholder = "Select an option",
   allowEmpty = true,
+  hidePlaceholder = false,
   ...rest
 }: ListBoxProps<T>) {
   return (
@@ -37,14 +39,16 @@ function ListBox<T>({
         </ListboxButton>
 
         <ListboxOptions className="listbox__options">
-          <ListboxOption
-            key="placeholder"
-            value={null}
-            disabled={!allowEmpty}
-            className="listbox__option listbox__option--placeholder"
-          >
-            {placeholder}
-          </ListboxOption>
+          {!hidePlaceholder && (
+            <ListboxOption
+              key="placeholder"
+              value={null}
+              disabled={!allowEmpty}
+              className="listbox__option listbox__option--placeholder"
+            >
+              {placeholder}
+            </ListboxOption>
+          )}
 
           {items.map((item) => (
             <ListboxOption

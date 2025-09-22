@@ -8,7 +8,7 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "~/ui/components/dialog"
+} from "~/ui/components/dialogs/dialog"
 import clsx from "clsx"
 
 function Command({

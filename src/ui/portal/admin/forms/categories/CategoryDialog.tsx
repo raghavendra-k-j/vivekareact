@@ -1,6 +1,6 @@
 import { Observer } from "mobx-react-lite";
 import { useRef } from "react";
-import { DialogFooter } from "~/ui/components/dialog";
+import { DialogFooter } from "~/ui/components/dialogs/dialog";
 import { DialogCloseButton, DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
 import { Button } from "~/ui/widgets/button/Button";
 import {

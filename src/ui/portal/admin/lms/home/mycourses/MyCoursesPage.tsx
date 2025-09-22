@@ -1,51 +1,50 @@
-import { useRef } from "react";
-import { AdminMyCoursesStore } from "./MyCoursesStore";
+import { ReactNode, useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
 import { AdminMyCoursesContext, useAdminMyCoursesStore } from "./MyCoursesContext";
+import { useDialogManager } from "~/ui/widgets/dialogmanager";
 import { useLMSStore } from "../../layout/LMSLayoutContext";
-import { AdminPageAppBar, AdminPageAppBarTitle } from "../../../components/PageAppBar";
-import { Input } from "~/ui/widgets/form/Input";
+import { AdminMyCoursesStore } from "./MyCoursesStore";
+import { AppBarView } from "./components/HeaderView";
+import { MainTableView } from "./components/MainTableView";
 
-
-function PageInner() {
-    const store = useAdminMyCoursesStore();
-    return (<div>
-        <AdminPageAppBar
-            start={<AdminPageAppBarTitle title="My Courses" />}
-            end={<AppBarEnd />}
-        />
-    </div>);
-}
-
-function AppBarEnd() {
-    return (<div>
-        <Input
-            placeholder="Search courses..."
-        />
-    </div>);
-}
-
-
-
-
-
-function PageProvider({ children, store }: { children: React.ReactNode, store: AdminMyCoursesStore }) {
-    return (<AdminMyCoursesContext.Provider
-        value={store}>
-        {children}
-    </AdminMyCoursesContext.Provider>);
-}
-
-
-
-export default function MyCoursesPage() {
+export function MyCoursesProvider({ children }: { children: ReactNode }) {
+    const layoutStore = useLMSStore();
+    const dialogManager = useDialogManager();
+    const navigate = useNavigate();
     const storeRef = useRef<AdminMyCoursesStore | null>(null);
-    const lmsStore = useLMSStore();
     if (!storeRef.current) {
         storeRef.current = new AdminMyCoursesStore({
-            lmsStore: lmsStore
+            layoutStore: layoutStore,
+            dialogManager: dialogManager,
+            navigate: navigate
         });
     }
-    return (<PageProvider store={storeRef.current}>
-        <PageInner />
-    </PageProvider>);
+    return (
+        <AdminMyCoursesContext.Provider value={storeRef.current}>
+            {children}
+        </AdminMyCoursesContext.Provider>
+    );
 }
+
+function MyCoursesPageInner() {
+    const store = useAdminMyCoursesStore();
+    useEffect(() => {
+        store.loadItems({ page: 1 });
+    }, [store]);
+
+    return (
+        <div className="flex flex-col h-full min-h-0 overflow-y-hidden">
+            <AppBarView />
+            <MainTableView />
+        </div>
+    );
+}
+
+export default function MyCoursesPage() {
+    return (
+        <MyCoursesProvider>
+            <MyCoursesPageInner />
+        </MyCoursesProvider>
+    );
+}
+

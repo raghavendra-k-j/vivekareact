@@ -1,9 +1,10 @@
-import { makeObservable, observable, runInAction } from "mobx";
+import { action, makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
 import { AdminCCListReq } from "~/domain/lms/models/AdminQueryCCModels";
+import { AdminCCItem } from "~/domain/lms/models/AdminCCItem";
 import { AdminCourseService } from "~/domain/lms/services/AdminCourseService";
 import { withMinDelay } from "~/infra/utils/withMinDelay";
-import { DataState } from "~/ui/utils/DataState";
+import { EasyTableData, EasyTableState } from "~/ui/components/easytable/types";
 import { CourseLayoutStore } from "../layout/CourseLayoutStore";
 import { AdminCCListVm } from "./models/AdminCCListVm";
 import { FormType } from "~/domain/forms/models/FormType";
@@ -18,18 +19,24 @@ export class ContentStore {
     searchQuery: string = "";
     selectedFormType: FormType | null = null;
     selectedAdminFormStatus: AdminFormStatus | null = null;
-    queryState: DataState<AdminCCListVm> = DataState.init();
-    pageSize: number = 50;
+    queryState: EasyTableState<AdminCCItem> = EasyTableState.init<AdminCCItem>();
+    dataVmOpt: AdminCCListVm | null = null;
+    pageSize: number = 10;
     currentPage: number = 1;
 
     constructor({ layoutStore }: { layoutStore: CourseLayoutStore }) {
         this.layoutStore = layoutStore;
         makeObservable(this, {
             queryState: observable.ref,
+            dataVmOpt: observable.ref,
             searchQuery: observable,
             selectedFormType: observable,
             selectedAdminFormStatus: observable,
             currentPage: observable,
+            pageSize: observable,
+            updateSearchQuery: action,
+            changePage: action,
+            changePageSize: action,
         });
     }
 
@@ -38,17 +45,33 @@ export class ContentStore {
     }
 
     get listVm(): AdminCCListVm {
-        return this.queryState.data!;
+        return this.dataVmOpt!;
     }
 
     get courseId(): number {
-        return this.layoutStore.courseId;
+        return this.layoutStore.course.id;
+    }
+
+    updateSearchQuery(query: string) {
+        this.searchQuery = query;
+    }
+
+    changePage(page: number) {
+        this.currentPage = page;
+        this.loadContents({ page: page });
+    }
+
+    changePageSize(size: number) {
+        this.pageSize = size;
+        this.currentPage = 1;
+        this.loadContents({ page: 1 });
     }
 
     async loadContents({ page = 1 }: { page?: number } = {}) {
+        console.log("ContentStore: loadContents", { page });
         try {
             runInAction(() => {
-                this.queryState = DataState.loading();
+                this.queryState = EasyTableState.loading();
                 this.currentPage = page;
             });
 
@@ -57,23 +80,33 @@ export class ContentStore {
                 page: page,
                 pageSize: this.pageSize,
                 searchQuery: this.searchQuery || null,
-                formType: this.selectedFormType?.type || null,
-                formStatus: this.selectedAdminFormStatus?.status || null,
+                formType: this.selectedFormType || null,
+                formStatus: this.selectedAdminFormStatus || null,
                 topicIds: null,
             });
 
             const res = (await withMinDelay(this.courserService.queryCourseContents(req), 300)).getOrError();
             const vm = AdminCCListVm.fromModel(res);
-
             runInAction(() => {
-                this.queryState = DataState.data(vm);
+                this.dataVmOpt = vm;
+                const tableData = new EasyTableData({
+                    items: vm.items,
+                    currentPage: vm.pageInfo.page,
+                    pageSize: vm.pageInfo.pageSize,
+                    totalItems: vm.pageInfo.totalItems,
+                });
+                this.queryState = EasyTableState.data(tableData);
             });
         } catch (error) {
             const appError = AppError.fromAny(error);
             runInAction(() => {
-                this.queryState = DataState.error(appError);
+                this.queryState = EasyTableState.error(appError);
             });
         }
+    }
+
+    reloadCurrentState(): void {
+        this.loadContents({ page: this.currentPage });
     }
 
     setSearchQuery(query: string) {

@@ -1,8 +1,8 @@
 import { FullCenteredView } from "~/ui/components/common/FullCenteredView";
 import { useLMSStore } from "../layout/LMSLayoutContext";
-import { navigateToLMSAdminHome } from "../utils/lmsNavUtils";
 import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { useEffect } from "react";
+import { navigateToLMSAdminHome } from "../utils/lmsUtils";
 
 export default function AdminLMSHomePageNavigator() {
     const lmsStore = useLMSStore();

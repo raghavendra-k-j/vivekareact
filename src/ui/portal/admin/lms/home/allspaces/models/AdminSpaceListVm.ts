@@ -1,15 +1,15 @@
 import { PageInfo } from "~/domain/common/models/PageInfo";
-import { AdminFolderInfo } from "~/domain/lms/models/AdminFolderInfo";
-import { AdminSpaceListRes } from "~/domain/lms/models/AdminQuerySpacesModels";
+import { LMSFolderInfo } from "~/domain/lms/models/LMSFolderInfo";
 import { AdminSpaceItem } from "~/domain/lms/models/AdminSpaceItem";
+import { AdminSpaceListRes } from "~/domain/lms/models/AdminSpaceListingModels";
 
 export class AdminSpaceListVm {
-    pageInf: PageInfo;
+    pageInfo: PageInfo;
     items: AdminSpaceItem[];
-    folder: AdminFolderInfo | null;
+    folder: LMSFolderInfo | null;
 
-    constructor(props: { pageInfo: PageInfo; items: AdminSpaceItem[]; folder: AdminFolderInfo | null }) {
-        this.pageInf = props.pageInfo;
+    constructor(props: { pageInfo: PageInfo; items: AdminSpaceItem[]; folder: LMSFolderInfo | null }) {
+        this.pageInfo = props.pageInfo;
         this.items = props.items;
         this.folder = props.folder;
     }

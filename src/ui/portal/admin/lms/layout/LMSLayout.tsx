@@ -1,21 +1,17 @@
 import { useRef } from "react";
 import { Outlet } from "react-router";
-import { UserPermissions } from "~/domain/common/models/UserPermissions";
 import { useAppStore } from "~/ui/portal/layout/app/AppContext";
 import { AdminForbiddenView } from "../../components/AdminForbiddenView";
 import { LMSLayoutContext } from "./LMSLayoutContext";
 import { LMSLayoutStore } from "./LMSLayoutStore";
 import { FullCenteredView } from "~/ui/components/common/FullCenteredView";
+import { hasLMSAdminAccess } from "../utils/lmsUtils";
 
 function PageProvider() {
     const storeRef = useRef<LMSLayoutStore | null>(null);
     const appStore = useAppStore();
-    const hasLMSPermission = appStore.authUser.hasAnyPermission([
-        UserPermissions.ADMIN_LMS_ALL,
-        UserPermissions.ADMIN_LMS_ASSIGNED
-    ]);
 
-    if (!hasLMSPermission) {
+    if (!hasLMSAdminAccess(appStore)) {
         return (<FullCenteredView>
             <AdminForbiddenView />
         </FullCenteredView>);
@@ -39,4 +35,3 @@ export default function LMSLayout() {
         <PageProvider />
     </div>);
 }
-

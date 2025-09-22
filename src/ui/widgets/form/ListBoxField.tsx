@@ -22,6 +22,7 @@ export type ListBoxFieldProps<T> = React.HTMLAttributes<HTMLDivElement> & {
     disabled?: boolean;
     onValueChange: (value: T | null) => void;
     className?: string;
+    hidePlaceholder?: boolean;
 };
 
 
@@ -39,6 +40,7 @@ function ListBoxField<T>({
     disabled = false,
     onValueChange,
     className = "",
+    hidePlaceholder = false,
     ...divProps
 }: ListBoxFieldProps<T>) {
     const handleChange = (val: T | null) => {
@@ -66,6 +68,7 @@ function ListBoxField<T>({
                         placeholder={placeholder}
                         disabled={disabled}
                         id={id}
+                        hidePlaceholder={hidePlaceholder}
                     />
                 )}
             </Observer>

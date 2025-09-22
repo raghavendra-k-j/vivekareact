@@ -1,36 +1,49 @@
-import { UserPermissions } from "~/domain/common/models/UserPermissions";
 import { LMSConst } from "~/domain/lms/models/LMSConst";
 import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
+import { AdminCourseService } from "~/domain/lms/services/AdminCourseService";
 import { AppStore } from "~/ui/portal/layout/app/AppStore";
 
 export class LMSLayoutStore {
 
     appStore: AppStore;
     adminSpacesService: AdminSpacesService;
+    adminCourseService: AdminCourseService;
 
     constructor({ appStore }: { appStore: AppStore }) {
         this.appStore = appStore;
         this.adminSpacesService = new AdminSpacesService();
+        this.adminCourseService = new AdminCourseService();
     }
 
-    entity(defIf: string) {
+    ed(defIf: string) {
         return this.appStore.entityCatalog.module(LMSConst.MODULE)!.entity(defIf)!;
     }
 
-    get hasAllPermission() {
-        return this.appStore.authUser.hasPermission(UserPermissions.ADMIN_LMS_ALL);
+    courseEd() {
+        return this.ed(LMSConst.ENTITY_COURSE);
     }
 
-    get hasAssignedPermission() {
-        return this.appStore.authUser.hasPermission(UserPermissions.ADMIN_LMS_ASSIGNED);
+    get courseLabelPlural(): string {
+        return this.courseEd().namePlural;
     }
 
-    get hasBothPermissions() {
-        return this.hasAllPermission && this.hasAssignedPermission;
+    get courseLabelSingular(): string {
+        return this.courseEd().nameSingular;
     }
 
-    get hasAnyPermission() {
-        return this.hasAllPermission || this.hasAssignedPermission;
+    get adminLabelPlural(): string {
+        return this.ed(LMSConst.ENTITY_ADMIN).namePlural;
     }
 
+    get adminLabelSingular(): string {
+        return this.ed(LMSConst.ENTITY_ADMIN).nameSingular;
+    }
+
+    get userLabelPlural(): string {
+        return this.ed(LMSConst.ENTITY_USER).namePlural;
+    }
+
+    get userLabelSingular(): string {
+        return this.ed(LMSConst.ENTITY_USER).nameSingular;
+    }
 }

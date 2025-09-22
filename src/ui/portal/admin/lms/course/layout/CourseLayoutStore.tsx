@@ -3,37 +3,35 @@ import { AppError } from "~/core/error/AppError";
 import { AdminCourseService } from "~/domain/lms/services/AdminCourseService";
 import { DataState } from "~/ui/utils/DataState";
 import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
-import { CourseDetailVM } from "../models/CourseDetailVM";
-import { copyToClipboard } from "~/core/utils/clipboard";
-import { showSuccessToast } from "~/ui/widgets/toast/toast";
 import { AdminRolesService } from "~/domain/users/services/AdminRolesService";
 import { DialogManagerStore } from "~/ui/widgets/dialogmanager";
 import { AdminFormsService } from "~/domain/forms/admin/services/AdminFormsService";
+import { AdminCourseDetailVm } from "../models/AdminCourseDetailVm";
 
 export class CourseLayoutStore {
 
     layoutStore: LMSLayoutStore;
-    courseId: number;
+    permalink: string;
     courseService: AdminCourseService;
     adminUserRolesService: AdminRolesService;
     dialogManager: DialogManagerStore;
     formsService: AdminFormsService;
 
-    courseDetailState: DataState<CourseDetailVM> = DataState.init();
+    courseDetailState: DataState<AdminCourseDetailVm> = DataState.init();
 
     constructor({
         layoutStore,
-        courseId,
+        permalink,
         dialogManager,
         formsService,
     }: {
         layoutStore: LMSLayoutStore;
-        courseId: number;
+        permalink: string;
         dialogManager: DialogManagerStore;
         formsService: AdminFormsService;
     }) {
         this.layoutStore = layoutStore;
-        this.courseId = courseId;
+        this.permalink = permalink;
         this.courseService = new AdminCourseService();
         this.adminUserRolesService = new AdminRolesService();
         this.dialogManager = dialogManager;
@@ -48,7 +46,7 @@ export class CourseLayoutStore {
     }
 
     entity(defId: string) {
-        return this.layoutStore.entity(defId);
+        return this.layoutStore.ed(defId);
     }
 
     async loadCourseDetails() {
@@ -56,8 +54,8 @@ export class CourseLayoutStore {
             runInAction(() => {
                 this.courseDetailState = DataState.loading();
             });
-            const result = (await this.courseService.getCourseDetails(this.courseId)).getOrError();
-            const viewModel = CourseDetailVM.fromModel(result);
+            const result = (await this.courseService.getCourseDetailsByPermalink(this.permalink)).getOrError();
+            const viewModel = AdminCourseDetailVm.fromModel(result);
             runInAction(() => {
                 this.courseDetailState = DataState.data(viewModel);
             });
@@ -67,13 +65,6 @@ export class CourseLayoutStore {
                 this.courseDetailState = DataState.error(appError);
             });
         }
-    }
-
-    copyCouseCode() {
-        copyToClipboard({ text: this.course.id.toString() });
-        showSuccessToast({
-            message: "Course code copied to clipboard",
-        });
     }
 
 }

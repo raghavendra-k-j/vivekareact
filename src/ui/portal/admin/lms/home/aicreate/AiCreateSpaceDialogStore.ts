@@ -8,8 +8,8 @@ import { DialogManagerStore } from "~/ui/widgets/dialogmanager/DialogManagerStor
 import { showErrorToast, showSuccessToast } from "~/ui/widgets/toast/toast";
 import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
 import { AllSpacesStore } from "../allspaces/AllSpacesStore";
-import { aiCreateSpaceDialogId } from "./AiCreateSpaceDialogConst";
 import { AiSpaceItemVm, AiSpacesCreatorResVm } from "./models/AiSpacesCreatorResVm";
+import { aiCreateSpaceDialogId } from "../dialogIds";
 
 export class AiCreateSpaceDialogStore {
     layoutStore: LMSLayoutStore;
@@ -203,7 +203,6 @@ export class AiCreateSpaceDialogStore {
                         type: itemVm.type,
                         parentId: parentId,
                         internalName: null,
-                        code: null,
                     });
 
                     const createRes = (await this.adminSpacesService.createSpace(createReq)).getOrError();

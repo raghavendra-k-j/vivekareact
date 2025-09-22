@@ -63,7 +63,6 @@ export class AppStore {
             return false;
         }
         if (this._appUser.appUserType.isAuthUser) {
-            console.log("Logged in user is auth user", this._appUser);
             return true;
         }
         return false;

@@ -10,7 +10,7 @@ export type AdminPageAppBarProps = {
 
 export function AdminPageAppBar({ start, end, bottom, className }: AdminPageAppBarProps) {
     return (
-        <header className={clsx("bg-surface shadow w-full", className)}>
+        <header className={clsx("bg-surface shadow w-full z-10", className)}>
             <div className="flex items-center justify-between min-h-14 py-2 px-4 sm:px-6">
                 <div className="flex items-center gap-2 min-w-0">{start}</div>
                 <div className="flex items-center gap-4">{end}</div>

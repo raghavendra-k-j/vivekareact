@@ -3,7 +3,7 @@ import clsx from "clsx";
 import React from "react";
 
 const badgeStyles = cva(
-    "inline-flex items-center rounded-sm font-medium whitespace-nowrap",
+    "inline-flex items-center font-medium whitespace-nowrap",
     {
         variants: {
             variant: {
@@ -48,6 +48,13 @@ const badgeStyles = cva(
                 sm: "text-sm-m px-2 py-0.5",
                 md: "text-sm px-2.5 py-1",
                 lg: "text-base px-3 py-1.5",
+            },
+            rounded: {
+                default: "rounded",
+                sm: "rounded-sm",
+                md: "rounded-md",
+                lg: "rounded-lg",
+                full: "rounded-full",
             },
         },
         compoundVariants: [
@@ -151,6 +158,7 @@ const badgeStyles = cva(
             variant: "soft",
             color: "neutral",
             size: "sm",
+            rounded: "sm",
         },
     }
 );

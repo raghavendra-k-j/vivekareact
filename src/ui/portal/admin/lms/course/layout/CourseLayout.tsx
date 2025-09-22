@@ -1,8 +1,14 @@
+import { Copy, Check } from "lucide-react";
 import { Observer } from "mobx-react-lite";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate, useParams } from "react-router";
+import { DateFmt } from "~/core/utils/DateFmt";
+import { AdminFormsService } from "~/domain/forms/admin/services/AdminFormsService";
 import { FullCenteredView } from "~/ui/components/common/FullCenteredView";
+import { CourseStatusBadge } from "~/ui/components/form/commons/CourseStatusBadge";
 import { useIsLinkActive } from "~/ui/hooks/useIsLinkActive";
+import { Button, ButtonGroup } from "~/ui/widgets/button/Button";
+import { useDialogManager } from "~/ui/widgets/dialogmanager";
 import { SimpleRetryableAppView } from "~/ui/widgets/error/SimpleRetryableAppError";
 import { LoaderView } from "~/ui/widgets/loader/LoaderView";
 import { TabItem } from "~/ui/widgets/tabs/TabItem";
@@ -10,32 +16,22 @@ import { TabsList } from "~/ui/widgets/tabs/TabList";
 import { useLMSStore } from "../../layout/LMSLayoutContext";
 import { CourseLayoutContext, useCourseLayoutStore } from "./CourseLayoutContext";
 import { CourseLayoutStore } from "./CourseLayoutStore";
-import { Badge } from "~/ui/widgets/badges/Badge";
-import { DateFmt } from "~/core/utils/DateFmt";
-import { Button } from "~/ui/widgets/button/Button";
-import { Copy } from "lucide-react";
-import { LMSConst } from "~/domain/lms/models/LMSConst";
-import { useDialogManager } from "~/ui/widgets/dialogmanager";
-import { AdminFormsService } from "~/domain/forms/admin/services/AdminFormsService";
+import { copyToClipboard } from "~/core/utils/clipboard";
 
 function PageProvider({ children }: { children: React.ReactNode }) {
     const storeRef = useRef<CourseLayoutStore | null>(null);
     const layoutStore = useLMSStore();
-    const { courseId: courseIdParam } = useParams<{ courseId: string }>();
+    const { permalink } = useParams<{ permalink: string }>();
     const dialogManager = useDialogManager();
 
     if (!storeRef.current) {
-        if (!courseIdParam) {
-            throw new Error("Course ID is required");
-        }
-        const courseId = parseInt(courseIdParam, 10);
-        if (isNaN(courseId)) {
-            throw new Error("Invalid course ID");
+        if (!permalink) {
+            throw new Error("Course permalink is required");
         }
         const formService = new AdminFormsService();
         storeRef.current = new CourseLayoutStore({
             layoutStore: layoutStore,
-            courseId: courseId,
+            permalink: permalink,
             dialogManager: dialogManager,
             formsService: formService
         });
@@ -52,6 +48,7 @@ function CourseTabs() {
     const tabs = [
         { to: "content", label: "Content" },
         { to: "members", label: "Members" },
+        { to: "topics", label: "Topics" },
         { to: "reports", label: "Reports" },
         { to: "settings", label: "Settings" },
     ];
@@ -76,27 +73,61 @@ function CourseTabs() {
 
 
 
+function CourseCodeButton() {
+    const store = useCourseLayoutStore();
+    const [showCode, setShowCode] = useState(false);
+
+    const handleCopy = () => {
+        copyToClipboard({ text: store.course.courseCode });
+        setShowCode(true);
+        const timer = setTimeout(() => setShowCode(false), 500);
+        return () => clearTimeout(timer);
+    };
+
+    return (
+        <ButtonGroup attached={true}>
+            <Button
+                variant="outline"
+                color="secondary"
+                size="sm"
+                className="font-bold px-3"
+            >
+                <span className="font-bold">{store.course.courseCode}</span>
+            </Button>
+            <Button
+                onClick={handleCopy}
+                variant={showCode ? "solid" : "outline"}
+                color={showCode ? "primary" : "secondary"}
+                size="sm"
+            >
+                {showCode ? (
+                    <>
+                        <Check className="w-4 h-4" />
+                    </>
+                ) : (
+                    <>
+                        <Copy className="w-4 h-4" />
+                    </>
+                )}
+            </Button>
+        </ButtonGroup>
+    );
+}
+
+
 function AppBarView() {
     const store = useCourseLayoutStore();
+
     return (
         <div className="px-6 py-3 border-b border-default">
             <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-1 min-w-0">
                     <h1 className="text-lg font-semibold text-default truncate max-w-xs">
-                        {store.course.name}
+                        {store.course.displayName}
                     </h1>
                 </div>
                 <div className="flex items-center">
-                    <Button
-                        variant="outline"
-                        color="secondary"
-                        size="sm"
-                        onClick={() => store.copyCouseCode()}
-                        className="flex items-center gap-1"
-                    >
-                        <Copy className="w-4 h-4" />
-                        Copy Course Code
-                    </Button>
+                    <CourseCodeButton />
                 </div>
             </div>
         </div>
@@ -106,11 +137,19 @@ function AppBarView() {
 
 function CourseInfoView() {
     const store = useCourseLayoutStore();
+    const lmsStore = useLMSStore();
+
+    const createdDateTime = DateFmt.datetime(store.course.createdAt);
+    const updatedDateTime = DateFmt.datetime(store.course.updatedAt);
+    const creatorName = store.course.creator.name;
+    const lastModifierName = store.course.lastModifier.name;
+
+    const tooltipText = `Created: ${createdDateTime} by ${creatorName}\nLast Updated: ${updatedDateTime} by ${lastModifierName}`;
 
     const infoItems = [
         `Created on: ${DateFmt.date(store.course.createdAt)}`,
-        `${store.course.totalAdmins} ${store.entity(LMSConst.ENTITY_ADMIN).namePlural}`,
-        `${store.course.totalUsers} ${store.entity(LMSConst.ENTITY_USER).namePlural}`,
+        `${store.course.totalAdmins} ${lmsStore.adminLabelPlural}`,
+        `${store.course.totalUsers} ${lmsStore.userLabelPlural}`,
         `${store.course.totalAssessments} Assessments`,
         `${store.course.totalSurveys} Surveys`
     ];
@@ -119,16 +158,20 @@ function CourseInfoView() {
         <div className="px-6 py-1.5 bg-surface-secondary/50 border-b border-default">
             <div className="flex items-center divide-x divide-default gap-0">
                 <div className="pr-3">
-                    <Badge
-                        color={store.course.status.isActive ? "success" : "secondary"}
-                        size="sm"
-                    >
-                        {store.course.status.label}
-                    </Badge>
+                    <CourseStatusBadge status={store.course.courseStatus} />
                 </div>
                 {infoItems.map((item, index) => (
                     <div key={index} className="px-3">
-                        <span className="text-sm text-secondary">{item}</span>
+                        {index === 0 ? (
+                            <span
+                                className="text-sm text-secondary cursor-pointer"
+                                title={tooltipText}
+                            >
+                                {item}
+                            </span>
+                        ) : (
+                            <span className="text-sm text-secondary">{item}</span>
+                        )}
                     </div>
                 ))}
             </div>

@@ -7,12 +7,14 @@ export class CourseStatus {
         this.value = value;
     }
 
+    public static readonly DRAFT = new CourseStatus({ label: "Draft", value: "draft" });
     public static readonly ACTIVE = new CourseStatus({ label: "Active", value: "active" });
-    public static readonly CLOSED = new CourseStatus({ label: "Closed", value: "closed" });
+    public static readonly COMPLETED = new CourseStatus({ label: "Completed", value: "completed" });
 
     private static readonly VALUE_MAP: Map<string, CourseStatus> = new Map([
+        [CourseStatus.DRAFT.value, CourseStatus.DRAFT],
         [CourseStatus.ACTIVE.value, CourseStatus.ACTIVE],
-        [CourseStatus.CLOSED.value, CourseStatus.CLOSED]
+        [CourseStatus.COMPLETED.value, CourseStatus.COMPLETED]
     ]);
 
     public static fromValue(value: string): CourseStatus {
@@ -23,12 +25,16 @@ export class CourseStatus {
         return status;
     }
 
+    public get isDraft(): boolean {
+        return this === CourseStatus.DRAFT;
+    }
+
     public get isActive(): boolean {
         return this === CourseStatus.ACTIVE;
     }
 
-    public get isClosed(): boolean {
-        return this === CourseStatus.CLOSED;
+    public get isCompleted(): boolean {
+        return this === CourseStatus.COMPLETED;
     }
 }
 

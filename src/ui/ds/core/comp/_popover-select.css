@@ -1,0 +1,107 @@
+.popover-select {
+  position: relative;
+}
+
+.popover-select__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #374151;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  min-width: 120px;
+}
+
+.popover-select__button:hover {
+  border-color: #9ca3af;
+}
+
+.popover-select__button:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.popover-select__button:disabled,
+.popover-select.is-disabled .popover-select__button {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.popover-select__content {
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  z-index: 50;
+  padding: 0.25rem;
+}
+
+.popover-select__option {
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  color: #374151;
+  font-size: 0.875rem;
+  width: 100%;
+  text-align: left;
+  outline: none;
+  border: none;
+  background: none;
+  border-radius: 0.25rem;
+}
+
+.popover-select__option:hover {
+  background-color: #f3f4f6;
+}
+
+.popover-select__option--selected {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.popover-select__option--placeholder {
+  color: #9ca3af;
+}
+
+.popover-select--sm .popover-select__button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  min-width: 100px;
+}
+
+.popover-select--sm .popover-select__option {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.popover-select--md .popover-select__button {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  min-width: 120px;
+}
+
+.popover-select--md .popover-select__option {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.popover-select--lg .popover-select__button {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  min-width: 140px;
+}
+
+.popover-select--lg .popover-select__option {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+}

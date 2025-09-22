@@ -1,12 +1,12 @@
 import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
-import { createSearchDebounce } from "~/core/utils/searchDebouce";
 import { RemoveMembersReq } from "~/domain/lms/models/AddRemoveMembersModels";
 import { AdminCMListReq } from "~/domain/lms/models/AdminCMListModels";
+import { AdminCMItem } from "~/domain/lms/models/AdminCMItem";
 import { SpaceMemberRole } from "~/domain/lms/models/SpaceMemberRole";
 import { withMinDelay } from "~/infra/utils/withMinDelay";
+import { EasyTableData, EasyTableState } from "~/ui/components/easytable/types";
 import { showLoadingDialog } from "~/ui/components/dialogs/showLoadingDialog";
-import { DataState } from "~/ui/utils/DataState";
 import { showErrorToast, showSuccessToast } from "~/ui/widgets/toast/toast";
 import AddMembersDialog from "../addmembers/AddMembersDialog";
 import { addMembersDialogId } from "../addmembers/utils";
@@ -17,28 +17,33 @@ export class MembersStore {
     layoutStore: CourseLayoutStore;
 
     searchQuery: string = "";
-    queryState: DataState<AdminCMListVm> = DataState.init();
+    queryState: EasyTableState<AdminCMItem> = EasyTableState.init<AdminCMItem>();
+    dataVmOpt: AdminCMListVm | null = null;
     pageSize: number = 50;
+    currentPage: number = 1;
     selectedRole: SpaceMemberRole | null = null;
 
-    private debouncedLoadMembers: () => void;
     selectedItems: Set<number> = new Set();
 
     constructor({ layoutStore }: { layoutStore: CourseLayoutStore }) {
         this.layoutStore = layoutStore;
         makeObservable(this, {
             queryState: observable.ref,
+            dataVmOpt: observable.ref,
             searchQuery: observable,
             selectedRole: observable,
             selectedItems: observable.shallow,
+            currentPage: observable,
+            pageSize: observable,
             clearSelection: action,
             setSearchQuery: action,
             listVm: computed,
             setSelectedRole: action,
             toggleSelectAll: action,
             toggleSelectItem: action,
+            changePage: action,
+            changePageSize: action,
         });
-        this.debouncedLoadMembers = createSearchDebounce(() => this.loadMembers({ page: 1 })).invoke;
     }
 
     get courseService() {
@@ -46,17 +51,18 @@ export class MembersStore {
     }
 
     get listVm(): AdminCMListVm {
-        return this.queryState.data!;
+        return this.dataVmOpt!;
     }
 
     get courseId(): number {
-        return this.layoutStore.courseId;
+        return this.layoutStore.course.id;
     }
 
     async loadMembers({ page = 1 }: { page?: number } = {}) {
         try {
             runInAction(() => {
-                this.queryState = DataState.loading();
+                this.queryState = EasyTableState.loading();
+                this.currentPage = page;
             });
             const req = new AdminCMListReq({
                 courseId: this.courseId,
@@ -68,19 +74,41 @@ export class MembersStore {
             const res = (await withMinDelay(this.courseService.queryMembers(req), 300)).getOrError();
             const vm = AdminCMListVm.fromModel(res);
             runInAction(() => {
-                this.queryState = DataState.data(vm);
+                this.dataVmOpt = vm;
+                const tableData = new EasyTableData({
+                    items: vm.items,
+                    currentPage: vm.pageInfo.page,
+                    pageSize: vm.pageInfo.pageSize,
+                    totalItems: vm.pageInfo.totalItems,
+                });
+                this.queryState = EasyTableState.data(tableData);
             });
         } catch (error) {
             const appError = AppError.fromAny(error);
             runInAction(() => {
-                this.queryState = DataState.error(appError);
+                this.queryState = EasyTableState.error(appError);
             });
         }
     }
 
+    reloadCurrentState(): void {
+        this.loadMembers({ page: this.currentPage });
+    }
+
     setSearchQuery(query: string) {
         this.searchQuery = query;
-        this.debouncedLoadMembers();
+        this.loadMembers({ page: 1 });
+    }
+
+    changePage(page: number) {
+        this.currentPage = page;
+        this.loadMembers({ page: page });
+    }
+
+    changePageSize(size: number) {
+        this.pageSize = size;
+        this.currentPage = 1;
+        this.loadMembers({ page: 1 });
     }
 
     goToPage(page: number) {

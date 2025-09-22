@@ -2,7 +2,7 @@ import { Observer } from "mobx-react-lite";
 import { useRef } from "react";
 import { SpaceType } from "~/domain/lms/models/SpaceType";
 import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
-import { DialogFooter } from "~/ui/components/dialog";
+import { DialogFooter } from "~/ui/components/dialogs/dialog";
 import { DialogCloseButton, DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
 import { Button } from "~/ui/widgets/button/Button";
 import {

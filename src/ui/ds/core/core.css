@@ -9,6 +9,7 @@
 @import './comp/_picker';
 @import './comp/_select';
 @import './comp/_listbox';
+@import './comp/_popover-select';
 @import './comp/_dialog';
 @import "./_datatable";
 

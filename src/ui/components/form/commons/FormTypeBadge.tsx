@@ -8,11 +8,13 @@ type Props = {
     className?: string;
 };
 
+
+
 export const FormTypeBade: React.FC<Props> = ({ type, size = "sm", className }) => {
     return (
         <Badge
             variant="soft"
-            color="indigo"
+            color={getBadgeColor(type)}
             size={size}
             className={className}
         >
@@ -20,3 +22,9 @@ export const FormTypeBade: React.FC<Props> = ({ type, size = "sm", className }) 
         </Badge>
     );
 };
+
+function getBadgeColor(type: FormType): "blue" | "orange" {
+    if (type.isAssessment) return "blue";
+    if (type.isSurvey) return "orange";
+    return "blue";
+}

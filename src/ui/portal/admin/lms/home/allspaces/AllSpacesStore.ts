@@ -1,43 +1,109 @@
-import { makeObservable, observable, runInAction } from "mobx";
+import { action, computed, makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
-import { AdminSpaceListReq } from "~/domain/lms/models/AdminQuerySpacesModels";
+import { AdminSpaceItem } from "~/domain/lms/models/AdminSpaceItem";
+import { AdminSpaceListReq } from "~/domain/lms/models/AdminSpaceListingModels";
 import { SpaceType } from "~/domain/lms/models/SpaceType";
 import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
-import { DataState } from "~/ui/utils/DataState";
+import { withMinDelay } from "~/infra/utils/withMinDelay";
+import { EasyTableData, EasyTableState } from "~/ui/components/easytable/types";
+import { SelectAllState } from "~/ui/utils/SelectAllState";
 import { DialogManagerStore } from "~/ui/widgets/dialogmanager/DialogManagerStore";
 import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
-import { CreateSpaceDialog } from "../createspace/CreateSpaceDialog";
-import { createSpaceDialogId } from "../createspace/CreateSpaceDialogConst";
-import { AiCreateSpaceDialog } from "../aicreate/AiCreateSpaceDialog";
-import { aiCreateSpaceDialogId } from "../aicreate/AiCreateSpaceDialogConst";
+import { adminLMSNavigateToCouse, adminLMSNavigateToFolder } from "../../utils/lmsUtils";
 import { AdminSpaceListVm } from "./models/AdminSpaceListVm";
-import { withMinDelay } from "~/infra/utils/withMinDelay";
 
 
 export class AllSpacesStore {
-    
 
 
     dialogManager: DialogManagerStore;
     layoutStore: LMSLayoutStore;
-    navigate: (path: string) => void;
 
     searchQuery: string = "";
-    queryState: DataState<AdminSpaceListVm> = DataState.init();
-    pageSize: number = 50;
+    dataVmOpt: AdminSpaceListVm | null = null;
+    queryState: EasyTableState<AdminSpaceItem> = EasyTableState.init<AdminSpaceItem>();
 
-    constructor({ layoutStore, dialogManager, navigate }: { 
-        layoutStore: LMSLayoutStore, 
+    pageSize: number = 10;
+    currentPage: number = 1;
+    selectedItemIds: Set<number> = new Set();
+    currentFolderPermalink: string | null = null;
+
+    constructor({ layoutStore, dialogManager, permalink }: {
+        layoutStore: LMSLayoutStore,
         dialogManager: DialogManagerStore,
-        navigate: (path: string) => void
+        permalink: string | null,
     }) {
         this.layoutStore = layoutStore;
         this.dialogManager = dialogManager;
-        this.navigate = navigate;
+        this.currentFolderPermalink = permalink;
         makeObservable(this, {
             queryState: observable.ref,
+            dataVmOpt: observable.ref,
             searchQuery: observable,
+            currentPage: observable,
+            currentFolderPermalink: observable,
+            pageSize: observable,
+            selectedItemIds: observable.shallow,
+            updateSearchQuery: action,
+            changePage: action,
+            changePageSize: action,
+            toggleItemSelection: action,
+            selectAllItems: action,
+            clearSelection: action,
+            selectAllState: computed,
         });
+    }
+
+    updateSearchQuery(query: string) {
+        this.searchQuery = query;
+    }
+
+    changePage(page: number) {
+        this.currentPage = page;
+        this.loadItems({ page: page, parentPermalink: this.currentFolderPermalink });
+    }
+
+    changePageSize(size: number) {
+        this.pageSize = size;
+        this.currentPage = 1;
+        this.loadItems({ page: 1, parentPermalink: this.currentFolderPermalink });
+    }
+
+    toggleItemSelection({ itemId, selected }: { itemId: number, selected?: boolean }) {
+        if (selected === undefined) {
+            if (this.selectedItemIds.has(itemId)) {
+                this.selectedItemIds.delete(itemId);
+            }
+            else {
+                this.selectedItemIds.add(itemId);
+            }
+        }
+        else if (selected) {
+            this.selectedItemIds.add(itemId);
+        }
+        else {
+            this.selectedItemIds.delete(itemId);
+        }
+    }
+
+    selectAllItems() {
+        if (!this.queryState.isData) return;
+        this.selectedItemIds.clear();
+        this.listVm.items.forEach(item => {
+            this.selectedItemIds.add(item.id);
+        });
+    }
+
+    clearSelection() {
+        this.selectedItemIds.clear();
+    }
+
+    get selectAllState(): SelectAllState {
+        if (!this.queryState.isData) return SelectAllState.NONE;
+        if (this.listVm.items.length === 0) return SelectAllState.NONE;
+        if (this.selectedItemIds.size === 0) return SelectAllState.NONE;
+        if (this.selectedItemIds.size === this.listVm.items.length) return SelectAllState.ALL;
+        return SelectAllState.SOME;
     }
 
     get adminSpacesService(): AdminSpacesService {
@@ -45,80 +111,124 @@ export class AllSpacesStore {
     }
 
     get listVm(): AdminSpaceListVm {
-        return this.queryState.data!;
+        return this.dataVmOpt!;
     }
 
-    get currentFolderId(): number | null {
-        return this.listVm.folder != null ? this.listVm.folder.id : null;
-    }
-
-    async loadItems({ page = 1, parentId = null }: { page?: number, parentId?: number | null } = {}) {
+    async loadItems({ page = 1, parentPermalink = null }: { page?: number, parentPermalink?: string | null } = {}) {
+        console.log("AllSpacesStore: loadItems", { page, parentPermalink });
         try {
             runInAction(() => {
-                this.queryState = DataState.loading();
+                this.queryState = EasyTableState.loading();
+                this.currentPage = page;
             });
             const req = new AdminSpaceListReq({
-                parentId: parentId,
+                parentPermalink: parentPermalink,
                 page: page,
                 pageSize: this.pageSize,
-                searchQuery: null
+                searchQuery: this.searchQuery.trim(),
             });
             const res = (await withMinDelay(this.adminSpacesService.querySpaces(req), 300)).getOrError();
             const vm = AdminSpaceListVm.fromModel(res);
             runInAction(() => {
-                this.queryState = DataState.data(vm);
+                this.dataVmOpt = vm;
+                const tableData = new EasyTableData({
+                    items: vm.items,
+                    currentPage: vm.pageInfo.page,
+                    pageSize: vm.pageInfo.pageSize,
+                    totalItems: vm.pageInfo.totalItems,
+                });
+                this.queryState = EasyTableState.data(tableData);
+                this.currentFolderPermalink = parentPermalink || null;
             });
         }
         catch (error) {
             const appError = AppError.fromAny(error);
             runInAction(() => {
-                this.queryState = DataState.error(appError);
+                this.queryState = EasyTableState.error(appError);
             });
         }
     }
 
-    navigateToFolder(id: number | null) {
-        if (id === null) {
-            this.navigate('/console/lms/spaces');
-        } else {
-            this.navigate(`/console/lms/spaces/${id}`);
+    reloadCurrentState(): void {
+        this.loadItems({ page: this.currentPage, parentPermalink: this.currentFolderPermalink });
+    }
+
+
+    onClickTableRow(item: AdminSpaceItem) {
+        if (item.type.isCourse) {
+            this.navigateToCouse(item.permalink);
+        }
+        else {
+            this.navigateToFolder(item.permalink);
         }
     }
 
-    showCreateDialog(type: SpaceType) {
-        this.dialogManager.show({
-            id: createSpaceDialogId,
-            component: CreateSpaceDialog,
-            props: {
-                type,
-                parentId: this.currentFolderId,
-                adminSpacesService: this.adminSpacesService,
-                layoutStore: this.layoutStore,
-                allSpacesStore: this,
-            },
+
+    navigateToFolder(permalink: string | null) {
+        adminLMSNavigateToFolder({
+            folderPermalink: permalink,
+            naviate: this.layoutStore.appStore.navigate
         });
+    }
+
+    showCreateDialog(type: SpaceType) {
+        // this.dialogManager.show({
+        //     id: createSpaceDialogId,
+        //     component: CreateSpaceDialog,
+        //     props: {
+        //         type,
+        //         parentId: this.currentFolderPermalink,
+        //         adminSpacesService: this.adminSpacesService,
+        //         layoutStore: this.layoutStore,
+        //         allSpacesStore: this,
+        //     },
+        // });
     }
 
     showAiCreateDialog() {
-        this.dialogManager.show({
-            id: aiCreateSpaceDialogId,
-            component: AiCreateSpaceDialog,
-            props: {
-                parentId: this.currentFolderId,
-                adminSpacesService: this.adminSpacesService,
-                layoutStore: this.layoutStore,
-                allSpacesStore: this,
-            },
+        // this.dialogManager.show({
+        //     id: aiCreateSpaceDialogId,
+        //     component: AiCreateSpaceDialog,
+        //     props: {
+        //         parentId: this.currentFolderPermalink,
+        //         adminSpacesService: this.adminSpacesService,
+        //         layoutStore: this.layoutStore,
+        //         allSpacesStore: this,
+        //     },
+        // });
+    }
+
+    navigateToCouse(permalink: string) {
+        adminLMSNavigateToCouse({
+            permalink,
+            naviate: this.layoutStore.appStore.navigate
         });
     }
 
-    reloadCurrentFolder(folderId?: number | null) {
-        const parentId = folderId !== undefined ? folderId : this.currentFolderId;
-        this.loadItems({ parentId: parentId, page: 1 });
+    showRenameDialog(item: AdminSpaceItem) {
+        // this.dialogManager.show({
+        //     id: renameSpaceDialogId,
+        //     component: RenameSpaceDialog,
+        //     props: {
+        //         item,
+        //         adminSpacesService: this.adminSpacesService,
+        //         layoutStore: this.layoutStore,
+        //         allSpacesStore: this,
+        //     },
+        // });
     }
 
-    navigateToCouse(id: number) {
-        this.navigate(`/console/lms/courses/${id}/content`);
+    showDeleteDialog(item: AdminSpaceItem) {
+        // this.dialogManager.show({
+        //     id: deleteSpaceDialogId,
+        //     component: DeleteSpaceDialog,
+        //     props: {
+        //         item,
+        //         adminSpacesService: this.adminSpacesService,
+        //         layoutStore: this.layoutStore,
+        //         allSpacesStore: this,
+        //     },
+        // });
     }
 
 }

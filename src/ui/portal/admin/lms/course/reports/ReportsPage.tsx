@@ -1,8 +1,10 @@
-import { ReactNode, useRef } from "react";
-import Card, { CardBody } from "~/ui/components/card";
+import { ReactNode, useEffect, useRef } from "react";
 import { ReportsContext } from "./ReportsContext";
 import { ReportsStore } from "./ReportsStore";
 import { useCourseLayoutStore } from "../layout/CourseLayoutContext";
+import { OverviewCards } from "./components/OverviewCards";
+import { LeaderboardView } from "./components/LeaderboardView";
+import { GradeDistributionView } from "./components/GradeDistributionView";
 
 function ReportsProvider({ children }: { children: ReactNode }) {
     const store = useRef<ReportsStore | null>(null);
@@ -24,15 +26,24 @@ export default function ReportsPage() {
 }
 
 function PageInner() {
+    const layoutStore = useCourseLayoutStore();
+
+    useEffect(() => {
+        // Ensure course details are loaded
+        if (!layoutStore.courseDetailState.isData && !layoutStore.courseDetailState.isLoading) {
+            layoutStore.loadCourseDetails();
+        }
+    }, [layoutStore]);
+
     return (
         <div className="h-full overflow-y-auto">
-            <div className="container mx-auto p-4 sm:p-6 grid grid-cols-1 gap-6">
-                <Card>
-                    <CardBody className="p-6">
-                        <h2 className="text-lg font-semibold mb-4">Course Reports</h2>
-                        <p className="text-secondary">Reports coming soon...</p>
-                    </CardBody>
-                </Card>
+            <div className="container mx-auto p-4 sm:p-6 space-y-6">
+                <OverviewCards />
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <LeaderboardView />
+                    <GradeDistributionView />
+                </div>
             </div>
         </div>
     );

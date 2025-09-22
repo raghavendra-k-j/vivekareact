@@ -1,22 +1,23 @@
 export class SpaceType {
 
-    public readonly type: string;
+    public readonly value: string;
     public readonly label: string;
+    public readonly labelPlural: string;
 
-    constructor(type: string, label: string) {
-        this.type = type;
+    constructor(value: string, label: string, labelPlural: string) {
+        this.value = value;
         this.label = label;
+        this.labelPlural = labelPlural;
     }
 
-    public static readonly FOLDER = new SpaceType("folder", "Folder");
-    public static readonly COURSE = new SpaceType("course", "Course");
+    public static readonly FOLDER = new SpaceType("folder", "Folder", "Folders");
+    public static readonly COURSE = new SpaceType("course", "Course", "Courses");
 
     public static fromValue(value: string): SpaceType {
-        if(value === SpaceType.FOLDER.type) return SpaceType.FOLDER;
-        if(value === SpaceType.COURSE.type) return SpaceType.COURSE;
+        if(value === SpaceType.FOLDER.value) return SpaceType.FOLDER;
+        if(value === SpaceType.COURSE.value) return SpaceType.COURSE;
         throw new Error(`Unknown SpaceType value: ${value}`);
     }
-
 
     get isFolder(): boolean {
         return this === SpaceType.FOLDER;
@@ -25,5 +26,4 @@ export class SpaceType {
     get isCourse(): boolean {
         return this === SpaceType.COURSE;
     }
-
 }
