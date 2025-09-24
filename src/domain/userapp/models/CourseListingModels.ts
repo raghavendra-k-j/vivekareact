@@ -1,7 +1,7 @@
 import { JsonObj } from "~/core/types/Json";
-import { CourseTheme } from "~/domain/common/models/CourseAvatar";
 import { PageInfo } from "~/domain/common/models/PageInfo";
 import { CourseStatus } from "~/domain/lms/models/CourseStatus";
+import { AvatarColor } from "~/domain/common/models/AvatarColor";
 
 export class CourseListingReq {
     status: CourseStatus | null;
@@ -38,10 +38,12 @@ export class CourseListingReq {
 
 export class CourseItem {
     id: number;
+    permalink: string;
     name: string;
-    theme: CourseTheme;
     internalName: string | null;
-    code: string | null;
+    courseCode: string;
+    courseStatus: CourseStatus;
+    avatarColor: AvatarColor;
     totalAssessments: number;
     totalSurveys: number;
     completedAssessments: number;
@@ -65,9 +67,12 @@ export class CourseItem {
 
     constructor({
         id,
+        permalink,
         name,
         internalName,
-        code,
+        courseCode,
+        courseStatus,
+        avatarColor,
         totalAssessments,
         totalSurveys,
         completedAssessments,
@@ -75,9 +80,12 @@ export class CourseItem {
         averagePercentage
     }: {
         id: number;
+        permalink: string;
         name: string;
         internalName: string | null;
-        code: string | null;
+        courseCode: string;
+        courseStatus: CourseStatus;
+        avatarColor: AvatarColor;
         totalAssessments: number;
         totalSurveys: number;
         completedAssessments: number;
@@ -85,10 +93,12 @@ export class CourseItem {
         averagePercentage: number;
     }) {
         this.id = id;
+        this.permalink = permalink;
         this.name = name;
-        this.theme = CourseTheme.generate(id, name);
         this.internalName = internalName;
-        this.code = code;
+        this.courseCode = courseCode;
+        this.courseStatus = courseStatus;
+        this.avatarColor = avatarColor;
         this.totalAssessments = totalAssessments;
         this.totalSurveys = totalSurveys;
         this.completedAssessments = completedAssessments;
@@ -99,9 +109,12 @@ export class CourseItem {
     static fromJson(json: JsonObj): CourseItem {
         return new CourseItem({
             id: Number(json.id),
+            permalink: String(json.permalink),
             name: String(json.name),
             internalName: json.internalName ? String(json.internalName) : null,
-            code: json.code ? String(json.code) : null,
+            courseCode: String(json.courseCode),
+            courseStatus: CourseStatus.fromValue(String(json.courseStatus)),
+            avatarColor: AvatarColor.fromJson(json.avatarColor as JsonObj),
             totalAssessments: Number(json.totalAssessments),
             totalSurveys: Number(json.totalSurveys),
             completedAssessments: Number(json.completedAssessments),

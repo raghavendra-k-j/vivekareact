@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Outlet } from "react-router";
 import { useUserPortalStore } from "../root/UserPortalContext";
-import { HomeAppBar } from "../components/homeappbar/HomeAppBar";
+import { HomeAppBar } from "../shared/components/homeappbar/HomeAppBar";
 import { HomePageContext } from "./HomePageContext";
 import { HomePageStore } from "./HomePageStore";
 

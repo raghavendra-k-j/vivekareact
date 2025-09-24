@@ -7,12 +7,12 @@ import { CourseItemVm } from "../models/CourseListVm";
 
 export function CourseCard({ course }: { course: CourseItemVm }) {
     const { base } = course;
-    const { theme } = base;
+    const avatarColor = base.avatarColor;
     return (
-        <NavLink to={getCouseURLById(course.base.id.toString())} className="bg-surface rounded-md shadow-sm border border-default hover:shadow-md transition-shadow h-full flex flex-col overflow-hidden">
+        <NavLink to={getCouseURLById(course.base.permalink)} className="bg-surface rounded-md shadow-sm border border-default hover:shadow-md transition-shadow h-full flex flex-col overflow-hidden">
             <div className="p-4 rounded-t-lg flex justify-between items-center">
                 <div className="flex items-center flex-1 mr-2">
-                    <CourseAvatar name={base.name} color={theme.bgColor} className="mr-2 w-12 h-12" />
+                    <CourseAvatar name={base.name} color={avatarColor.bgColor} className="mr-2 w-12 h-12" />
                     <h3 className="text-base font-semibold text-default leading-snug line-clamp-2">
                         {base.name}
                     </h3>
@@ -36,7 +36,7 @@ export function CourseCard({ course }: { course: CourseItemVm }) {
                 >
                     <div
                         className="h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${base.progress}%`, backgroundColor: theme.bgColor }}
+                        style={{ width: `${base.progress}%`, backgroundColor: avatarColor.bgColor }}
                     />
                 </div>
 

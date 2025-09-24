@@ -30,7 +30,7 @@ const HomeLayout = lazy(() => import("./ui/portal/user/home/HomePage"));
 
 // Scaffolded User Pages
 const CourseListPage = lazy(() => import("./ui/portal/user/courselist/CourseListPage"));
-const CoursePage = lazy(() => import("./ui/portal/user/course/CoursePage"));
+const CourseDetailPage = lazy(() => import("./ui/portal/user/coursedetail/CourseDetailPage"));
 const FormsListPage = lazy(() => import("./ui/portal/user/formslist/FormsListPage"));
 
 
@@ -105,7 +105,7 @@ const userPortalRoutes = (
             <Route path="assessments" element={<FormsListPage formType={FormType.Assessment} />} />
             <Route path="surveys" element={<FormsListPage formType={FormType.Survey} />} />
         </Route>
-        <Route path="courses/:permalink" element={<CoursePage />} />
+        <Route path="courses/:permalink" element={<CourseDetailPage />} />
     </Route>
 );
 

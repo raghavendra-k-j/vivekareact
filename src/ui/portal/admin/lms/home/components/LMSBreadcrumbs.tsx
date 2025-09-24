@@ -17,10 +17,10 @@ export function LMSBreadcrumbs({ folder, isLoading, isError, onNavigateToFolder 
     const buildBreadcrumbPath = (current: LMSFolderInfo | null): LMSFolderInfo[] => {
         const path: LMSFolderInfo[] = [];
         while (current) {
-            path.unshift(current);
+            path.push(current);
             current = current.parent;
         }
-        return path;
+        return path.reverse();
     };
 
     const breadcrumbPath = folder ? buildBreadcrumbPath(folder) : [];

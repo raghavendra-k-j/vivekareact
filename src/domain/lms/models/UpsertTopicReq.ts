@@ -5,7 +5,7 @@ export class UpsertTopicReq {
     spaceId: number;
     topicId?: number;
     name: string;
-    avatarColor: AvatarColor;
+    avatarColor?: AvatarColor;
 
     constructor({
         spaceId,
@@ -16,7 +16,7 @@ export class UpsertTopicReq {
         spaceId: number;
         topicId?: number;
         name: string;
-        avatarColor: AvatarColor;
+        avatarColor?: AvatarColor;
     }) {
         this.spaceId = spaceId;
         this.topicId = topicId;
@@ -29,7 +29,7 @@ export class UpsertTopicReq {
             spaceId: this.spaceId,
             topicId: this.topicId,
             name: this.name,
-            avatarColor: this.avatarColor.toJson(),
+            avatarColor: this.avatarColor?.toJson(),
         };
     }
 }

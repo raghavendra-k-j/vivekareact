@@ -203,6 +203,7 @@ export class AiCreateSpaceDialogStore {
                         type: itemVm.type,
                         parentId: parentId,
                         internalName: null,
+                        avatarColor: null,
                     });
 
                     const createRes = (await this.adminSpacesService.createSpace(createReq)).getOrError();

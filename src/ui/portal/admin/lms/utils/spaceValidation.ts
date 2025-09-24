@@ -29,7 +29,7 @@ export function validateSpaceCode({ value, label, minLength = 1, maxLength = 50 
 export function validateInternalName({ value, label, minLength = 1, maxLength = 100 }: { value: string, label: string, minLength?: number, maxLength?: number }): string | null {
     value = value.trim();
     if (!value) {
-        return `${label} is required`;
+        return null;
     }
     if (value.length < minLength) {
         return `${label} must be at least ${minLength} characters long`;

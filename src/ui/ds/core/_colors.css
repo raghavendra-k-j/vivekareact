@@ -76,3 +76,8 @@
 .divide-tertiary > :not([hidden]) {
   border-color: var(--color-border-tertiary);
 }
+
+
+.z-appbar {
+  z-index: 1000;
+}

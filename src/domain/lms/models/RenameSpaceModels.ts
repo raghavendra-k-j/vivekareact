@@ -5,9 +5,9 @@ export class RenameSpaceReq {
     id: number;
     name: string;
     internalName: string | null;
-    avatarColor: AvatarColor;
+    avatarColor: AvatarColor | null;
 
-    constructor({ id, name, internalName, avatarColor }: { id: number, name: string, internalName: string | null, avatarColor: AvatarColor }) {
+    constructor({ id, name, internalName, avatarColor }: { id: number, name: string, internalName: string | null, avatarColor: AvatarColor | null }) {
         this.id = id;
         this.name = name;
         this.internalName = internalName;
@@ -19,7 +19,7 @@ export class RenameSpaceReq {
             id: this.id,
             name: this.name,
             internalName: this.internalName,
-            avatarColor: this.avatarColor,
+            avatarColor: this.avatarColor?.toJson(),
         };
     }
 }

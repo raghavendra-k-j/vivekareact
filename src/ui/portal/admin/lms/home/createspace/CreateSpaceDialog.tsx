@@ -1,9 +1,8 @@
 import { Observer } from "mobx-react-lite";
-import { useRef } from "react";
+import { ReactNode, useRef } from "react";
 import { SpaceType } from "~/domain/lms/models/SpaceType";
-import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
 import { DialogFooter } from "~/ui/components/dialogs/dialog";
-import { DialogCloseButton, DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
+import { DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
 import { Button } from "~/ui/widgets/button/Button";
 import {
     Dialog,
@@ -11,31 +10,27 @@ import {
     DialogOverlay,
     DialogScaffold
 } from "~/ui/widgets/dialogmanager";
-import { useDialogManager } from "~/ui/widgets/dialogmanager/DialogManagerContext";
 import { FTextField } from "~/ui/widgets/form/TextField";
-import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
 import { AllSpacesStore } from "../allspaces/AllSpacesStore";
-import { CreateSpaceDialogProvider, useCreateSpaceDialogStore } from "./CreateSpaceDialogContext";
+import { CreateSpaceDialogContext, useCreateSpaceDialogStore } from "./CreateSpaceDialogContext";
 import { CreateSpaceDialogStore } from "./CreateSpaceDialogStore";
+import { HyperLink } from "~/ui/widgets/button/HyperLink";
 
 export interface CreateSpaceDialogProps {
     type: SpaceType;
-    parentId: number | null;
-    adminSpacesService: AdminSpacesService;
-    layoutStore: LMSLayoutStore;
     allSpacesStore: AllSpacesStore;
+    onClose: () => void;
 }
 
 function DialogInner() {
     const store = useCreateSpaceDialogStore();
     return (
-        <Dialog onClose={() => store.closeDialog()}>
+        <Dialog onClose={() => store.onClose()}>
             <DialogOverlay />
             <DialogScaffold>
                 <DialogContent className="w-full max-w-md">
                     <DialogHeader
-                        className="border-"
-                        onClose={<DialogCloseButton onClick={() => store.closeDialog()} />}
+                        className="border-none"
                         title={`Create New ${store.typeLabel}`}
                     />
                     <DialogForm />
@@ -52,19 +47,15 @@ function DialogForm() {
         <FTextField
             required
             label="Name"
-            placeholder="Enter name"
+            placeholder={`Enter ${store.typeLabel.toLowerCase()} name`}
             field={store.nameField}
         />
         <Observer>
             {() =>
                 store.type.isCourse ? (
-                    <button
-                        type="button"
-                        onClick={() => store.toggleAdditionalFields()}
-                        className="text-blue-600 hover:text-blue-800 underline text-sm"
-                    >
-                        {store.showAdditionalFields ? "Hide additional fields" : "Show additional fields"}
-                    </button>
+                    <HyperLink onClick={() => store.toggleAdditionalFields()}>
+                        <button>{store.showAdditionalFields ? "Hide additional fields" : "Show additional fields"}</button>
+                    </HyperLink>
                 ) : null
             }
         </Observer>
@@ -77,18 +68,16 @@ function DialogForm() {
                             placeholder="Enter internal name"
                             field={store.internalNameField}
                         />
-                        <FTextField
-                            label="Code"
-                            placeholder="Enter code"
-                            field={store.codeField}
-                        />
                     </>
                 ) : null
             }
         </Observer>
 
         <DialogFooter>
-            <Button variant="outline" onClick={() => store.closeDialog()}>
+            <Button
+                variant="outline"
+                color="secondary"
+                onClick={() => store.onClose()}>
                 Cancel
             </Button>
             <Observer>
@@ -105,18 +94,28 @@ function DialogForm() {
     </div>);
 }
 
+export function CreateSpaceDialogProvider({
+    children,
+    store
+}: {
+    children: ReactNode;
+    store: CreateSpaceDialogStore;
+}) {
+    return (
+        <CreateSpaceDialogContext.Provider value={store}>
+            {children}
+        </CreateSpaceDialogContext.Provider>
+    );
+}
+
 
 export function CreateSpaceDialog(props: CreateSpaceDialogProps) {
     const storeRef = useRef<CreateSpaceDialogStore | null>(null);
-    const dialogManager = useDialogManager();
     if (!storeRef.current) {
         storeRef.current = new CreateSpaceDialogStore({
-            adminSpacesService: props.adminSpacesService,
             type: props.type,
-            parentId: props.parentId,
-            layoutStore: props.layoutStore,
             allSpacesStore: props.allSpacesStore,
-            dialogManager: dialogManager,
+            onClose: props.onClose,
         });
     }
     return (

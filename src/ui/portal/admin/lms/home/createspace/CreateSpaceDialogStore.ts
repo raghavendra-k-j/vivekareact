@@ -1,54 +1,51 @@
 import { makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
 import { CreateSpaceReq, CreateSpaceRes } from "~/domain/lms/models/CreateSpaceModels";
-import { LMSConst } from "~/domain/lms/models/LMSConst";
 import { SpaceType } from "~/domain/lms/models/SpaceType";
-import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
 import { DataState } from "~/ui/utils/DataState";
-import { DialogManagerStore } from "~/ui/widgets/dialogmanager/DialogManagerStore";
 import { InputValue } from "~/ui/widgets/form/InputValue";
 import { InputValuesUtil } from "~/ui/widgets/form/InputValueUtil";
 import { showErrorToast } from "~/ui/widgets/toast/toast";
-import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
-import { validateInternalName, validateSpaceCode, validateSpaceName } from "../../utils/spaceValidation";
+import { validateInternalName, validateSpaceName } from "../../utils/spaceValidation";
 import { AllSpacesStore } from "../allspaces/AllSpacesStore";
-import { createSpaceDialogId } from "./CreateSpaceDialogConst";
 
 export class CreateSpaceDialogStore {
-    
-    layoutStore: LMSLayoutStore;
+
     allSpacesStore: AllSpacesStore;
-    adminSpacesService: AdminSpacesService;
-    dialogManager: DialogManagerStore;
-    parentId: number | null = null;
+    onClose: () => void;
 
     nameField: InputValue<string> = new InputValue("");
     internalNameField: InputValue<string> = new InputValue("");
-    codeField: InputValue<string> = new InputValue("");
     type: SpaceType;
     showAdditionalFields: boolean = false;
 
     createState: DataState<CreateSpaceRes> = DataState.init();
 
-    constructor({ layoutStore, allSpacesStore, adminSpacesService,
-        dialogManager,
-        type, parentId, }: {
-            layoutStore: LMSLayoutStore;
-            allSpacesStore: AllSpacesStore;
-            adminSpacesService: AdminSpacesService;
-            dialogManager: DialogManagerStore;
-            type: SpaceType;
-            parentId: number | null;
-        }) {
-        this.layoutStore = layoutStore;
+    get layoutStore() {
+        return this.allSpacesStore.layoutStore;
+    }
+
+    get adminSpacesService() {
+        return this.layoutStore.adminSpacesService;
+    }
+
+    get dialogManager() {
+        return this.layoutStore.portalLayoutStore.dialogManager;
+    }
+
+    get parentId(): number | null {
+        if (this.allSpacesStore.currentFolderPermalink != null) {
+            return this.allSpacesStore.dataVmOpt!.folder?.id || null;
+        }
+        return null;
+    }
+
+    constructor({ allSpacesStore, type, onClose }: { allSpacesStore: AllSpacesStore; type: SpaceType; onClose: () => void }) {
+        this.onClose = onClose;
         this.allSpacesStore = allSpacesStore;
-        this.adminSpacesService = adminSpacesService;
-        this.dialogManager = dialogManager;
         this.type = type;
-        this.parentId = parentId;
         this.nameField.validator = (value) => validateSpaceName({ value: value, label: this.typeLabel });
         this.internalNameField.validator = (value) => validateInternalName({ value: value, label: `${this.typeLabel} internal name` });
-        this.codeField.validator = (value) => validateSpaceCode({ value: value, label: `${this.typeLabel} code` });
         makeObservable(this, {
             createState: observable.ref,
             showAdditionalFields: observable,
@@ -56,13 +53,12 @@ export class CreateSpaceDialogStore {
     }
 
     get typeLabel(): string {
-        if (this.type.isCourse) {
-            return this.layoutStore.ed(LMSConst.ENTITY_COURSE).namePlural;
-        }
-        else {
+        if (this.type.isFolder) {
             return this.type.label;
         }
+        return this.layoutStore.courseEd.namePlural;
     }
+
 
     toggleAdditionalFields(): void {
         runInAction(() => {
@@ -72,8 +68,8 @@ export class CreateSpaceDialogStore {
 
     async createSpace() {
         const fieldsToValidate = [this.nameField];
-        if (this.type.isCourse) {
-            fieldsToValidate.push(this.internalNameField, this.codeField);
+        if (this.showAdditionalFields) {
+            fieldsToValidate.push(this.internalNameField);
         }
         const isValid = InputValuesUtil.validateAll(fieldsToValidate);
         if (!isValid) {
@@ -88,34 +84,27 @@ export class CreateSpaceDialogStore {
             });
             const req = new CreateSpaceReq({
                 name: this.nameField.value.trim(),
-                internalName: this.internalNameField.value.trim() || null,
-                code: this.codeField.value.trim() || null,
+                internalName: this.internalNameField.value.trim(),
                 type: this.type,
-                parentId: this.parentId
+                parentId: this.parentId,
+                avatarColor: null
             });
             const res = (await this.adminSpacesService.createSpace(req)).getOrError();
             runInAction(() => {
                 this.createState = DataState.data(res);
             });
-            
+
             // Navigate to the newly created folder if it's a folder
-            if (this.type.isFolder) {
-                this.allSpacesStore.navigateToFolder(res.id);
-            } else {
-                this.allSpacesStore.reloadCurrentFolder();
-            }
-            
-            this.dialogManager.closeById(createSpaceDialogId);
-        } catch (error) {
+            this.allSpacesStore.navigateToPermalink({ permalink: res.permalink, type: this.type });
+            this.onClose();
+            this.allSpacesStore.reloadCurrentState();
+        }
+        catch (error) {
             const appError = AppError.fromAny(error);
             runInAction(() => {
                 this.createState = DataState.error(appError);
             });
         }
-    }
-
-    closeDialog(): void {
-        this.dialogManager.closeById(createSpaceDialogId);
     }
 
 }

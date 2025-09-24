@@ -1,0 +1,2077 @@
+------- DATA MODELS -----------
+
+
+package com.sentiacare.assessmentapp.domain.lms.entities;
+
+import com.sentiacare.assessmentapp.domain.lms.constants.LMSConst;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(
+        name = SpaceEntity.C.TABLE_NAME,
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = SpaceEntity.C.UK_ORGID_COURSECODE,
+                        columnNames = {SpaceEntity.C.COL_ORG_ID, SpaceEntity.C.COL_COURSE_CODE}
+                )
+        },
+        indexes = {
+                @Index(
+                        name = SpaceEntity.C.IDX_ORGID_PARENTID,
+                        columnList = SpaceEntity.C.COL_ORG_ID + "," + SpaceEntity.C.COL_PARENT_ID
+                ),
+                @Index(
+                        name = SpaceEntity.C.IDX_ORGID_TYPE_COURSESTATUS,
+                        columnList = SpaceEntity.C.COL_ORG_ID + "," + SpaceEntity.C.COL_TYPE + "," + SpaceEntity.C.COL_COURSE_STATUS
+                )
+        }
+)
+@Entity
+public class SpaceEntity {
+
+    public static class C {
+        public static final String TABLE_NAME = "lmsspace";
+        public static final String COL_ID = "id";
+        public static final String COL_ORG_ID = "orgId";
+        public static final String COL_TYPE = "type";
+        public static final String COL_PERMALINK = "permalink";
+        public static final String COL_NAME = "name";
+        public static final String COL_INTERNAL_NAME = "internalName";
+        public static final String COL_PARENT_ID = "parentId";
+        public static final String COL_CREATED_BY_ID = "createdById";
+        public static final String COL_UPDATED_BY_ID = "updatedById";
+        public static final String COL_COURSE_STATUS = "courseStatus";
+        public static final String COL_COURSE_CODE = "courseCode";
+        public static final String COL_COURSE_USER_PASSWORD = "courseUserPassword";
+        public static final String COL_AVATAR_BG = "avatarBg";
+        public static final String COL_AVATAR_FG = "avatarFg";
+        public static final String COL_CREATED_AT = "createdAt";
+        public static final String COL_UPDATED_AT = "updatedAt";
+        public static final String UK_ORGID_COURSECODE = "uk_lmsspace_orgid_coursecode";
+        public static final String IDX_ORGID_PARENTID = "idx_lmsspace_orgid_parentid";
+        public static final String IDX_ORGID_TYPE_COURSESTATUS = "idx_lmsspace_orgid_type_coursestatus";
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = C.COL_ID)
+    private Long id;
+
+    @Column(name = C.COL_ORG_ID, nullable = false)
+    private Integer orgId;
+
+    @Column(name = C.COL_TYPE, nullable = false)
+    @Convert(converter = SpaceTypeConverter.class)
+    private SpaceType type;
+
+    @Column(name = C.COL_PERMALINK, nullable = false, length = LMSConst.PERMALINK_MAX_LENGTH, unique = true)
+    private String permalink;
+
+    @Column(name = C.COL_NAME, nullable = false, length = LMSConst.NAME_MAX_LENGTH)
+    private String name;
+
+    @Column(name = C.COL_INTERNAL_NAME, length = LMSConst.NAME_MAX_LENGTH)
+    private String internalName;
+
+    @Column(name = C.COL_PARENT_ID)
+    private Long parentId;
+
+    @Column(name = C.COL_CREATED_BY_ID)
+    private Integer createdById;
+
+    @Column(name = C.COL_UPDATED_BY_ID)
+    private Integer updatedById;
+
+    @Column(name = C.COL_COURSE_STATUS)
+    @Convert(converter = CourseStatusConverter.class)
+    private CourseStatus courseStatus;
+
+    @Column(name = C.COL_COURSE_CODE, length = LMSConst.COURSE_CODE_MAX_LENGTH)
+    private String courseCode;
+
+    @Column(name = C.COL_COURSE_USER_PASSWORD, length = LMSConst.COURSE_PASSWORD_MAX_LENGTH)
+    private String courseUserPassword;
+
+    @Column(name = C.COL_AVATAR_BG, length = LMSConst.SPACE_COLOR_CODE_LENGTH)
+    private String avatarBg;
+
+    @Column(name = C.COL_AVATAR_FG, length = LMSConst.SPACE_COLOR_CODE_LENGTH)
+    private String avatarFg;
+
+    @Column(name = C.COL_CREATED_AT, nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = C.COL_UPDATED_AT, nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        var now = LocalDateTime.now();
+        if (createdAt == null) createdAt = now;
+        if (updatedAt == null) updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+}
+
+
+
+package com.sentiacare.assessmentapp.domain.lms.entities;
+
+import com.sentiacare.assessmentapp.domain.lms.constants.LMSConst;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(
+        name = TopicEntity.C.TABLE_NAME,
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = TopicEntity.C.UK_SPACE_NAME,
+                        columnNames = {TopicEntity.C.COL_SPACE_ID, TopicEntity.C.COL_NAME}
+                )
+        }
+)
+@Entity
+public class TopicEntity {
+
+    public static class C {
+        public static final String TABLE_NAME = "topic";
+
+        public static final String COL_ID = "id";
+        public static final String COL_ORG_ID = "orgId";
+        public static final String COL_SPACE_ID = "spaceId";
+        public static final String COL_NAME = "name";
+        public static final String COL_CREATED_BY_ID = "createdById";
+        public static final String COL_UPDATED_BY_ID = "updatedById";
+        public static final String COL_AVATAR_BG = "avatarBg";
+        public static final String COL_AVATAR_FG = "avatarFg";
+        public static final String COL_CREATED_AT = "createdAt";
+        public static final String COL_UPDATED_AT = "updatedAt";
+
+        public static final String UK_SPACE_NAME = "uk_topic_space_name";
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = C.COL_ID)
+    private Long id;
+
+    @Column(name = C.COL_ORG_ID, nullable = false)
+    private Integer orgId;
+
+    @Column(name = C.COL_SPACE_ID, nullable = false)
+    private Long spaceId;
+
+    @Column(name = C.COL_NAME, nullable = false, length = LMSConst.TOPIC_NAME_MAX_LENGTH)
+    private String name;
+
+    @Column(name = C.COL_CREATED_BY_ID)
+    private Integer createdById;
+
+    @Column(name = C.COL_UPDATED_BY_ID)
+    private Integer updatedById;
+
+    @Column(name = C.COL_AVATAR_BG, length = LMSConst.SPACE_COLOR_CODE_LENGTH)
+    private String avatarBg;
+
+    @Column(name = C.COL_AVATAR_FG, length = LMSConst.SPACE_COLOR_CODE_LENGTH)
+    private String avatarFg;
+
+    @Column(name = C.COL_CREATED_AT, nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = C.COL_UPDATED_AT, nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        var now = LocalDateTime.now();
+        if (createdAt == null) createdAt = now;
+        if (updatedAt == null) updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+}
+
+
+
+package com.sentiacare.assessmentapp.domain.form.tables;
+
+import com.sentiacare.assessmentapp.domain.audit.AuditRequestColumnData;
+import com.sentiacare.assessmentapp.domain.audit.AuditUtils;
+import com.sentiacare.assessmentapp.domain.audit.Auditable;
+import com.sentiacare.assessmentapp.domain.commons.converters.ListToStringConverter;
+import com.sentiacare.assessmentapp.domain.commons.utils.StringIdUtil;
+import com.sentiacare.assessmentapp.domain.form.enums.*;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Table(name = TblForm.C.TABLE_NAME)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Builder
+public class TblForm implements Cloneable, Auditable<TblForm> {
+
+    public static final class C {
+
+        public static final String COL_ID = "id";
+        public static final String COL_ORG_ID = "orgId";
+        public static final String COL_TYPE = "type";
+        public static final String COL_SPACE_ID = "spaceId";
+        public static final String COL_TOPIC_ID = "topicId";
+        public static final String COL_CREATOR_ID = "creatorId";
+        public static final String COL_UPDATED_BY_ID = "updatedById";
+        public static final String COL_CREATED_AT = "createdAt";
+        public static final String COL_UPDATED_AT = "updatedAt";
+        public static final String COL_STATUS = "status";
+        public static final String COL_LANGUAGE_ID = "languageId";
+        public static final String COL_LANGUAGE_IDS = "formLangs";
+        public static final String COL_PERMALINK = "permalink";
+        public static final String COL_VERIFY_GUEST_EMAIL = "verifyGuestEmail";
+        public static final String COL_TITLE = "title";
+        public static final String COL_DESCRIPTION = "description";
+        public static final String COL_TAGS = "tags";
+        public static final String COL_START_DATE = "startDate";
+        public static final String COL_END_DATE = "endDate";
+        public static final String COL_TIME_LIMIT = "timeLimit";
+        public static final String COL_TOTAL_QUESTIONS = "totalQuestions";
+        public static final String COL_TOTAL_MARKS = "totalMarks";
+        public static final String COL_PASSING_MARKS = "passingMarks";
+        public static final String COL_ASSESSMENT_TYPE = "assessmentType";
+        public static final String COL_ASSMNT_TYPE_REF_ID = "assmntTypeRefId";
+        public static final String COL_ASSMNT_DOMAIN = "assmntDomain";
+        public static final String COL_SHUFFLE = "shuffle";
+        public static final String COL_VISIBILITY = "visibility";
+        public static final String COL_HOLD4MANUAL_EVAL = "hold4ManualEval";
+        public static final String COL_EVAL_OE_QS_WT_AI = "evalOeQsWtAi";
+        public static final String COL_AI_FORM_CITE = "aIFormCite";
+
+        public static final String TABLE_NAME = "form";
+
+        public static final int TITLE_MAX_LENGTH = 255;
+        public static final int DESCRIPTION_MAX_LENGTH = 2000;
+        public static final int TYPE_MAX_LENGTH = 30;
+        public static final int STATUS_MAX_LENGTH = 30;
+        public static final int LANGUAGE_ID_MAX_LENGTH = 8;
+        public static final int PERMALINK_MAX_LENGTH = 60;
+        public static final int VISIBILITY_MAX_LENGTH = 20;
+        public static final int TAG_TEXT_MAX_LENGTH = 100;
+        public static final int TAG_MAX_COUNT = 10;
+        public static final int MIN_TIME_LIMIT_SECONDS = 60;
+        public static final int MAX_TIME_LIMIT_SECONDS = 6 * 60 * 60;
+        public static final int MIN_START_END_DATE_DIFFERENCE = 1;
+    }
+
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = C.COL_ORG_ID)
+    private Integer orgId;
+
+    @Column(name = C.COL_TYPE, length = C.TYPE_MAX_LENGTH)
+    @Convert(converter = FormType.JPAConverter.class)
+    private FormType type;
+
+    @Column(name = C.COL_SPACE_ID)
+    private Long spaceId;
+
+    @Column(name = C.COL_TOPIC_ID)
+    private Long topicId;
+
+    @Column(name = C.COL_CREATOR_ID)
+    private Integer creatorId;
+
+    @Column(name = C.COL_UPDATED_BY_ID)
+    private Integer updatedById;
+
+    @Column(name = C.COL_CREATED_AT)
+    private LocalDateTime createdAt;
+
+    @Column(name = C.COL_UPDATED_AT)
+    private LocalDateTime updatedAt;
+
+    @Column(name = C.COL_STATUS, length = C.STATUS_MAX_LENGTH)
+    @Convert(converter = FormStatus.JPAConverter.class)
+    private FormStatus status;
+
+    @Column(name = C.COL_LANGUAGE_ID, length = C.LANGUAGE_ID_MAX_LENGTH)
+    private String languageId;
+
+    @Column(name = C.COL_LANGUAGE_IDS)
+    @Convert(converter = ListToStringConverter.class)
+    private List<String> languageIds;
+
+    @Column(name = C.COL_PERMALINK, length = C.PERMALINK_MAX_LENGTH)
+    private String permalink;
+
+    @Column(name = C.COL_VERIFY_GUEST_EMAIL)
+    private Boolean verifyGuestEmail;
+
+    @Column(name = C.COL_TITLE, length = C.TITLE_MAX_LENGTH)
+    private String title;
+
+    @Column(name = C.COL_DESCRIPTION, length = C.DESCRIPTION_MAX_LENGTH)
+    private String description;
+
+    @Column(name = C.COL_TAGS)
+    @Convert(converter = ListToStringConverter.class)
+    private List<String> tags;
+
+    @Column(name = C.COL_START_DATE)
+    private LocalDateTime startDate;
+
+    @Column(name = C.COL_END_DATE)
+    private LocalDateTime endDate;
+
+    @Column(name = C.COL_TIME_LIMIT)
+    private Integer timeLimit;
+
+    @Column(name = C.COL_TOTAL_QUESTIONS)
+    private Integer totalQuestions;
+
+    @Column(name = C.COL_TOTAL_MARKS)
+    private Float totalMarks;
+
+    @Column(name = C.COL_PASSING_MARKS)
+    private Float passingMarks;
+
+    @Column(name = C.COL_ASSESSMENT_TYPE, length = C.TYPE_MAX_LENGTH)
+    @Convert(converter = AssessmentType.JPAConverter.class)
+    private AssessmentType assessmentType;
+
+    @Column(name = C.COL_ASSMNT_TYPE_REF_ID)
+    private Integer assmntTypeRefId;
+
+    @Column(name = C.COL_ASSMNT_DOMAIN)
+    @Convert(converter = AssmntDomain.JPAConverter.class)
+    private AssmntDomain assmntDomain;
+
+    @Column(name = C.COL_SHUFFLE)
+    private Boolean shuffle;
+
+    @Column(name = C.COL_VISIBILITY, length = C.VISIBILITY_MAX_LENGTH)
+    private FormVisibility visibility;
+
+    @Column(name = C.COL_HOLD4MANUAL_EVAL)
+    private Boolean hold4ManualEval;
+
+    @Column(name = C.COL_EVAL_OE_QS_WT_AI)
+    private Boolean evalOeQsWtAi;
+
+    @Column(name = C.COL_AI_FORM_CITE, columnDefinition = "JSON")
+    private String aIFormCite;
+
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+
+        if (startDate != null) {
+            startDate = startDate.withSecond(0).withNano(0);
+        }
+        if (endDate != null) {
+            endDate = endDate.withSecond(0).withNano(0);
+        }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
+        // Normalize the seconds and nanoseconds
+        if (startDate != null) {
+            startDate = startDate.withSecond(0).withNano(0);
+        }
+        if (endDate != null) {
+            endDate = endDate.withSecond(0).withNano(0);
+        }
+    }
+
+    public boolean isEndDateOver() {
+        return endDate != null && endDate.isBefore(LocalDateTime.now());
+    }
+
+    public boolean isActive() {
+        // If Not Published return false
+        if (status != FormStatus.PUBLISHED) {
+            return false;
+        }
+        // If End Date is Over return false
+        if (isEndDateOver()) {
+            return false;
+        }
+        // If Start Date is in Future return false
+        return startDate == null || !startDate.isAfter(LocalDateTime.now());
+    }
+
+    public boolean isAssessment() {
+        return type == FormType.ASSESSMENT;
+    }
+
+    public boolean isSurvey() {
+        return type == FormType.SURVEY;
+    }
+
+    public boolean isPublished() {
+        return status == FormStatus.PUBLISHED;
+    }
+
+    public boolean isDraft() {
+        return status == FormStatus.DRAFT;
+    }
+
+    public boolean isClosed() {
+        return endDate != null && endDate.isBefore(LocalDateTime.now());
+    }
+
+    public String getShortLink() {
+        return StringIdUtil.encode(id);
+    }
+
+
+    @Override
+    public TblForm clone() {
+        try {
+            return (TblForm) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+
+    @Override
+    public List<AuditRequestColumnData> getAuditData(TblForm oldEntity) {
+        return AuditUtils.compareEntities(oldEntity, this);
+    }
+
+    @Override
+    public List<AuditRequestColumnData> getDeleteAuditData() {
+        return AuditUtils.getDeleteAuditData(this);
+    }
+
+}
+
+
+package com.sentiacare.assessmentapp.domain.form.enums;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import java.io.IOException;
+
+@AllArgsConstructor
+@Getter
+@JsonDeserialize(using = FormType.Deserializer.class)
+@JsonSerialize(using = FormType.Serializer.class)
+public enum FormType {
+    ASSESSMENT("Assessment", "Assessment"),
+    SURVEY("Survey", "Survey");
+    private final String type;
+    private final String name;
+
+    public static FormType fromType(String type) {
+        if (type == null) return null;
+        for (FormType formType : FormType.values()) {
+            if (formType.getType().equalsIgnoreCase(type)) {
+                return formType;
+            }
+        }
+        return null;
+    }
+
+    public boolean isAssessment() {
+        return this == ASSESSMENT;
+    }
+
+    public boolean isSurvey() {
+        return this == SURVEY;
+    }
+
+    public static class Deserializer extends JsonDeserializer<FormType> {
+        @Override
+        public FormType deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+            String type = jsonParser.getText();
+            return FormType.fromType(type);
+        }
+    }
+
+    public static class Serializer extends JsonSerializer<FormType> {
+        @Override
+        public void serialize(FormType formType, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+            jsonGenerator.writeString(formType.getType());
+        }
+    }
+
+
+    @Converter(autoApply = true)
+    public static class JPAConverter implements AttributeConverter<FormType, String> {
+
+        @Override
+        public String convertToDatabaseColumn(FormType attribute) {
+            if (attribute == null) {
+                return null;
+            }
+            return attribute.getType();
+        }
+
+        @Override
+        public FormType convertToEntityAttribute(String dbData) {
+            if (dbData == null) {
+                return null;
+            }
+            return FormType.fromType(dbData);
+        }
+    }
+}
+
+
+
+package com.sentiacare.assessmentapp.domain.form.enums;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import java.io.IOException;
+
+@AllArgsConstructor
+@Getter
+@JsonDeserialize(using = FormStatus.FormStatusDeserializer.class)
+@JsonSerialize(using = FormStatus.FormStatusSerializer.class)
+public enum FormStatus {
+
+    DRAFT("Draft", "Draft"),
+    PUBLISHED("Published", "Published"),
+    ARCHIVED("Archived", "Archived");
+
+    private final String status;
+    private final String name;
+
+    public boolean isDraft() {
+        return this == DRAFT;
+    }
+
+    public boolean isPublished() {
+        return this == PUBLISHED;
+    }
+
+    public boolean isArchived() {
+        return this == ARCHIVED;
+    }
+
+    public static FormStatus fromStatus(String status) {
+        if (status == null) return null;
+        for (FormStatus formStatus : FormStatus.values()) {
+            if (formStatus.getStatus().equalsIgnoreCase(status)) {
+                return formStatus;
+            }
+        }
+        return null;
+    }
+
+    public static class FormStatusDeserializer extends JsonDeserializer<FormStatus> {
+        @Override
+        public FormStatus deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+            String status = jsonParser.getText();
+            return FormStatus.fromStatus(status);
+        }
+    }
+
+    public static class FormStatusSerializer extends JsonSerializer<FormStatus> {
+        @Override
+        public void serialize(FormStatus formStatus, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+            jsonGenerator.writeString(formStatus.getStatus());
+        }
+    }
+
+    @Converter(autoApply = true)
+    public static class JPAConverter implements AttributeConverter<FormStatus, String> {
+
+        @Override
+        public String convertToDatabaseColumn(FormStatus attribute) {
+            if (attribute == null) {
+                return null;
+            }
+            return attribute.getStatus();
+        }
+
+        @Override
+        public FormStatus convertToEntityAttribute(String dbData) {
+            if (dbData == null) {
+                return null;
+            }
+            return FormStatus.fromStatus(dbData);
+        }
+    }
+
+}
+
+
+
+package com.sentiacare.assessmentapp.domain.form.tables;
+
+import com.sentiacare.assessmentapp.commons.utils.UUIDUtils;
+import com.sentiacare.assessmentapp.domain.form.enums.EvaluationType;
+import lombok.*;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+@Entity
+@Table(name = TblFormResponse.Fields.TABLE_NAME)
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Builder
+public class TblFormResponse {
+
+
+    public static final class Fields {
+        public static final String ID = "id";
+        public static final String UID = "uid";
+        public static final String FORM_ID = "formId";
+        public static final String USER_ID = "userId";
+        public static final String GUEST_ID = "guestId";
+        public static final String SUBMITTED_LANG = "submittedLanguage";
+        public static final String SUBMITTED_AT = "submittedAt";
+        public static final String STARTED_AT = "startedAt";
+        public static final String ENDED_AT = "endedAt";
+
+        public static final String IS_EVALUATED = "isEvaluated";
+        public static final String EVALUATOR_ID = "evaluatorId";
+        public static final String EVALUATED_ON = "evaluatedOn";
+        public static final String EVALUATION_TYPE = "evaluationType";
+
+        public static final String TIME_TAKEN = "timeTaken";
+        public static final String MARKS = "marks";
+        public static final String PERCENTAGE = "percentage";
+        public static final String ATTEMPTED_Q_COUNT = "attemptedQCount";
+        public static final String CORRECT_Q_COUNT = "correctQCount";
+        public static final String PARTIAL_CORRECT_Q_COUNT = "partialCorrectQCount";
+        public static final String INCORRECT_Q_COUNT = "incorrectQCount";
+        public static final String UPDATED_AT = "updatedAt";
+        public static final String VERSION = "version";
+        public static final String TABLE_NAME = "formsubmission";
+    }
+
+
+
+    @Id
+    @Column(name = Fields.ID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(name = Fields.UID, unique = true, nullable = false)
+    private String uid;
+
+    @Column(name = Fields.FORM_ID, nullable = false)
+    private Integer formId;
+
+    @Column(name = Fields.USER_ID)
+    private Integer userId;
+
+    @Column(name = Fields.GUEST_ID)
+    private Integer guestId;
+
+    @Column(name = Fields.SUBMITTED_LANG)
+    private String submittedLanguage;
+
+    @Column(name = Fields.SUBMITTED_AT, nullable = false)
+    private LocalDateTime submittedAt;
+
+    @Column(name = Fields.STARTED_AT, nullable = false)
+    private LocalDateTime startedAt;
+
+    @Column(name = Fields.ENDED_AT, nullable = false)
+    private LocalDateTime endedAt;
+
+    @Column(name = Fields.IS_EVALUATED)
+    private Boolean isEvaluated;
+
+    @Column(name = Fields.EVALUATED_ON)
+    private LocalDateTime evaluatedOn;
+
+    @Column(name = Fields.EVALUATOR_ID)
+    private Integer evaluatorId;
+
+    @Column(name = Fields.EVALUATION_TYPE)
+    @Convert(converter = EvaluationType.JPAConverter.class)
+    private EvaluationType evaluationType;
+
+    @Column(name = Fields.TIME_TAKEN, nullable = false)
+    private Integer timeTaken;
+
+    @Column(name = Fields.MARKS)
+    private Float marks;
+
+    @Column(name = Fields.PERCENTAGE)
+    private Float percentage;
+
+    @Column(name = Fields.ATTEMPTED_Q_COUNT)
+    private Integer attemptedQCount;
+
+    @Column(name = Fields.CORRECT_Q_COUNT)
+    private Integer correctQCount;
+
+    @Column(name = Fields.PARTIAL_CORRECT_Q_COUNT)
+    private Integer partiallyCorrectQCount;
+
+    @Column(name = Fields.INCORRECT_Q_COUNT)
+    private Integer incorrectQCount;
+
+    @Column(name = Fields.UPDATED_AT)
+    private LocalDateTime updatedAt;
+
+    @Version
+    @Column(name = Fields.VERSION)
+    private Integer version;
+
+    public void updatePercentage(Float totalMarks) {
+        if (marks != null && totalMarks != null) {
+            this.percentage = (marks / totalMarks) * 100;
+        }
+    }
+
+
+    @PrePersist
+    public void prePersist() {
+        if (submittedAt == null) {
+            this.submittedAt = LocalDateTime.now();
+        }
+        if (updatedAt == null) {
+            this.updatedAt = LocalDateTime.now();
+        }
+        if (uid == null) {
+            this.uid = UUIDUtils.compact();
+        }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public Boolean isPassed(Float passingMarks) {
+        if(passingMarks == null || marks == null) {
+            return null;
+        }
+        return marks >= passingMarks;
+    }
+
+
+    public boolean isEvaluationFinalized() {
+        return Boolean.TRUE.equals(isEvaluated) && Objects.equals(evaluationType, EvaluationType.MANUAL);
+    }
+
+}
+
+
+------- END OF DATA MODELS --------------
+
+
+------- Requirement ----------
+package com.sentiacare.assessmentapp.domain.lms.proj;
+
+public record TopicReportItemProj(
+        Long id,
+        String name,
+        Long totalAssessments,
+        Long totalSurveys,
+        Long completedAssessments,
+        Long completedSurveys,
+        Double averagePercentage
+) {
+}
+
+
+
+package com.sentiacare.assessmentapp.domain.lms.proj;
+
+import com.sentiacare.assessmentapp.commons.models.PageLimit;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class TopicReportItemSpecs {
+    private PageLimit pageLimit;
+    private Long courseId;
+    private Long userId;
+}
+
+
+
+package com.sentiacare.assessmentapp.commons.models;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class PageLimit {
+    private int offset;
+    private int limit;
+    private int page;
+
+
+    public static PageLimit fromPageAndPageSize(int page, int pageSize) {
+        if (page < 1) page = 1;
+        int offset = (page - 1) * pageSize;
+        return new PageLimit(offset, pageSize, page);
+    }
+
+
+    public static PageLimit autoPageAndPageSize(Integer page, Integer pageSize) {
+        if (page == null || pageSize == null) {
+            return null;
+        }
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 10;
+        if (pageSize > 100) pageSize = 100;
+        int offset = (page - 1) * pageSize;
+        return new PageLimit(offset, pageSize, page);
+    }
+
+    public Integer getPageSize() {
+        return limit;
+    }
+
+
+}
+
+
+------- END OF REQUIREMENT -----------------
+
+
+
+---- SAMPLE MY CODING PATTERN -----------
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/SpaceRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.entities.CourseStatus;
+import com.sentiacare.assessmentapp.domain.lms.entities.SpaceEntity;
+import com.sentiacare.assessmentapp.domain.lms.entities.SpaceType;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface SpaceRepo extends JpaRepository<SpaceEntity, Long>,
+        AdminSpacesCustomRepo,
+        AdminCourseContentsRepo,
+        SpaceMemberCustomRepo,
+        UserCourseRepo
+{
+
+    long countByOrgIdAndType(Integer orgId, SpaceType type);
+
+    Optional<SpaceEntity> findByOrgIdAndTypeAndId(Integer orgId, SpaceType spaceType, Long id);
+
+    Optional<SpaceEntity> findByOrgIdAndIdAndType(Integer orgId, Long id, SpaceType spaceType);
+    Optional<SpaceEntity> findByOrgIdAndPermalinkAndType(Integer orgId, String permalink, SpaceType spaceType);
+
+    Optional<SpaceEntity> findByOrgIdAndId(Integer orgId, Long id);
+
+    boolean existsByOrgIdAndTypeAndParentIdAndNameIgnoreCase(Integer orgId, SpaceType type, Long parentId, String name);
+
+    boolean existsByOrgIdAndTypeAndParentIdIsNullAndNameIgnoreCase(Integer orgId, SpaceType type, String name);
+
+    Optional<SpaceEntity> findByOrgIdAndIdAndTypeAndCourseStatusNot(Integer orgId, Long spaceId, SpaceType type, CourseStatus status);
+
+    List<SpaceEntity> findAllByOrgIdAndParentId(Integer orgId, Long parentId);
+
+    Optional<SpaceEntity> findByOrgIdAndTypeAndPermalink(Integer orgId, SpaceType type, String permalink);
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/TopicRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.entities.TopicEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface TopicRepo extends JpaRepository<TopicEntity, Long>, TopicCustomRepo {
+    Optional<TopicEntity> findByOrgIdAndSpaceIdAndId(Integer orgId, Long spaceId, Long topicId);
+
+    long countByOrgIdAndSpaceId(Integer orgId, Long spaceId);
+
+    @Modifying
+    @Query("DELETE FROM TopicEntity t WHERE t.spaceId = ?1")
+    void deleteAllBySpaceId(Long spaceId);
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/CoursesRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.proj.CourseListItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.CourseListSpecs;
+
+import java.util.List;
+
+public interface CoursesRepo {
+    List<CourseListItemProj> queryMyCourseListItems(CourseListSpecs specs);
+    long courseMyCourseListItems(CourseListSpecs specs);
+}
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/UserCourseRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+
+import com.sentiacare.assessmentapp.domain.lms.proj.CourseDetailFormProj;
+
+public interface UserCourseRepo {
+    CourseDetailFormProj getCourseDetailFormProjById(Long courseId, Integer userId);
+    long getUserRankInCourse(Long courseId, Integer userId);
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/CourseFormsRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+
+public interface CourseFormsRepo {
+
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/CoursesRepoImpl.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.commons.models.PageLimit;
+import com.sentiacare.assessmentapp.domain.form.enums.FormStatus;
+import com.sentiacare.assessmentapp.domain.form.enums.FormType;
+import com.sentiacare.assessmentapp.domain.lms.entities.CourseStatus;
+import com.sentiacare.assessmentapp.domain.lms.entities.SpaceType;
+import com.sentiacare.assessmentapp.domain.lms.proj.CourseListItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.CourseListSpecs;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Repository
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
+public class CoursesRepoImpl implements CoursesRepo {
+
+    private final EntityManager em;
+
+    @Override
+    public List<CourseListItemProj> queryMyCourseListItems(CourseListSpecs specs) {
+        Filters f = buildFilters(specs);
+        PageLimit pl = specs.pageLimit();
+
+        String jpql = """
+                SELECT new com.sentiacare.assessmentapp.domain.lms.proj.CourseListItemProj(
+                    s.id,
+                    s.permalink,
+                    s.name,
+                    s.internalName,
+                    s.courseCode,
+                    s.courseStatus,
+                    s.avatarBg,
+                    s.avatarFg,
+                    COUNT(DISTINCT CASE WHEN f.type = :assType THEN f.id END),
+                    COUNT(DISTINCT CASE WHEN f.type = :survType THEN f.id END),
+                    COUNT(DISTINCT CASE WHEN f.type = :assType AND fr.id IS NOT NULL THEN f.id END),
+                    COUNT(DISTINCT CASE WHEN f.type = :survType AND fr.id IS NOT NULL THEN f.id END),
+                    AVG(CASE WHEN f.type = :assType THEN fr.percentage END)
+                )
+                FROM SpaceEntity s
+                JOIN SpaceMembershipEntity sm
+                  ON sm.spaceId = s.id AND sm.userId = :userId
+                LEFT JOIN TblForm f
+                  ON f.spaceId = s.id AND f.status = :pubStatus
+                LEFT JOIN TblFormResponse fr
+                  ON fr.formId = f.id AND fr.userId = :userId
+                """ + f.where + """
+                GROUP BY s.id, s.permalink, s.name, s.internalName, s.courseCode, s.courseStatus, s.avatarBg, s.avatarFg
+                ORDER BY s.id DESC
+                """;
+
+        TypedQuery<CourseListItemProj> q = em.createQuery(jpql, CourseListItemProj.class);
+        q.setParameter("userId", specs.userId());
+        q.setParameter("assType", FormType.ASSESSMENT);
+        q.setParameter("survType", FormType.SURVEY);
+        q.setParameter("courseType", SpaceType.COURSE);
+        q.setParameter("pubStatus", FormStatus.PUBLISHED);
+        f.params.forEach(q::setParameter);
+
+        if (pl != null) {
+            q.setFirstResult(pl.getOffset());
+            q.setMaxResults(pl.getLimit());
+        }
+
+        return q.getResultList();
+    }
+
+    @Override
+    public long courseMyCourseListItems(CourseListSpecs specs) {
+        Filters f = buildFilters(specs);
+
+        String jpql = """
+                SELECT COUNT(DISTINCT s.id)
+                FROM SpaceEntity s
+                JOIN SpaceMembershipEntity sm
+                  ON sm.spaceId = s.id AND sm.userId = :userId
+                """ + f.where;
+
+        TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+        q.setParameter("userId", specs.userId());
+        q.setParameter("courseType", SpaceType.COURSE);
+        f.params.forEach(q::setParameter);
+
+        return q.getSingleResult();
+    }
+
+    private Filters buildFilters(CourseListSpecs specs) {
+        StringBuilder where = new StringBuilder(" WHERE s.orgId = :orgId AND s.type = :courseType ");
+        Map<String, Object> params = new HashMap<>();
+        params.put("orgId", specs.orgId());
+
+        CourseStatus status = specs.status();
+        if (status != null) {
+            where.append(" AND s.courseStatus = :status ");
+            params.put("status", status);
+        }
+
+        String raw = StringUtils.trimToNull(specs.searchQuery());
+        if (StringUtils.isNotBlank(raw)) {
+            where.append("""
+                    AND (
+                        LOWER(s.name)          LIKE :q
+                        OR LOWER(s.internalName) LIKE :q
+                        OR LOWER(s.courseCode) LIKE :q
+                    )
+                    """);
+            params.put("q", "%" + raw.toLowerCase() + "%");
+        }
+
+        return new Filters(where.toString(), params);
+    }
+
+    private record Filters(String where, Map<String, Object> params) {
+    }
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/TopicCustomRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminTopicItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminTopicsListSpecs;
+
+import java.util.List;
+
+public interface TopicCustomRepo {
+    List<AdminTopicItemProj> queryAdminTopicsList(AdminTopicsListSpecs specs);
+    long countAdminTopicsList(AdminTopicsListSpecs specs);
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/UserCourseRepoImpl.java
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/UserCourseRepoImpl.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.form.enums.FormStatus;
+import com.sentiacare.assessmentapp.domain.form.enums.FormType;
+import com.sentiacare.assessmentapp.domain.form.tables.TblForm;
+import com.sentiacare.assessmentapp.domain.form.tables.TblFormResponse;
+import com.sentiacare.assessmentapp.domain.lms.proj.CourseDetailFormProj;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+@Repository
+@Transactional(readOnly = true)
+public class UserCourseRepoImpl implements UserCourseRepo {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Override
+    public CourseDetailFormProj getCourseDetailFormProjById(Long courseId, Integer userId) {
+        String jpql = """
+                SELECT new com.sentiacare.assessmentapp.domain.lms.proj.CourseDetailFormProj(
+                  (SELECT COUNT(fa.id)
+                     FROM TblForm fa
+                    WHERE fa.spaceId = :spaceId
+                      AND fa.type = :assType
+                      AND fa.status = :pubStatus),
+                  (SELECT COUNT(fs.id)
+                     FROM TblForm fs
+                    WHERE fs.spaceId = :spaceId
+                      AND fs.type = :survType
+                      AND fs.status = :pubStatus),
+                  (SELECT COUNT(fa2.id)
+                     FROM TblForm fa2
+                    WHERE fa2.spaceId = :spaceId
+                      AND fa2.type = :assType
+                      AND fa2.status = :pubStatus
+                      AND EXISTS (
+                            SELECT 1
+                              FROM TblFormResponse fr2
+                             WHERE fr2.formId = fa2.id
+                               AND fr2.userId = :userId
+                      )),
+                  (SELECT COUNT(fs2.id)
+                     FROM TblForm fs2
+                    WHERE fs2.spaceId = :spaceId
+                      AND fs2.type = :survType
+                      AND fs2.status = :pubStatus
+                      AND EXISTS (
+                            SELECT 1
+                              FROM TblFormResponse fr3
+                             WHERE fr3.formId = fs2.id
+                               AND fr3.userId = :userId
+                      )),
+                  (SELECT AVG(fr4.percentage)
+                     FROM TblFormResponse fr4
+                    WHERE fr4.userId = :userId
+                      AND EXISTS (
+                            SELECT 1
+                              FROM TblForm fa3
+                             WHERE fa3.id = fr4.formId
+                               AND fa3.spaceId = :spaceId
+                               AND fa3.type = :assType
+                               AND fa3.status = :pubStatus
+                      ))
+                )
+                FROM SpaceEntity s
+                WHERE s.id = :spaceId
+                """;
+
+        TypedQuery<CourseDetailFormProj> q = em.createQuery(jpql, CourseDetailFormProj.class);
+        q.setParameter("spaceId", courseId);
+        q.setParameter("userId", userId);
+        q.setParameter("assType", FormType.ASSESSMENT);
+        q.setParameter("survType", FormType.SURVEY);
+        q.setParameter("pubStatus", FormStatus.PUBLISHED);
+
+        return q.getSingleResult();
+    }
+
+    @Override
+    public long getUserRankInCourse(Long courseId, Integer userId) {
+        String fTable = TblForm.C.TABLE_NAME;
+        String fId = TblForm.C.COL_ID;
+        String fSpaceId = TblForm.C.COL_SPACE_ID;
+        String fType = TblForm.C.COL_TYPE;
+        String fStatus = TblForm.C.COL_STATUS;
+
+        String frTable = TblFormResponse.Fields.TABLE_NAME;
+        String frFormId = TblFormResponse.Fields.FORM_ID;
+        String frUserId = TblFormResponse.Fields.USER_ID;
+        String frMarks = TblFormResponse.Fields.MARKS;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("WITH user_totals AS (")
+                .append(" SELECT fr.").append(frUserId).append(" AS uid, SUM(fr.").append(frMarks).append(") AS sum_marks")
+                .append(" FROM ").append(frTable).append(" fr")
+                .append(" JOIN ").append(fTable).append(" f ON f.").append(fId).append(" = fr.").append(frFormId)
+                .append(" WHERE f.").append(fSpaceId).append(" = :spaceId")
+                .append(" AND f.").append(fType).append(" = :typeVal")
+                .append(" AND f.").append(fStatus).append(" = :statusVal")
+                .append(" GROUP BY fr.").append(frUserId)
+                .append(")")
+                .append(" SELECT COALESCE((")
+                .append(" SELECT rnk FROM (")
+                .append(" SELECT uid, DENSE_RANK() OVER (ORDER BY sum_marks DESC) AS rnk")
+                .append(" FROM user_totals")
+                .append(" ) r")
+                .append(" WHERE r.uid = :userId")
+                .append(" ), 0)");
+
+        Object raw = em.createNativeQuery(sb.toString())
+                .setParameter("spaceId", courseId)
+                .setParameter("userId", userId)
+                .setParameter("typeVal", new FormType.JPAConverter().convertToDatabaseColumn(FormType.ASSESSMENT))
+                .setParameter("statusVal", new FormStatus.JPAConverter().convertToDatabaseColumn(FormStatus.PUBLISHED))
+                .getSingleResult();
+
+        if (raw == null) return 0L;
+        if (raw instanceof Number n) return n.longValue();
+        return Long.parseLong(raw.toString());
+    }
+
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/SpaceMembershipRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.entities.SpaceMemberRole;
+import com.sentiacare.assessmentapp.domain.lms.entities.SpaceMembershipEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface SpaceMembershipRepo extends JpaRepository<SpaceMembershipEntity, Long> {
+    Optional<SpaceMembershipEntity> findBySpaceIdAndUserId(Long spaceId, Integer userId);
+
+    List<SpaceMembershipEntity> findBySpaceId(Long spaceId);
+
+    List<SpaceMembershipEntity> findByUserId(Integer userId);
+
+    List<SpaceMembershipEntity> findBySpaceIdAndRole(Long spaceId, SpaceMemberRole role);
+
+    boolean existsBySpaceIdAndUserId(Long spaceId, Integer userId);
+
+    long countBySpaceId(Long spaceId);
+
+    @Query("SELECT sm.userId FROM SpaceMembershipEntity sm WHERE sm.spaceId = :courseId AND sm.userId IN :userIds")
+    List<Integer> findExistingMemberIdsByCourseIdAndMemberIds(@Param("courseId") Long courseId, @Param("userIds") List<Integer> userIds);
+
+    Optional<SpaceMembershipEntity> findBySpaceIdAndUserIdAndRole(Long spaceId, Integer userId, SpaceMemberRole role);
+
+    @Modifying
+    @Query("DELETE FROM SpaceMembershipEntity sm WHERE sm.spaceId = :spaceId AND sm.userId IN :userIds")
+    void deleteBySpaceIdAndUserIdIn(Long spaceId, ArrayList<Integer> userIds);
+
+    Long countBySpaceIdAndRole(Long id, SpaceMemberRole role);
+
+
+    @Modifying
+    @Query("DELETE FROM SpaceMembershipEntity sm WHERE sm.spaceId = ?1")
+    void deleteAllBySpaceId(Long spaceId);
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/TopicCustomRepoImpl.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.commons.models.PageLimit;
+import com.sentiacare.assessmentapp.domain.form.enums.FormType;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminTopicItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminTopicsListSpecs;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Repository
+@Transactional(readOnly = true)
+public class TopicCustomRepoImpl implements TopicCustomRepo {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    private static final String PROJECTION_CLASS = "com.sentiacare.assessmentapp.domain.lms.proj.AdminTopicItemProj";
+
+    private static final String PROJECTION_COLUMNS = """
+            t.id, t.orgId, t.spaceId, t.name, t.avatarBg, t.avatarFg,
+            (SELECT COUNT(f1.id) FROM TblForm f1 WHERE f1.orgId = t.orgId AND f1.topicId = t.id AND f1.type = :assessType),
+            (SELECT COUNT(f2.id) FROM TblForm f2 WHERE f2.orgId = t.orgId AND f2.topicId = t.id AND f2.type = :surveyType),
+            t.createdAt, t.updatedAt
+            """;
+
+    private static final String SELECT_ADMIN_TOPIC_ITEM_PROJ = """
+            SELECT new %s(
+            %s
+            ) FROM TopicEntity t
+            """.formatted(PROJECTION_CLASS, PROJECTION_COLUMNS);
+
+    @Override
+    public List<AdminTopicItemProj> queryAdminTopicsList(AdminTopicsListSpecs specs) {
+        Filters f = buildFilters(specs);
+        String jpql = SELECT_ADMIN_TOPIC_ITEM_PROJ + f.where + " ORDER BY t.updatedAt DESC, t.id DESC";
+        TypedQuery<AdminTopicItemProj> q = em.createQuery(jpql, AdminTopicItemProj.class);
+        f.params.forEach(q::setParameter);
+        q.setParameter("assessType", FormType.ASSESSMENT);
+        q.setParameter("surveyType", FormType.SURVEY);
+        PageLimit p = specs.pageLimit();
+        if (p != null) {
+            q.setFirstResult(p.getOffset());
+            q.setMaxResults(p.getLimit());
+        }
+        return q.getResultList();
+    }
+
+    @Override
+    public long countAdminTopicsList(AdminTopicsListSpecs specs) {
+        Filters f = buildFilters(specs);
+        String jpql = "SELECT COUNT(t.id) FROM TopicEntity t" + f.where;
+        TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+        f.params.forEach(q::setParameter);
+        return q.getSingleResult();
+    }
+
+    private static Filters buildFilters(AdminTopicsListSpecs specs) {
+        StringBuilder where = new StringBuilder(" WHERE t.orgId = :orgId AND t.spaceId = :spaceId ");
+        Map<String, Object> params = new HashMap<>();
+        params.put("orgId", specs.orgId());
+        params.put("spaceId", specs.spaceId());
+        String raw = StringUtils.trimToNull(specs.searchQuery());
+        if (StringUtils.isNotBlank(raw)) {
+            where.append(" AND LOWER(t.name) LIKE :q ");
+            params.put("q", "%" + raw.toLowerCase() + "%");
+        }
+        return new Filters(where.toString(), params);
+    }
+
+    private record Filters(String where, Map<String, Object> params) {
+    }
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/AdminSpacesCustomRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminFolderInfoProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminMyCourseItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminSpaceItemProj;
+
+import java.util.List;
+
+public interface AdminSpacesCustomRepo {
+    List<AdminFolderInfoProj> findBreadcrumb(Integer orgId, Long leafId);
+
+    List<AdminSpaceItemProj> findAdminSpaceItems(AdminSpaceItemListSpecs specs);
+    long countAdminSpaceItems(AdminSpaceItemListSpecs specs);
+
+    List<AdminMyCourseItemProj> findAdminMyCourseItems(AdminMyCourseListSpecs specs);
+    long countAdminMyCourseItems(AdminMyCourseListSpecs specs);
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/SpaceMemberCustomRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminCMItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminQueryCMSpecs;
+import com.sentiacare.assessmentapp.domain.lms.proj.QueryAddMemberItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.QueryAddMembersSpecs;
+
+import java.util.List;
+
+public interface SpaceMemberCustomRepo {
+    List<AdminCMItemProj> queryAdminCCItemProjList(AdminQueryCMSpecs specs);
+    long countAdminCCItemProjList(AdminQueryCMSpecs specs);
+    List<QueryAddMemberItemProj> queryAddMembersItemProjList(QueryAddMembersSpecs specs);
+    long countAddMembersItemProjList(QueryAddMembersSpecs specs);
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/AdminMyCourseListSpecs.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.commons.models.PageLimit;
+import com.sentiacare.assessmentapp.domain.lms.entities.CourseStatus;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+public class AdminMyCourseListSpecs {
+    private Integer orgId;
+    private Integer userId;
+    private String searchQuery;
+    private PageLimit pageLimit;
+    private CourseStatus courseStatus;
+}
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/AdminCourseContentsRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminCCItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminQueryCCItemSpecs;
+
+import java.util.List;
+
+public interface AdminCourseContentsRepo {
+    List<AdminCCItemProj> queryAdminCCItemProjList(AdminQueryCCItemSpecs specs);
+    long countAdminCCItemProjList(AdminQueryCCItemSpecs specs);
+}
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/AdminSpaceItemListSpecs.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.commons.models.PageLimit;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@Getter
+@Setter
+@AllArgsConstructor
+public class AdminSpaceItemListSpecs {
+    private Integer orgId;
+    private String searchQuery;
+    private Long parentId;
+    private PageLimit pageLimit;
+}
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/AdminSpacesCustomRepoImpl.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.commons.models.PageLimit;
+import com.sentiacare.assessmentapp.domain.form.enums.FormStatus;
+import com.sentiacare.assessmentapp.domain.form.enums.FormType;
+import com.sentiacare.assessmentapp.domain.lms.entities.SpaceEntity;
+import com.sentiacare.assessmentapp.domain.lms.entities.SpaceMemberRole;
+import com.sentiacare.assessmentapp.domain.lms.entities.SpaceType;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminFolderInfoProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminMyCourseItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminSpaceItemProj;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Repository
+@Transactional(readOnly = true)
+public class AdminSpacesCustomRepoImpl implements AdminSpacesCustomRepo {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Override
+    public List<AdminFolderInfoProj> findBreadcrumb(Integer orgId, Long leafId) {
+        String sql = getFindFolderSubtreeSQL();
+        @SuppressWarnings("unchecked")
+        List<Object[]> rows = (List<Object[]>) em.createNativeQuery(sql)
+                .setParameter("orgId", orgId)
+                .setParameter("rootId", leafId)
+                .getResultList();
+        return rows.stream()
+                .map(a -> new AdminFolderInfoProj(
+                        ((Number) a[0]).longValue(),   // id
+                        (String) a[2],                 // permalink
+                        (String) a[1],                 // name
+                        ((Number) a[3]).intValue()))   // depth
+                .toList();
+    }
+
+    @Override
+    public List<AdminSpaceItemProj> findAdminSpaceItems(AdminSpaceItemListSpecs specs) {
+        Filters f = buildSpaceListFilters(specs);
+        PageLimit page = specs.getPageLimit();
+        String jpql = """
+                SELECT new com.sentiacare.assessmentapp.domain.lms.proj.AdminSpaceItemProj(
+                    s.id, s.permalink, s.type, s.name, s.internalName, s.parentId,
+                    s.avatarBg, s.avatarFg, s.courseStatus, s.createdAt, s.updatedAt
+                )
+                FROM SpaceEntity s
+                """ + f.where + " ORDER BY s.name ASC, s.id ASC";
+        TypedQuery<AdminSpaceItemProj> q = em.createQuery(jpql, AdminSpaceItemProj.class);
+        f.params.forEach(q::setParameter);
+        q.setFirstResult(page.getOffset());
+        q.setMaxResults(page.getLimit());
+        return q.getResultList();
+    }
+
+    @Override
+    public long countAdminSpaceItems(AdminSpaceItemListSpecs specs) {
+        Filters f = buildSpaceListFilters(specs);
+        String jpql = "SELECT COUNT(s.id) FROM SpaceEntity s" + f.where;
+        TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+        f.params.forEach(q::setParameter);
+        return q.getSingleResult();
+    }
+
+    @Override
+    public List<AdminMyCourseItemProj> findAdminMyCourseItems(AdminMyCourseListSpecs specs) {
+        Filters f = buildMyCoursesFilters(specs);
+        PageLimit page = specs.getPageLimit();
+        String jpql = """
+                SELECT new com.sentiacare.assessmentapp.domain.lms.proj.AdminMyCourseItemProj(
+                    s.id, s.permalink, s.name, s.internalName,
+                    s.avatarBg, s.avatarFg, s.courseCode, s.courseStatus,
+                    (SELECT COUNT(sm1.id) FROM SpaceMembershipEntity sm1 WHERE sm1.spaceId = s.id AND sm1.role = :roleAdmin),
+                    (SELECT COUNT(sm2.id) FROM SpaceMembershipEntity sm2 WHERE sm2.spaceId = s.id AND sm2.role = :roleUser),
+                    (SELECT COUNT(fa.id) FROM TblForm fa WHERE fa.spaceId = s.id AND fa.type = :typeAssessment AND fa.status <> :statusArchived),
+                    (SELECT COUNT(fs.id) FROM TblForm fs WHERE fs.spaceId = s.id AND fs.type = :typeSurvey AND fs.status <> :statusArchived),
+                    s.createdAt, s.updatedAt
+                )
+                FROM SpaceEntity s
+                """ + f.where + " ORDER BY s.name ASC, s.id ASC";
+        TypedQuery<AdminMyCourseItemProj> q = em.createQuery(jpql, AdminMyCourseItemProj.class);
+        f.params.forEach(q::setParameter);
+        q.setParameter("roleAdmin", SpaceMemberRole.ADMIN);
+        q.setParameter("roleUser", SpaceMemberRole.USER);
+        q.setParameter("typeAssessment", FormType.ASSESSMENT);
+        q.setParameter("typeSurvey", FormType.SURVEY);
+        q.setParameter("statusArchived", FormStatus.ARCHIVED);
+        q.setFirstResult(page.getOffset());
+        q.setMaxResults(page.getLimit());
+        return q.getResultList();
+    }
+
+    @Override
+    public long countAdminMyCourseItems(AdminMyCourseListSpecs specs) {
+        Filters f = buildMyCoursesFilters(specs);
+        String jpql = "SELECT COUNT(s.id) FROM SpaceEntity s" + f.where;
+        TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+        f.params.forEach(q::setParameter);
+        return q.getSingleResult();
+    }
+
+    @NotNull
+    private String getFindFolderSubtreeSQL() {
+        String t = SpaceEntity.C.TABLE_NAME;
+        String colId = SpaceEntity.C.COL_ID;
+        String colPermalink = SpaceEntity.C.COL_PERMALINK;
+        String colParent = SpaceEntity.C.COL_PARENT_ID;
+        String colName = SpaceEntity.C.COL_NAME;
+        String colOrg = SpaceEntity.C.COL_ORG_ID;
+        return "WITH RECURSIVE r AS (" +
+                " SELECT s." + colId + " AS " + colId +
+                ", s." + colParent + " AS " + colParent +
+                ", s." + colName + " AS " + colName +
+                ", s." + colPermalink + " AS " + colPermalink +
+                ", 0 AS depth" +
+                " FROM " + t + " s WHERE s." + colId + " = :rootId AND s." + colOrg + " = :orgId" +
+                " UNION ALL " +
+                " SELECT p." + colId +
+                ", p." + colParent +
+                ", p." + colName +
+                ", p." + colPermalink +
+                ", r.depth + 1" +
+                " FROM " + t + " p JOIN r ON r." + colParent + " = p." + colId +
+                " WHERE p." + colOrg + " = :orgId) " +
+                "SELECT r." + colId +
+                ", r." + colName +
+                ", r." + colPermalink +
+                ", r.depth FROM r ORDER BY r.depth DESC, r." + colId;
+    }
+
+    private Filters buildSpaceListFilters(AdminSpaceItemListSpecs specs) {
+        StringBuilder where = new StringBuilder(" WHERE s.orgId = :orgId ");
+        Map<String, Object> params = new HashMap<>();
+        params.put("orgId", specs.getOrgId());
+        if (specs.getParentId() != null) {
+            where.append(" AND s.parentId = :parentId ");
+            params.put("parentId", specs.getParentId());
+        } else {
+            where.append(" AND s.parentId IS NULL ");
+        }
+        String raw = StringUtils.trimToNull(specs.getSearchQuery());
+        if (StringUtils.isNotBlank(raw)) {
+            where.append(" AND (LOWER(s.name) LIKE :q OR LOWER(s.internalName) LIKE :q OR LOWER(s.courseCode) LIKE :q) ");
+            params.put("q", "%" + raw.toLowerCase() + "%");
+        }
+        return new Filters(where.toString(), params);
+    }
+
+    private Filters buildMyCoursesFilters(AdminMyCourseListSpecs specs) {
+        StringBuilder where = new StringBuilder(" WHERE s.orgId = :orgId AND s.type = :courseType ");
+        Map<String, Object> params = new HashMap<>();
+        params.put("orgId", specs.getOrgId());
+        params.put("courseType", SpaceType.COURSE);
+        where.append(" AND EXISTS (SELECT 1 FROM SpaceMembershipEntity sm WHERE sm.spaceId = s.id AND sm.userId = :userId AND sm.role = :roleAdmin) ");
+        params.put("userId", specs.getUserId());
+        params.put("roleAdmin", SpaceMemberRole.ADMIN);
+        if (specs.getCourseStatus() != null) {
+            where.append(" AND s.courseStatus = :courseStatus ");
+            params.put("courseStatus", specs.getCourseStatus());
+        }
+        String raw = StringUtils.trimToNull(specs.getSearchQuery());
+        if (StringUtils.isNotBlank(raw)) {
+            where.append(" AND (LOWER(s.name) LIKE :q OR LOWER(s.internalName) LIKE :q OR LOWER(s.courseCode) LIKE :q) ");
+            params.put("q", "%" + raw.toLowerCase() + "%");
+        }
+        return new Filters(where.toString(), params);
+    }
+
+    private record Filters(String where, Map<String, Object> params) {
+    }
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/SpaceMemberCustomRepoImpl.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.commons.models.PageLimit;
+import com.sentiacare.assessmentapp.domain.lms.entities.SpaceMemberRole;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminCMItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminQueryCMSpecs;
+import com.sentiacare.assessmentapp.domain.lms.proj.QueryAddMemberItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.QueryAddMembersSpecs;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Repository
+@Transactional(readOnly = true)
+public class SpaceMemberCustomRepoImpl implements SpaceMemberCustomRepo {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    private static final String SELECT_PROJ = """
+            SELECT new com.sentiacare.assessmentapp.domain.lms.proj.AdminCMItemProj(
+                u.id,
+                u.userName,
+                u.email,
+                u.mobile,
+                u.name,
+                u.emailVerified,
+                m.createdAt,
+                m.role
+            )
+            """;
+
+    private static final String FROM_JOIN = """
+            FROM SpaceMembershipEntity m
+            JOIN UserAccountEntity u ON u.id = m.userId
+            """;
+
+    @Override
+    public List<AdminCMItemProj> queryAdminCCItemProjList(AdminQueryCMSpecs specs) {
+        Filters f = buildFilters(specs);
+        PageLimit pl = specs.getPageLimit();
+        String jpql = SELECT_PROJ + FROM_JOIN + f.where + " ORDER BY m.createdAt DESC, u.id DESC";
+        TypedQuery<AdminCMItemProj> q = em.createQuery(jpql, AdminCMItemProj.class);
+        f.params.forEach(q::setParameter);
+        q.setFirstResult(pl.getOffset());
+        q.setMaxResults(pl.getLimit());
+        return q.getResultList();
+    }
+
+    @Override
+    public long countAdminCCItemProjList(AdminQueryCMSpecs specs) {
+        Filters f = buildFilters(specs);
+        String jpql = "SELECT COUNT(m.id) " + FROM_JOIN + f.where;
+        TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+        f.params.forEach(q::setParameter);
+        return q.getSingleResult();
+    }
+
+    private Filters buildFilters(AdminQueryCMSpecs specs) {
+        StringBuilder where = new StringBuilder(" WHERE 1=1 ");
+        Map<String, Object> params = new HashMap<>();
+
+        where.append(" AND m.spaceId = :courseId ");
+        params.put("courseId", specs.getCourseId());
+
+        SpaceMemberRole role = specs.getMemberRole();
+        if (role != null) {
+            where.append(" AND m.role = :role ");
+            params.put("role", role);
+        }
+
+        String raw = StringUtils.trimToNull(specs.getSearchQuery());
+        if (StringUtils.isNotBlank(raw)) {
+            where.append("""
+                    AND (
+                        LOWER(u.userName) LIKE :q
+                        OR LOWER(u.name) LIKE :q
+                        OR LOWER(u.email) LIKE :q
+                        OR LOWER(u.mobile) LIKE :q
+                    )
+                    """);
+            params.put("q", "%" + raw.toLowerCase() + "%");
+        }
+
+        return new Filters(where.toString(), params);
+    }
+
+    private record Filters(String where, Map<String, Object> params) {
+    }
+
+
+    @Override
+    public List<QueryAddMemberItemProj> queryAddMembersItemProjList(QueryAddMembersSpecs specs) {
+        Filters f = buildAddMembersFilters(specs);
+        PageLimit pl = specs.getPageLimit();
+
+        // Base select with LEFT JOIN to bring membership (for the given course) if any
+        String jpql = """
+                SELECT new com.sentiacare.assessmentapp.domain.lms.proj.QueryAddMemberItemProj(
+                    u.id,
+                    u.userName,
+                    u.email,
+                    u.mobile,
+                    u.name,
+                    u.emailVerified,
+                    r.type,
+                    m.createdAt,
+                    m.role
+                )
+                FROM UserAccountEntity u
+                JOIN UserRoleEntity r ON r.id = u.roleId
+                LEFT JOIN SpaceMembershipEntity m
+                       ON m.userId = u.id
+                      AND m.spaceId = :courseId
+                """ + f.where + " ORDER BY u.id DESC";
+
+        TypedQuery<QueryAddMemberItemProj> q = em.createQuery(jpql, QueryAddMemberItemProj.class);
+
+        // Always bind courseId (can be null; join condition will keep m null in that case)
+        q.setParameter("courseId", specs.getCourseId());
+
+        // Bind filter params
+        f.params.forEach(q::setParameter);
+
+        // Pagination
+        if (pl != null) {
+            q.setFirstResult(pl.getOffset());
+            q.setMaxResults(pl.getLimit());
+        }
+
+        return q.getResultList();
+    }
+
+    @Override
+    public long countAddMembersItemProjList(QueryAddMembersSpecs specs) {
+        Filters f = buildAddMembersFilters(specs);
+
+        // Use COUNT DISTINCT to be safe against any accidental duplication
+        String jpql = """
+                SELECT COUNT(DISTINCT u.id)
+                FROM UserAccountEntity u
+                JOIN UserRoleEntity r ON r.id = u.roleId
+                LEFT JOIN SpaceMembershipEntity m
+                       ON m.userId = u.id
+                      AND m.spaceId = :courseId
+                """ + f.where;
+
+        TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+
+        // Bind course
+        q.setParameter("courseId", specs.getCourseId());
+
+        // Bind filter params
+        f.params.forEach(q::setParameter);
+
+        return q.getSingleResult();
+    }
+
+    /**
+     * WHERE builder for the "Add Members" dialog query.
+     * Supports: orgId, single roleType, searchQuery, excludeExisting.
+     */
+    private Filters buildAddMembersFilters(QueryAddMembersSpecs specs) {
+        StringBuilder where = new StringBuilder(" WHERE 1=1 ");
+        Map<String, Object> params = new HashMap<>();
+
+        // org filter
+        where.append(" AND u.orgId = :orgId ");
+        params.put("orgId", specs.getOrgId());
+
+        // roleType filter
+        if (specs.getRoleTypes() != null) {
+            where.append(" AND r.type = :roleType ");
+            params.put("roleType", specs.getRoleTypes());
+        }
+
+        // search filter
+        String raw = StringUtils.trimToNull(specs.getSearchQuery());
+        if (StringUtils.isNotBlank(raw)) {
+            where.append("""
+                    AND (
+                        LOWER(u.userName) LIKE :q
+                        OR LOWER(u.name)   LIKE :q
+                        OR LOWER(u.email)  LIKE :q
+                        OR LOWER(u.mobile) LIKE :q
+                    )
+                    """);
+            params.put("q", "%" + raw.toLowerCase() + "%");
+        }
+
+        // excludeExisting => only those NOT already members of the given course
+        if (Boolean.TRUE.equals(specs.getExcludeExisting())) {
+            // This relies on LEFT JOIN with m.spaceId = :courseId in the main query
+            where.append(" AND m.id IS NULL ");
+        }
+
+        return new Filters(where.toString(), params);
+    }
+
+
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/UserTopicReportsCustomRepo.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.proj.TopicReportItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.TopicReportItemSpecs;
+import java.util.List;
+
+public interface UserTopicReportsCustomRepo {
+    List<TopicReportItemProj> queryTopicReportItemProj(TopicReportItemSpecs specs);
+    long countTopicReportItemProj(TopicReportItemSpecs specs);
+}
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/AdminCourseContentsRepoImpl.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.commons.models.PageLimit;
+import com.sentiacare.assessmentapp.domain.form.enums.FormStatus;
+import com.sentiacare.assessmentapp.domain.form.enums.FormType;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminCCItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.AdminQueryCCItemSpecs;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Repository
+@Transactional(readOnly = true)
+public class AdminCourseContentsRepoImpl implements AdminCourseContentsRepo {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    // Constructor projection into AdminCCItemProj
+    private static final String SELECT_PROJ = """
+        SELECT new com.sentiacare.assessmentapp.domain.lms.proj.AdminCCItemProj(
+            f.id,
+            f.type,
+            f.status,
+            f.title,
+            f.createdAt,
+            f.updatedAt,
+            f.startDate,
+            f.endDate,
+            f.spaceId,
+            f.topicId,
+            t.name,
+            f.totalQuestions,
+            COUNT(fr.id)
+        )
+        """;
+
+    private static final String FROM_JOIN = """
+        FROM TblForm f
+        LEFT JOIN SpaceEntity t ON t.id = f.topicId
+        LEFT JOIN TblFormResponse fr ON fr.formId = f.id
+        """;
+
+    private static final String GROUP_BY = """
+        GROUP BY
+            f.id, f.type, f.status, f.title,
+            f.createdAt, f.updatedAt,
+            f.startDate, f.endDate,
+            f.spaceId, f.topicId,
+            t.name, f.totalQuestions
+        """;
+
+    @Override
+    public List<AdminCCItemProj> queryAdminCCItemProjList(AdminQueryCCItemSpecs specs) {
+        Filters f = buildFilters(specs);
+        PageLimit pl = specs.getPageLimit();
+
+        String jpql = SELECT_PROJ + FROM_JOIN + f.where + GROUP_BY + " ORDER BY f.updatedAt DESC, f.id DESC";
+        TypedQuery<AdminCCItemProj> q = em.createQuery(jpql, AdminCCItemProj.class);
+
+        f.params.forEach(q::setParameter);
+
+        q.setFirstResult(pl.getOffset());
+        q.setMaxResults(pl.getLimit());
+
+        return q.getResultList();
+    }
+
+    @Override
+    public long countAdminCCItemProjList(AdminQueryCCItemSpecs specs) {
+        Filters f = buildFilters(specs);
+
+        String jpql = """
+            SELECT COUNT(f.id)
+            FROM TblForm f
+            LEFT JOIN SpaceEntity t ON t.id = f.topicId
+            """ + f.where;
+
+        TypedQuery<Long> q = em.createQuery(jpql, Long.class);
+        f.params.forEach(q::setParameter);
+
+        return q.getSingleResult();
+    }
+
+    /**
+     * Dynamically builds WHERE clause and parameters based on specs
+     */
+    private static Filters buildFilters(AdminQueryCCItemSpecs specs) {
+        StringBuilder where = new StringBuilder(" WHERE 1=1 ");
+        Map<String, Object> params = new HashMap<>();
+
+        if (specs.getSpaceId() != null) {
+            where.append(" AND f.spaceId = :spaceId ");
+            params.put("spaceId", specs.getSpaceId());
+        }
+
+        if (specs.getTopicIds() != null && !specs.getTopicIds().isEmpty()) {
+            where.append(" AND f.topicId IN :topicIds ");
+            params.put("topicIds", specs.getTopicIds());
+        }
+
+        FormType ft = specs.getFormType();
+        if (ft != null) {
+            where.append(" AND f.type = :formType ");
+            params.put("formType", ft);
+        }
+
+        FormStatus fs = specs.getFormStatus();
+        if (fs != null) {
+            // explicit filter
+            where.append(" AND f.status = :formStatus ");
+            params.put("formStatus", fs);
+        } else {
+            // default: exclude archived
+            where.append(" AND f.status <> :archivedStatus ");
+            params.put("archivedStatus", FormStatus.ARCHIVED);
+        }
+
+        String raw = StringUtils.trimToNull(specs.getSearchQuery());
+        if (StringUtils.isNotBlank(raw)) {
+            where.append("""
+                AND (
+                    LOWER(f.title) LIKE :q
+                    OR LOWER(t.name) LIKE :q
+                )
+                """);
+            params.put("q", "%" + raw.toLowerCase() + "%");
+        }
+
+        return new Filters(where.toString(), params);
+    }
+
+    private record Filters(String where, Map<String, Object> params) {}
+}
+
+
+// file: src/main/java/com/sentiacare/assessmentapp/domain/lms/repo/UserTopicReportsCustomRepoImpl.java
+package com.sentiacare.assessmentapp.domain.lms.repo;
+
+import com.sentiacare.assessmentapp.domain.lms.proj.TopicReportItemProj;
+import com.sentiacare.assessmentapp.domain.lms.proj.TopicReportItemSpecs;
+
+import java.util.List;
+
+public class UserTopicReportsCustomRepoImpl implements UserTopicReportsCustomRepo {
+    @Override
+    public List<TopicReportItemProj> queryTopicReportItemProj(TopicReportItemSpecs specs) {
+        return List.of();
+    }
+
+    @Override
+    public long countTopicReportItemProj(TopicReportItemSpecs specs) {
+        return 0;
+    }
+}
+
+
+

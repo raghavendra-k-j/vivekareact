@@ -10,6 +10,12 @@ import { SelectAllState } from "~/ui/utils/SelectAllState";
 import { DialogManagerStore } from "~/ui/widgets/dialogmanager/DialogManagerStore";
 import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
 import { adminLMSNavigateToCouse, adminLMSNavigateToFolder } from "../../utils/lmsUtils";
+import { CreateSpaceDialog } from "../createspace/CreateSpaceDialog";
+import { createSpaceDialogId } from "../createspace/CreateSpaceDialogContext";
+import { RenameSpaceDialog } from "../renamespace/RenameSpaceDialog";
+import { renameSpaceDialogId } from "../renamespace/RenameSpaceDialogContext";
+import { DeleteSpaceDialog } from "../deletespaces/DeleteSpaceDialog";
+import { deleteSpaceDialogId } from "../deletespaces/DeleteSpaceDialogContext";
 import { AdminSpaceListVm } from "./models/AdminSpaceListVm";
 
 
@@ -163,6 +169,16 @@ export class AllSpacesStore {
         }
     }
 
+    navigateToPermalink({ permalink, type }: { permalink: string | null, type: SpaceType }) {
+        if (type.isCourse) {
+            this.navigateToCouse(permalink!);
+        }
+        else {
+            this.navigateToFolder(permalink);
+        }
+    }
+
+
 
     navigateToFolder(permalink: string | null) {
         adminLMSNavigateToFolder({
@@ -172,17 +188,15 @@ export class AllSpacesStore {
     }
 
     showCreateDialog(type: SpaceType) {
-        // this.dialogManager.show({
-        //     id: createSpaceDialogId,
-        //     component: CreateSpaceDialog,
-        //     props: {
-        //         type,
-        //         parentId: this.currentFolderPermalink,
-        //         adminSpacesService: this.adminSpacesService,
-        //         layoutStore: this.layoutStore,
-        //         allSpacesStore: this,
-        //     },
-        // });
+        this.dialogManager.show({
+            id: createSpaceDialogId,
+            component: CreateSpaceDialog,
+            props: {
+                type,
+                allSpacesStore: this,
+                onClose: () => { this.dialogManager.closeById(createSpaceDialogId); }
+            },
+        });
     }
 
     showAiCreateDialog() {
@@ -206,29 +220,27 @@ export class AllSpacesStore {
     }
 
     showRenameDialog(item: AdminSpaceItem) {
-        // this.dialogManager.show({
-        //     id: renameSpaceDialogId,
-        //     component: RenameSpaceDialog,
-        //     props: {
-        //         item,
-        //         adminSpacesService: this.adminSpacesService,
-        //         layoutStore: this.layoutStore,
-        //         allSpacesStore: this,
-        //     },
-        // });
+        this.dialogManager.show({
+            id: renameSpaceDialogId,
+            component: RenameSpaceDialog,
+            props: {
+                item,
+                allSpacesStore: this,
+                onClose: () => { this.dialogManager.closeById(renameSpaceDialogId); }
+            },
+        });
     }
 
     showDeleteDialog(item: AdminSpaceItem) {
-        // this.dialogManager.show({
-        //     id: deleteSpaceDialogId,
-        //     component: DeleteSpaceDialog,
-        //     props: {
-        //         item,
-        //         adminSpacesService: this.adminSpacesService,
-        //         layoutStore: this.layoutStore,
-        //         allSpacesStore: this,
-        //     },
-        // });
+        this.dialogManager.show({
+            id: deleteSpaceDialogId,
+            component: DeleteSpaceDialog,
+            props: {
+                item,
+                allSpacesStore: this,
+                onClose: () => { this.dialogManager.closeById(deleteSpaceDialogId); }
+            },
+        });
     }
 
 }

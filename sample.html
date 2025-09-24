@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LearnIt — Udemy-like LMS (Pure HTML/CSS/JS)</title>
+
+  <!-- Tailwind Play CDN (for dev/demo). For production, build Tailwind. -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui'] },
+          boxShadow: {
+            soft: '0 10px 25px -10px rgba(0,0,0,0.15)',
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Inter font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    /* small enhancements beyond Tailwind */
+    .glass {
+      backdrop-filter: saturate(180%) blur(10px);
+      -webkit-backdrop-filter: saturate(180%) blur(10px);
+      background: rgba(255,255,255,0.7);
+    }
+    .glass-dark {
+      backdrop-filter: saturate(180%) blur(10px);
+      -webkit-backdrop-filter: saturate(180%) blur(10px);
+      background: rgba(17,24,39,0.6);
+    }
+    .line-clamp-2{
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .line-clamp-3{
+      display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .no-scrollbar::-webkit-scrollbar{ display:none; }
+    .no-scrollbar{ -ms-overflow-style:none; scrollbar-width:none; }
+    .tap-highlight-none{ -webkit-tap-highlight-color: transparent; }
+    /* Visually-hidden utility for a11y */
+    .sr-only-focusable:focus{ position: static !important; width:auto; height:auto; clip:auto; }
+  </style>
+</head>
+<body class="min-h-screen bg-gray-50 text-gray-800 font-sans dark:bg-gray-950 dark:text-gray-100">
+  <!-- ====== App Header ====== -->
+  <header class="sticky top-0 z-50 border-b border-gray-200/70 dark:border-white/10">
+    <div class="glass dark:glass-dark">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-3">
+        <!-- Mobile: sidebar toggle -->
+        <button id="btnOpenFilters" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10" aria-label="Open filters">
+          <!-- heroicon: bars-3 -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg>
+        </button>
+
+        <a href="#" class="flex items-center gap-2 font-extrabold text-xl sm:text-2xl tracking-tight">
+          <!-- heroicon: sparkles -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-700 dark:text-brand-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l1.546 3.91L17.9 8.1l-3.56 2.873L15.042 15 12 12.9 8.958 15l.702-4.027L6.1 8.1l4.354-1.19L12 3z"/></svg>
+          LearnIt
+        </a>
+
+        <!-- Search -->
+        <div class="relative flex-1 max-w-xl ml-auto">
+          <label for="q" class="sr-only">Search for anything</label>
+          <input id="q" type="search" placeholder="Search for anything"
+                 class="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-white/90 dark:bg-white/5 px-4 py-2.5 pl-10 shadow-soft placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-600" />
+          <!-- heroicon: magnifying-glass -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="absolute left-3 top-2.5 h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z"/>
+          </svg>
+        </div>
+
+        <!-- Actions -->
+        <div class="ml-2 flex items-center gap-1 sm:gap-2">
+          <!-- Dark mode toggle -->
+          <button id="btnTheme" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10" aria-label="Toggle dark mode">
+            <!-- heroicon: sun/moon (we’ll swap via JS) -->
+            <svg id="iconSun" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden dark:block" viewBox="0 0 24 24" fill="currentColor"><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12ZM12 2.25a.75.75 0 0 1 .75.75v1.5a.75.75 0 1 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM12 18.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 1 1-1.5 0v-1.5a.75.75 0 0 1 .75-.75ZM4.72 4.72a.75.75 0 1 1 1.06 1.06L4.72 6.84a.75.75 0 1 1-1.06-1.06L4.72 4.72ZM18.22 18.22a.75.75 0 0 1 1.06 0l1.06 1.06a.75.75 0 1 1-1.06 1.06l-1.06-1.06a.75.75 0 0 1 0-1.06ZM2.25 12a.75.75 0 0 1 .75-.75h1.5a.75.75 0 1 1 0 1.5H3a.75.75 0 0 1-.75-.75ZM18.75 12a.75.75 0 0 1 .75-.75h1.5a.75.75 0 1 1 0 1.5h-1.5a.75.75 0 0 1-.75-.75ZM4.72 19.28a.75.75 0 0 1 0-1.06l1.06-1.06a.75.75 0 1 1 1.06 1.06L5.78 19.28a.75.75 0 0 1-1.06 0ZM18.22 5.78a.75.75 0 0 1 0-1.06l1.06-1.06a.75.75 0 1 1 1.06 1.06L19.28 5.78a.75.75 0 0 1-1.06 0Z"/></svg>
+            <svg id="iconMoon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 dark:hidden" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+
+          <!-- Wishlist -->
+          <button id="btnWishlist" class="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10" aria-label="Wishlist">
+            <!-- heroicon: heart -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91 3.5 13.26a5.75 5.75 0 0 1 8.128-8.13l.372.37.372-.37a5.75 5.75 0 1 1 8.128 8.13l-8.145 7.65a.75.75 0 0 1-1.31-.03Z"/></svg>
+            <span id="wishlistBadge" class="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 rounded-full bg-rose-600 text-white hidden">0</span>
+          </button>
+
+          <!-- Cart -->
+          <button id="btnCart" class="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10" aria-label="Open cart">
+            <!-- heroicon: shopping-cart -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M2.25 3a.75.75 0 0 0 0 1.5H4.4l2.77 11.08a2.25 2.25 0 0 0 2.19 1.72h7.73a2.25 2.25 0 0 0 2.16-1.59l2.1-7A.75.75 0 0 0 21.6 7.5H7.12L6.58 5.25H2.25ZM9 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/></svg>
+            <span id="cartBadge" class="absolute -top-1 -right-1 text-[10px] px-1.5 py-0.5 rounded-full bg-brand-700 text-white hidden">0</span>
+          </button>
+
+          <!-- Profile (mock) -->
+          <button id="btnMyLearning" class="hidden sm:inline-flex items-center gap-2 rounded-lg px-3 py-2 bg-gray-900 text-white dark:bg-white dark:text-gray-900 hover:opacity-90">
+            <!-- heroicon: academic-cap -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="m12 3 9 4.5-9 4.5L3 7.5 12 3Zm0 7.5 6.75-3.375V12a.75.75 0 0 1-.45.69l-6 2.7a.75.75 0 0 1-.6 0l-6-2.7A.75.75 0 0 1 5.25 12V7.125L12 10.5Z"/></svg>
+            My Learning
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== Hero ====== -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-[radial-gradient(45rem_30rem_at_50%_20%,_rgba(37,99,235,0.08),_transparent)] dark:bg-[radial-gradient(45rem_30rem_at_50%_20%,_rgba(59,130,246,0.15),_transparent)]"></div>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-14 relative">
+      <div class="max-w-3xl">
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight leading-tight">Level up your skills with courses you’ll actually finish.</h1>
+        <p class="mt-3 text-lg text-gray-600 dark:text-gray-300">Browse thousands of expert-led lessons in development, design, business, and more.</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          <button data-cat="All" class="chip filter-chip active">All</button>
+          <button data-cat="Development" class="chip filter-chip">Development</button>
+          <button data-cat="Design" class="chip filter-chip">Design</button>
+          <button data-cat="Business" class="chip filter-chip">Business</button>
+          <button data-cat="Marketing" class="chip filter-chip">Marketing</button>
+          <button data-cat="Photography" class="chip filter-chip">Photography</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Layout ====== -->
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-28 pt-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <!-- Sidebar Filters -->
+    <aside id="filtersPane" class="lg:col-span-3 lg:sticky lg:top-24 lg:self-start bg-white/90 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-2xl p-4 lg:p-5 shadow-soft
+                                  fixed inset-y-0 left-0 z-50 w-80 max-w-[80%] translate-x-[-110%] lg:translate-x-0 transition-transform duration-300 no-scrollbar overflow-y-auto">
+      <div class="flex items-center justify-between">
+        <h2 class="text-lg font-bold">Filters</h2>
+        <button id="btnCloseFilters" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10" aria-label="Close filters">
+          <!-- heroicon: x-mark -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="mt-4 space-y-6">
+        <!-- Category -->
+        <div>
+          <p class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Category</p>
+          <div id="catList" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <!-- Levels -->
+        <div>
+          <p class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Level</p>
+          <div class="space-y-2">
+            <label class="flex items-center gap-2"><input type="checkbox" class="lvl" value="Beginner"> <span>Beginner</span></label>
+            <label class="flex items-center gap-2"><input type="checkbox" class="lvl" value="Intermediate"> <span>Intermediate</span></label>
+            <label class="flex items-center gap-2"><input type="checkbox" class="lvl" value="Advanced"> <span>Advanced</span></label>
+          </div>
+        </div>
+
+        <!-- Ratings -->
+        <div>
+          <p class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Minimum rating</p>
+          <div class="space-y-2">
+            <label class="flex items-center gap-2"><input type="radio" name="minRating" class="rt" value="0" checked> <span>All</span></label>
+            <label class="flex items-center gap-2"><input type="radio" name="minRating" class="rt" value="3"> <span>3★ & up</span></label>
+            <label class="flex items-center gap-2"><input type="radio" name="minRating" class="rt" value="4"> <span>4★ & up</span></label>
+            <label class="flex items-center gap-2"><input type="radio" name="minRating" class="rt" value="4.5"> <span>4.5★ & up</span></label>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div>
+          <p class="text-sm font-semibold text-gray-600 dark:text-gray-300 mb-2">Max price: <span id="priceVal" class="font-bold">₹5000</span></p>
+          <input id="priceRange" type="range" min="0" max="10000" step="100" value="5000" class="w-full accent-brand-700">
+          <div class="flex items-center justify-between text-xs text-gray-500 mt-1">
+            <span>Free</span><span>₹10,000</span>
+          </div>
+        </div>
+
+        <!-- Reset -->
+        <button id="btnReset" class="w-full rounded-xl border border-gray-200 dark:border-white/10 px-4 py-2 hover:bg-gray-100 dark:hover:bg-white/10">Reset filters</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="lg:col-span-9 space-y-6">
+      <!-- Sort + results count -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <p id="resultsCount" class="text-sm text-gray-600 dark:text-gray-300">Loading courses…</p>
+        <div class="flex items-center gap-3">
+          <label class="text-sm text-gray-600 dark:text-gray-300">Sort by</label>
+          <select id="sortSelect" class="rounded-lg border border-gray-200 dark:border-white/10 bg-white/90 dark:bg-white/5 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand-600">
+            <option value="popular">Most Popular</option>
+            <option value="rating">Highest Rated</option>
+            <option value="new">Newest</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Courses Grid -->
+      <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+    </main>
+  </div>
+
+  <!-- ====== My Learning (drawer-like section) ====== -->
+  <section id="myLearning" class="hidden">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-24">
+      <h2 class="text-2xl font-bold mb-4">My Learning</h2>
+      <p class="text-gray-600 dark:text-gray-300 mb-4">Courses you’ve enrolled in appear here.</p>
+      <div id="learnGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+    </div>
+  </section>
+
+  <!-- ====== Course Details Modal ====== -->
+  <div id="courseModal" class="fixed inset-0 z-[60] hidden" role="dialog" aria-modal="true" aria-labelledby="courseTitle">
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="relative mx-auto max-w-3xl mt-10 sm:mt-16">
+      <div class="mx-4 rounded-2xl overflow-hidden bg-white dark:bg-gray-900 border border-gray-200 dark:border-white/10 shadow-soft">
+        <div class="aspect-[16/9] bg-gray-100 dark:bg-white/5" id="courseHero"></div>
+        <div class="p-5 sm:p-6">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 id="courseTitle" class="text-2xl font-extrabold"></h3>
+              <p id="courseMeta" class="mt-1 text-sm text-gray-600 dark:text-gray-300"></p>
+            </div>
+            <button id="btnCloseModal" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10" aria-label="Close dialog">
+              <!-- heroicon: x-mark -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <p id="courseDesc" class="mt-3 text-gray-700 dark:text-gray-200"></p>
+          <div class="mt-5 flex flex-wrap items-center gap-3">
+            <button id="btnEnroll" class="rounded-xl bg-brand-700 hover:bg-brand-800 text-white px-5 py-2.5">Enroll now</button>
+            <button id="btnAddCart" class="rounded-xl border border-gray-200 dark:border-white/10 px-5 py-2.5 hover:bg-gray-100 dark:hover:bg-white/10">Add to cart</button>
+            <button id="btnWishlistToggle" class="rounded-xl border border-gray-200 dark:border-white/10 px-5 py-2.5 hover:bg-gray-100 dark:hover:bg-white/10">♡ Wishlist</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== Cart Drawer ====== -->
+  <aside id="cartDrawer" class="fixed top-0 right-0 z-[70] h-full w-[92%] max-w-md translate-x-full transition-transform duration-300 bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-white/10 shadow-soft flex flex-col">
+    <div class="p-4 flex items-center justify-between border-b border-gray-200 dark:border-white/10">
+      <h3 class="text-lg font-bold">Your Cart</h3>
+      <button id="btnCloseCart" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10" aria-label="Close cart">
+        <!-- heroicon: x-mark -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="cartList" class="flex-1 overflow-y-auto p-4 space-y-4"></div>
+    <div class="p-4 border-t border-gray-200 dark:border-white/10 space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="text-sm text-gray-600 dark:text-gray-300">Subtotal</span>
+        <span id="cartSubtotal" class="font-bold">₹0</span>
+      </div>
+      <button id="btnCheckout" class="w-full rounded-xl bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-5 py-3 hover:opacity-90">Checkout</button>
+      <p id="checkoutMsg" class="text-xs text-gray-500"></p>
+    </div>
+  </aside>
+
+  <!-- ====== Bottom Nav (mobile) ====== -->
+  <nav class="lg:hidden fixed bottom-0 inset-x-0 z-40 border-t border-gray-200 dark:border-white/10 glass dark:glass-dark">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid grid-cols-4 py-2 text-xs">
+        <button data-nav="home" class="navbtn flex flex-col items-center gap-1 py-1 text-brand-700 dark:text-brand-400">
+          <!-- heroicon: home -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="m2.25 12 9.32-7.46a.75.75 0 0 1 .94 0L21.75 12v8.25a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75v-4.5h-4.5v4.5A.75.75 0 0 1 9 21H3a.75.75 0 0 1-.75-.75V12Z"/></svg>
+          Home
+        </button>
+        <button id="bnCat" class="flex flex-col items-center gap-1 py-1">
+          <!-- heroicon: squares-2x2 -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M3 3h8v8H3V3Zm10 0h8v8h-8V3ZM3 13h8v8H3v-8Zm10 0h8v8h-8v-8Z"/></svg>
+          Categories
+        </button>
+        <button id="bnWish" class="flex flex-col items-center gap-1 py-1">
+          <!-- heroicon: heart -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91 3.5 13.26a5.75 5.75 0 0 1 8.128-8.13l.372.37.372-.37a5.75 5.75 0 1 1 8.128 8.13l-8.145 7.65a.75.75 0 0 1-1.31-.03Z"/></svg>
+          Wishlist
+        </button>
+        <button id="bnCart" class="flex flex-col items-center gap-1 py-1">
+          <!-- heroicon: shopping-cart -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M2.25 3a.75.75 0 0 0 0 1.5H4.4l2.77 11.08a2.25 2.25 0 0 0 2.19 1.72h7.73a2.25 2.25 0 0 0 2.16-1.59l2.1-7A.75.75 0 0 0 21.6 7.5H7.12L6.58 5.25H2.25ZM9 21a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm9 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"/></svg>
+          Cart
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====== Templates (hidden) ====== -->
+  <template id="courseCardTpl">
+    <article class="group rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 bg-white dark:bg-gray-900 shadow-soft flex flex-col">
+      <div class="relative">
+        <img class="w-full aspect-[16/10] object-cover bg-gray-100 dark:bg-white/5" alt="">
+        <button data-preview class="absolute bottom-3 left-3 rounded-lg bg-white/90 dark:bg-gray-950/70 text-xs px-2 py-1 shadow border border-gray-200 dark:border-white/10 hover:bg-white">Preview</button>
+        <button data-wish class="absolute top-3 right-3 p-2 rounded-full bg-white/90 dark:bg-gray-950/70 shadow border border-gray-200 dark:border-white/10" title="Wishlist">
+          <!-- heart -->
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91 3.5 13.26a5.75 5.75 0 0 1 8.128-8.13l.372.37.372-.37a5.75 5.75 0 1 1 8.128 8.13l-8.145 7.65a.75.75 0 0 1-1.31-.03Z"/></svg>
+        </button>
+      </div>
+      <div class="p-4 flex-1 flex flex-col">
+        <h3 class="font-bold leading-tight mb-1 line-clamp-2"></h3>
+        <p class="text-sm text-gray-600 dark:text-gray-300 line-clamp-2"></p>
+        <div class="mt-3 flex items-center gap-2 text-sm">
+          <div class="flex items-center gap-0.5 text-amber-400" data-stars></div>
+          <span class="font-semibold" data-rating></span>
+          <span class="text-gray-500 dark:text-gray-400" data-students></span>
+        </div>
+        <div class="mt-3 flex items-center justify-between">
+          <span class="text-lg font-extrabold" data-price></span>
+          <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-white/10 border border-gray-200 dark:border-white/10" data-level></span>
+        </div>
+        <div class="mt-4 grid grid-cols-2 gap-2">
+          <button data-details class="rounded-lg border border-gray-200 dark:border-white/10 px-3 py-2 hover:bg-gray-100 dark:hover:bg-white/10">Details</button>
+          <button data-add class="rounded-lg bg-gray-900 text-white dark:bg-white dark:text-gray-900 px-3 py-2 hover:opacity-90">Add</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <!-- ====== Scripts ====== -->
+  <script>
+    /* ---------------------------
+       Data (mock catalog)
+    ----------------------------*/
+    const CATEGORIES = ['Development','Design','Business','Marketing','Photography'];
+    const COURSES = [
+      {
+        id:'wd-101',
+        title:'Modern Web Development Bootcamp 2025',
+        instructor:'Alex Carter',
+        category:'Development',
+        level:'Beginner',
+        rating:4.7, students: 12845,
+        price: 3499,
+        duration:'18h', lessons: 122,
+        thumbnail:'https://picsum.photos/seed/wd101/800/500',
+        description:'Learn HTML, CSS, JavaScript and modern tooling. Build responsive, accessible websites with real projects and deploy them.'
+      },
+      {
+        id:'js-pro',
+        title:'JavaScript Mastery: From Fundamentals to Pro',
+        instructor:'Priya Nair',
+        category:'Development',
+        level:'Intermediate',
+        rating:4.6, students: 18412,
+        price: 4299,
+        duration:'22h', lessons: 168,
+        thumbnail:'https://picsum.photos/seed/jspro/800/500',
+        description:'Deep dive into the JavaScript language, async patterns, modules, testing, and performance. Includes 20+ hands-on labs.'
+      },
+      {
+        id:'uiux-essentials',
+        title:'UI/UX Design Essentials',
+        instructor:'Marco Silva',
+        category:'Design',
+        level:'Beginner',
+        rating:4.5, students: 9321,
+        price: 2899,
+        duration:'10h', lessons: 80,
+        thumbnail:'https://picsum.photos/seed/uiux/800/500',
+        description:'Design user-centered interfaces, wireframes, and prototypes. Learn heuristics, typography, color, and accessibility.'
+      },
+      {
+        id:'photo-pro',
+        title:'Photography Pro: Shoot & Edit Like a Pro',
+        instructor:'Aisha Khan',
+        category:'Photography',
+        level:'Intermediate',
+        rating:4.4, students: 7634,
+        price: 2599,
+        duration:'12h', lessons: 74,
+        thumbnail:'https://picsum.photos/seed/photo/800/500',
+        description:'Master composition, lighting, and post-processing for stunning photos. Covers DSLR, mirrorless, and mobile workflows.'
+      },
+      {
+        id:'biz-start',
+        title:'Start & Grow Your Online Business',
+        instructor:'Rohan Mehta',
+        category:'Business',
+        level:'Beginner',
+        rating:4.3, students: 6542,
+        price: 1999,
+        duration:'8h', lessons: 48,
+        thumbnail:'https://picsum.photos/seed/business/800/500',
+        description:'Validate ideas, craft offers, build funnels, and launch. Learn basic finance, ops, and growth strategies.'
+      },
+      {
+        id:'seo-ads',
+        title:'SEO & Performance Marketing A–Z',
+        instructor:'Mina Lee',
+        category:'Marketing',
+        level:'Advanced',
+        rating:4.8, students: 11880,
+        price: 4999,
+        duration:'16h', lessons: 96,
+        thumbnail:'https://picsum.photos/seed/marketing/800/500',
+        description:'Master keyword research, on-page/off-page SEO, analytics, and ads strategy with real dashboards & case studies.'
+      }
+    ];
+
+    /* ---------------------------
+       State
+    ----------------------------*/
+    const state = {
+      q: '',
+      category: 'All',
+      levels: new Set(),
+      minRating: 0,
+      maxPrice: 5000,
+      sort: 'popular',
+      cart: load('cart', []),
+      wishlist: load('wishlist', []),
+      learning: load('learning', []),
+      theme: load('theme', prefersDark() ? 'dark' : 'light')
+    };
+
+    function load(k, fallback){ try{ return JSON.parse(localStorage.getItem(k)) ?? fallback }catch(_){ return fallback } }
+    function save(k, v){ localStorage.setItem(k, JSON.stringify(v)) }
+    function prefersDark(){ return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches }
+
+    /* ---------------------------
+       Theme
+    ----------------------------*/
+    const html = document.documentElement;
+    applyTheme(state.theme);
+    function applyTheme(mode){
+      if(mode === 'dark'){ html.classList.add('dark'); } else { html.classList.remove('dark'); }
+      state.theme = mode; save('theme', mode);
+      // swap icons
+      document.getElementById('iconSun')?.classList.toggle('hidden', mode !== 'dark');
+      document.getElementById('iconMoon')?.classList.toggle('hidden', mode === 'dark');
+    }
+    document.getElementById('btnTheme').addEventListener('click', () => {
+      applyTheme(html.classList.contains('dark') ? 'light' : 'dark');
+    });
+
+    /* ---------------------------
+       UI helpers
+    ----------------------------*/
+    const grid = document.getElementById('grid');
+    const resultsCount = document.getElementById('resultsCount');
+    const sortSelect = document.getElementById('sortSelect');
+    const priceRange = document.getElementById('priceRange');
+    const priceVal = document.getElementById('priceVal');
+    priceVal.textContent = `₹${state.maxPrice.toLocaleString('en-IN')}`;
+
+    const qInput = document.getElementById('q');
+    qInput.addEventListener('input', debounce((e) => {
+      state.q = e.target.value.trim();
+      renderCourses();
+    }, 200));
+
+    sortSelect.addEventListener('change', e => { state.sort = e.target.value; renderCourses(); });
+    priceRange.addEventListener('input', e => {
+      state.maxPrice = +e.target.value;
+      priceVal.textContent = `₹${state.maxPrice.toLocaleString('en-IN')}`;
+    });
+    priceRange.addEventListener('change', () => renderCourses());
+
+    // Category chips in hero
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      stylizeChip(btn);
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.category = btn.dataset.cat;
+        renderCourses();
+      });
+    });
+
+    function stylizeChip(btn){
+      btn.classList.add('rounded-full','px-3','py-1.5','text-sm','border','border-gray-200','dark:border-white/10','bg-white/80','dark:bg-white/5','hover:bg-white','dark:hover:bg-white/10','transition');
+    }
+
+    // Sidebar: category list mirrors CATEGORIES
+    const catList = document.getElementById('catList');
+    catList.append(...['All', ...CATEGORIES].map(cat => {
+      const b = document.createElement('button');
+      b.textContent = cat;
+      b.dataset.cat = cat;
+      stylizeChip(b);
+      b.addEventListener('click', () => {
+        state.category = cat;
+        document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.filter-chip[data-cat="${CSS.escape(cat)}"]`)?.classList.add('active');
+        renderCourses();
+      });
+      return b;
+    }));
+
+    // Levels
+    document.querySelectorAll('.lvl').forEach(cb => cb.addEventListener('change', () => {
+      if(cb.checked) state.levels.add(cb.value); else state.levels.delete(cb.value);
+      renderCourses();
+    }));
+
+    // Ratings
+    document.querySelectorAll('.rt').forEach(r => r.addEventListener('change', () => {
+      state.minRating = +document.querySelector('.rt:checked').value;
+      renderCourses();
+    }));
+
+    // Reset
+    document.getElementById('btnReset').addEventListener('click', () => {
+      state.q=''; qInput.value='';
+      state.category='All';
+      state.levels.clear(); document.querySelectorAll('.lvl').forEach(cb => cb.checked=false);
+      state.minRating=0; document.querySelector('.rt[value="0"]').checked=true;
+      state.maxPrice=5000; priceRange.value=5000; priceVal.textContent='₹5,000';
+      state.sort='popular'; sortSelect.value='popular';
+      document.querySelectorAll('.filter-chip').forEach(b => b.classList.remove('active'));
+      document.querySelector('.filter-chip[data-cat="All"]').classList.add('active');
+      renderCourses();
+    });
+
+    /* ---------------------------
+       Modal (ARIA, focus trap)
+    ----------------------------*/
+    const modal = document.getElementById('courseModal');
+    const modalClose = document.getElementById('btnCloseModal');
+    const courseHero = document.getElementById('courseHero');
+    const courseTitle = document.getElementById('courseTitle');
+    const courseMeta = document.getElementById('courseMeta');
+    const courseDesc = document.getElementById('courseDesc');
+    const btnEnroll = document.getElementById('btnEnroll');
+    const btnAddCart = document.getElementById('btnAddCart');
+    const btnWishlistToggle = document.getElementById('btnWishlistToggle');
+    let activeCourse = null, lastFocus = null;
+
+    function openModal(course){
+      activeCourse = course;
+      lastFocus = document.activeElement;
+      courseHero.style.background = `url(${course.thumbnail}) center/cover`;
+      courseHero.setAttribute('aria-label', `${course.title} hero image`);
+
+      courseTitle.textContent = course.title;
+      courseMeta.textContent = `${course.instructor} • ${course.level} • ${course.duration} • ${course.lessons} lessons`;
+      courseDesc.textContent = course.description;
+      btnEnroll.onclick = () => { enrollCourse(course.id); closeModal(); };
+      btnAddCart.onclick = () => { addToCart(course.id); };
+      btnWishlistToggle.textContent = isWished(course.id) ? '♥ Wishlisted' : '♡ Wishlist';
+      btnWishlistToggle.onclick = () => { toggleWishlist(course.id); btnWishlistToggle.textContent = isWished(course.id) ? '♥ Wishlisted' : '♡ Wishlist'; };
+
+      modal.classList.remove('hidden');
+      trapFocus(modal);
+      modalClose.focus();
+    }
+    function closeModal(){
+      modal.classList.add('hidden');
+      releaseFocus();
+      lastFocus?.focus();
+    }
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+    modal.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+
+    // Focus trap
+    let trapCleanup = null;
+    function trapFocus(container){
+      const focusables = container.querySelectorAll('a,button,input,textarea,select,[tabindex]:not([tabindex="-1"])');
+      const first = focusables[0]; const last = focusables[focusables.length-1];
+      function handler(e){
+        if(e.key !== 'Tab') return;
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+      container.addEventListener('keydown', handler);
+      trapCleanup = () => container.removeEventListener('keydown', handler);
+    }
+    function releaseFocus(){ trapCleanup?.(); }
+
+    /* ---------------------------
+       Cart Drawer
+    ----------------------------*/
+    const cartDrawer = document.getElementById('cartDrawer');
+    const btnCart = document.getElementById('btnCart');
+    const btnCloseCart = document.getElementById('btnCloseCart');
+    const cartList = document.getElementById('cartList');
+    const cartSubtotal = document.getElementById('cartSubtotal');
+    const cartBadge = document.getElementById('cartBadge');
+    const checkoutMsg = document.getElementById('checkoutMsg');
+    btnCart.addEventListener('click', () => openCart());
+    btnCloseCart.addEventListener('click', () => closeCart());
+    document.getElementById('bnCart').addEventListener('click', () => openCart());
+    function openCart(){ cartDrawer.style.transform = 'translateX(0)'; renderCart(); }
+    function closeCart(){ cartDrawer.style.transform = 'translateX(100%)'; }
+    function addToCart(id){
+      const item = state.cart.find(i=>i.id===id);
+      if(item) item.qty++; else state.cart.push({id, qty:1});
+      save('cart', state.cart);
+      updateCartBadge();
+      // small toast-like message
+      checkoutMsg.textContent = '';
+      openCart();
+    }
+    function removeFromCart(id){
+      state.cart = state.cart.filter(i=>i.id!==id);
+      save('cart', state.cart);
+      renderCart(); updateCartBadge();
+    }
+    function updateQty(id, qty){
+      const it = state.cart.find(i=>i.id===id); if(!it) return;
+      it.qty = Math.max(1, qty|0);
+      save('cart', state.cart);
+      renderCart();
+    }
+    function renderCart(){
+      cartList.innerHTML = '';
+      let sum = 0;
+      if(state.cart.length===0){
+        cartList.innerHTML = `<p class="text-sm text-gray-600 dark:text-gray-300">Your cart is empty.</p>`;
+      } else {
+        state.cart.forEach(it=>{
+          const c = COURSES.find(c=>c.id===it.id);
+          sum += c.price * it.qty;
+          const row = document.createElement('div');
+          row.className = 'flex gap-3 items-center';
+          row.innerHTML = `
+            <img src="${c.thumbnail}" alt="" class="w-20 h-14 object-cover rounded-lg border border-gray-200 dark:border-white/10">
+            <div class="flex-1">
+              <p class="font-semibold line-clamp-2">${c.title}</p>
+              <p class="text-xs text-gray-500">${c.instructor}</p>
+              <div class="mt-2 flex items-center gap-2">
+                <input type="number" min="1" value="${it.qty}" class="w-16 rounded-lg border border-gray-200 dark:border-white/10 bg-transparent px-2 py-1">
+                <button class="text-sm px-2 py-1 rounded-lg border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10">Remove</button>
+              </div>
+            </div>
+            <div class="font-bold">₹${(c.price*it.qty).toLocaleString('en-IN')}</div>
+          `;
+          const num = row.querySelector('input'); num.addEventListener('change', e=>updateQty(c.id, +e.target.value));
+          row.querySelector('button').addEventListener('click', ()=>removeFromCart(c.id));
+          cartList.appendChild(row);
+        });
+      }
+      cartSubtotal.textContent = `₹${sum.toLocaleString('en-IN')}`;
+      // badges
+      updateCartBadge();
+    }
+    function updateCartBadge(){
+      const count = state.cart.reduce((n,i)=>n+i.qty,0);
+      cartBadge.textContent = count; cartBadge.classList.toggle('hidden', count===0);
+    }
+    document.getElementById('btnCheckout').addEventListener('click', ()=>{
+      if(state.cart.length===0){ checkoutMsg.textContent = 'Add some courses first 🙂'; return; }
+      // mock checkout success -> enroll all
+      state.cart.forEach(it => enrollCourse(it.id));
+      state.cart = []; save('cart', state.cart); renderCart();
+      checkoutMsg.textContent = 'Checkout complete! Courses added to My Learning.';
+      renderMyLearning();
+    });
+
+    /* ---------------------------
+       Wishlist + My Learning
+    ----------------------------*/
+    const wishlistBadge = document.getElementById('wishlistBadge');
+    document.getElementById('bnWish').addEventListener('click', ()=>{
+      state.category='All'; state.levels.clear(); state.minRating=0; state.q='';
+      renderCourses(COURSES.filter(c=>state.wishlist.includes(c.id)), 'Your wishlist');
+      document.getElementById('q').value='';
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+    function isWished(id){ return state.wishlist.includes(id); }
+    function toggleWishlist(id){
+      if(isWished(id)) state.wishlist = state.wishlist.filter(x=>x!==id);
+      else state.wishlist.push(id);
+      save('wishlist', state.wishlist);
+      updateWishlistBadge();
+      renderCourses();
+    }
+    function updateWishlistBadge(){
+      wishlistBadge.textContent = state.wishlist.length;
+      wishlistBadge.classList.toggle('hidden', state.wishlist.length===0);
+    }
+    function enrollCourse(id){
+      if(!state.learning.includes(id)){ state.learning.push(id); save('learning', state.learning); renderMyLearning(); }
+    }
+    function renderMyLearning(){
+      const sec = document.getElementById('myLearning');
+      const grid = document.getElementById('learnGrid');
+      grid.innerHTML = '';
+      if(state.learning.length===0){
+        sec.classList.add('hidden'); return;
+      }
+      sec.classList.remove('hidden');
+      state.learning.map(id => COURSES.find(c=>c.id===id)).forEach(c=>{
+        const card = document.createElement('article');
+        card.className = 'rounded-2xl overflow-hidden border border-gray-200 dark:border-white/10 bg-white dark:bg-gray-900 shadow-soft';
+        card.innerHTML = `
+          <img src="${c.thumbnail}" class="w-full aspect-[16/9] object-cover" alt="">
+          <div class="p-4">
+            <h3 class="font-bold line-clamp-2">${c.title}</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300">${c.instructor}</p>
+            <div class="mt-3 flex items-center justify-between">
+              <button class="rounded-lg px-3 py-2 border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/10">Continue</button>
+              <span class="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-white/10 border border-gray-200 dark:border-white/10">${c.level}</span>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    /* ---------------------------
+       Rendering courses
+    ----------------------------*/
+    const cardTpl = document.getElementById('courseCardTpl');
+    function renderCourses(customList=null, customHeading=null){
+      const list = (customList ?? COURSES)
+        .filter(c => state.category==='All' || c.category===state.category)
+        .filter(c => state.levels.size===0 || state.levels.has(c.level))
+        .filter(c => c.rating >= state.minRating)
+        .filter(c => c.price <= state.maxPrice)
+        .filter(c => state.q==='' || [c.title,c.description,c.instructor,c.category,c.level].join(' ').toLowerCase().includes(state.q.toLowerCase()));
+
+      const sorted = [...list].sort((a,b)=>{
+        switch(state.sort){
+          case 'rating': return b.rating - a.rating;
+          case 'new': return a.id > b.id ? -1 : 1; // naive newness
+          case 'price-asc': return a.price - b.price;
+          case 'price-desc': return b.price - a.price;
+          default: return b.students - a.students; // popular
+        }
+      });
+
+      resultsCount.textContent = customHeading ?? `${sorted.length} result${sorted.length!==1?'s':''}${state.category!=='All' ? ` in ${state.category}` : ''}`;
+
+      grid.innerHTML = '';
+      if(sorted.length===0){
+        grid.innerHTML = `<p class="text-sm text-gray-600 dark:text-gray-300">No courses found. Try adjusting filters.</p>`;
+        return;
+      }
+
+      sorted.forEach(course => {
+        const node = cardTpl.content.firstElementChild.cloneNode(true);
+        const img = node.querySelector('img'); img.src = course.thumbnail; img.alt = `${course.title} cover`;
+        node.querySelector('h3').textContent = course.title;
+        node.querySelector('p').textContent = course.instructor;
+        node.querySelector('[data-rating]').textContent = course.rating.toFixed(1);
+        node.querySelector('[data-students]').textContent = `(${course.students.toLocaleString('en-IN')})`;
+        node.querySelector('[data-price]').textContent = `₹${course.price.toLocaleString('en-IN')}`;
+        node.querySelector('[data-level]').textContent = course.level;
+
+        // stars
+        const stars = node.querySelector('[data-stars]');
+        stars.innerHTML = '';
+        const full = Math.floor(course.rating), half = course.rating - full >= 0.5;
+        for(let i=0;i<5;i++){
+          const filled = i<full || (i===full && half);
+          stars.innerHTML += filled
+            ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 0 0 .95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 0 0-.364 1.118l1.07 3.292c.3.922-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 0 0-1.175 0l-2.8 2.034c-.784.57-1.838-.196-1.539-1.118l1.07-3.292a1 1 0 0 0-.364-1.118L2.88 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 0 0 .951-.69l1.07-3.293Z"/></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-300 dark:text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m11.48 3.499 2.155 4.433 4.894.713-3.54 3.45.835 4.869-4.344-2.283-4.344 2.283.835-4.87-3.54-3.45 4.894-.712 2.155-4.433z"/></svg>';
+        }
+
+        // actions
+        node.querySelector('[data-add]').addEventListener('click', () => addToCart(course.id));
+        node.querySelector('[data-preview]').addEventListener('click', () => openModal(course));
+        node.querySelector('[data-details]').addEventListener('click', () => openModal(course));
+        const wishBtn = node.querySelector('[data-wish]');
+        setWishBtn(wishBtn, isWished(course.id));
+        wishBtn.addEventListener('click', () => { toggleWishlist(course.id); setWishBtn(wishBtn, isWished(course.id)); });
+
+        grid.appendChild(node);
+      });
+    }
+
+    function setWishBtn(btn, wished){
+      btn.innerHTML = wished
+        ? '<svg class="h-5 w-5 text-rose-600" viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91 3.5 13.26a5.75 5.75 0 0 1 8.128-8.13l.372.37.372-.37a5.75 5.75 0 1 1 8.128 8.13l-8.145 7.65a.75.75 0 0 1-1.31-.03Z"/></svg>'
+        : '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M11.645 20.91 3.5 13.26a5.75 5.75 0 0 1 8.128-8.13l.372.37.372-.37a5.75 5.75 0 1 1 8.128 8.13l-8.145 7.65a.75.75 0 0 1-1.31-.03Z"/></svg>';
+    }
+
+    /* ---------------------------
+       Filters pane (mobile)
+    ----------------------------*/
+    const filtersPane = document.getElementById('filtersPane');
+    const btnOpenFilters = document.getElementById('btnOpenFilters');
+    const btnCloseFilters = document.getElementById('btnCloseFilters');
+    btnOpenFilters.addEventListener('click', ()=> filtersPane.style.transform = 'translateX(0)');
+    btnCloseFilters.addEventListener('click', ()=> filtersPane.style.transform = 'translateX(-110%)');
+
+    // Bottom nav quick actions
+    document.getElementById('bnCat').addEventListener('click', ()=> filtersPane.style.transform = 'translateX(0)');
+    document.querySelector('[data-nav="home"]').addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+
+    // "My Learning" shortcut
+    document.getElementById('btnMyLearning').addEventListener('click', ()=>{
+      document.getElementById('myLearning').scrollIntoView({behavior:'smooth'});
+    });
+
+    /* ---------------------------
+       Utils
+    ----------------------------*/
+    function debounce(fn, ms){
+      let t; return (...args)=>{ clearTimeout(t); t = setTimeout(()=>fn.apply(this,args), ms); }
+    }
+
+    /* ---------------------------
+       Init
+    ----------------------------*/
+    function init(){
+      updateCartBadge();
+      updateWishlistBadge();
+      renderMyLearning();
+      renderCourses();
+    }
+    init();
+  </script>
+
+  <style>
+    /* chip .active style using plain CSS to avoid inline style toggles */
+    .chip.active{ background: rgb(29 78 216 / 1); color:white; border-color: transparent; }
+    .chip.active:hover{ opacity:.95; }
+  </style>
+</body>
+</html>

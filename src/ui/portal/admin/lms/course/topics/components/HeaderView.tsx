@@ -32,7 +32,7 @@ export function HeaderView() {
                                 color="primary"
                                 variant="solid"
                                 size="md"
-                                onClick={() => store.topicDialogStore.openCreateDialog()}
+                                onClick={() => store.openCreateTopicDialog()}
                             >
                                 New Topic
                             </Button>

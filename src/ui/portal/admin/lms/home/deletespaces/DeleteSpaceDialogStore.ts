@@ -1,100 +1,83 @@
 import { makeObservable, observable, runInAction } from "mobx";
 import { AppError } from "~/core/error/AppError";
 import { AdminSpaceItem } from "~/domain/lms/models/AdminSpaceItem";
-import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
 import { DataState } from "~/ui/utils/DataState";
-import { DialogManagerStore } from "~/ui/widgets/dialogmanager/DialogManagerStore";
 import { InputValue } from "~/ui/widgets/form/InputValue";
 import { showErrorToast } from "~/ui/widgets/toast/toast";
-import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
 import { AllSpacesStore } from "../allspaces/AllSpacesStore";
-import { deleteSpaceDialogId } from "../dialogIds";
 
 export class DeleteSpaceDialogStore {
-    item: AdminSpaceItem;
-    layoutStore: LMSLayoutStore;
+
     allSpacesStore: AllSpacesStore;
-    adminSpacesService: AdminSpacesService;
-    dialogManager: DialogManagerStore;
+    onClose: () => void;
+    item: AdminSpaceItem;
 
-    confirmationField: InputValue<string> = new InputValue("");
-    deleteState: DataState<any> = DataState.init();
+    confirmationTextField: InputValue<string> = new InputValue("");
 
-    constructor({
-        item,
-        adminSpacesService,
-        layoutStore,
-        allSpacesStore,
-    }: {
-        item: AdminSpaceItem;
-        adminSpacesService: AdminSpacesService;
-        layoutStore: LMSLayoutStore;
-        allSpacesStore: AllSpacesStore;
-    }) {
-        this.item = item;
-        this.layoutStore = layoutStore;
+    confirmationChecked: boolean = false;
+
+    deleteState: DataState<void> = DataState.init();
+
+    get layoutStore() {
+        return this.allSpacesStore.layoutStore;
+    }
+
+    get adminSpacesService() {
+        return this.layoutStore.adminSpacesService;
+    }
+
+    get dialogManager() {
+        return this.layoutStore.portalLayoutStore.dialogManager;
+    }
+
+    constructor({ allSpacesStore, item, onClose }: { allSpacesStore: AllSpacesStore; item: AdminSpaceItem; onClose: () => void }) {
+        this.onClose = onClose;
         this.allSpacesStore = allSpacesStore;
-        this.adminSpacesService = adminSpacesService;
-        this.dialogManager = allSpacesStore.dialogManager;
-
-        this.confirmationField.validator = (value) => this.validateConfirmation(value);
+        this.item = item;
 
         makeObservable(this, {
             deleteState: observable.ref,
+            confirmationChecked: observable,
         });
     }
 
-    get canDelete(): boolean {
-        return (
-            this.confirmationField.value.trim() === this.item.name &&
-            !this.deleteState.isLoading
-        );
+    get typeLabel(): string {
+        return this.item.type.label;
     }
 
-    validateConfirmation(value: string): string | null {
-        if (value.trim() !== this.item.name) {
-            return `Must match "${this.item.name}"`;
-        }
-        return null;
-    }
-
-    fillConfirmationText() {
-        runInAction(() => {
-            this.confirmationField.value = this.item.name;
-        });
+    get isConfirmationValid(): boolean {
+        return this.confirmationChecked;
     }
 
     async deleteSpace() {
-        if (!this.canDelete) return;
+        if (!this.isConfirmationValid) {
+            showErrorToast({
+                message: "Please confirm the deletion by checking the checkbox.",
+            });
+            return;
+        }
 
         try {
             runInAction(() => {
                 this.deleteState = DataState.loading();
             });
 
-            const result = await this.adminSpacesService.deleteSpace(this.item.id);
-            result.getOrError();
+            (await this.adminSpacesService.deleteSpace(this.item.id)).getOrError();
 
             runInAction(() => {
-                this.deleteState = DataState.data(null);
+                this.deleteState = DataState.data(undefined);
             });
 
-            // Reload the current folder to reflect changes
-            this.allSpacesStore.reloadCurrentFolder();
-
-            this.closeDialog();
-        } catch (error) {
+            // Reload the current state to reflect changes
+            this.allSpacesStore.reloadCurrentState();
+            this.onClose();
+        }
+        catch (error) {
             const appError = AppError.fromAny(error);
             runInAction(() => {
                 this.deleteState = DataState.error(appError);
             });
-            showErrorToast({
-                message: appError.message,
-            });
         }
     }
 
-    closeDialog() {
-        this.dialogManager.closeById(deleteSpaceDialogId);
-    }
 }

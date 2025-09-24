@@ -1,7 +1,7 @@
-import { AdminSpaceItem } from "~/domain/lms/models/AdminSpaceItem";
-import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
+import { Observer } from "mobx-react-lite";
+import { ReactNode, useRef } from "react";
 import { DialogFooter } from "~/ui/components/dialogs/dialog";
-import { DialogCloseButton, DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
+import { DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
 import { Button } from "~/ui/widgets/button/Button";
 import {
     Dialog,
@@ -9,29 +9,28 @@ import {
     DialogOverlay,
     DialogScaffold
 } from "~/ui/widgets/dialogmanager";
-import { FTextField } from "~/ui/widgets/form/TextField";
-import { DeleteSpaceDialogProvider, useDeleteSpaceDialogStore } from "./DeleteSpaceDialogContext";
-import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
+import { Checkbox } from "~/ui/widgets/form/Checkbox";
 import { AllSpacesStore } from "../allspaces/AllSpacesStore";
+import { DeleteSpaceDialogContext, useDeleteSpaceDialogStore } from "./DeleteSpaceDialogContext";
+import { DeleteSpaceDialogStore } from "./DeleteSpaceDialogStore";
+import { AdminSpaceItem } from "~/domain/lms/models/AdminSpaceItem";
 
 export interface DeleteSpaceDialogProps {
     item: AdminSpaceItem;
-    adminSpacesService: AdminSpacesService;
-    layoutStore: LMSLayoutStore;
     allSpacesStore: AllSpacesStore;
+    onClose: () => void;
 }
 
 function DialogInner() {
     const store = useDeleteSpaceDialogStore();
     return (
-        <Dialog onClose={() => store.closeDialog()}>
+        <Dialog onClose={() => store.onClose()}>
             <DialogOverlay />
             <DialogScaffold>
                 <DialogContent className="w-full max-w-md">
                     <DialogHeader
-                        className="border-"
-                        onClose={<DialogCloseButton onClick={() => store.closeDialog()} />}
-                        title="Delete Space"
+                        className="border-none"
+                        title={`Delete ${store.typeLabel}`}
                     />
                     <DialogForm />
                 </DialogContent>
@@ -44,55 +43,66 @@ function DialogForm() {
     const store = useDeleteSpaceDialogStore();
     return (
         <div className="space-y-4 p-6">
-            <div className="space-y-4">
-                <div className="text-sm text-gray-700">
-                    Are you sure you want to delete <strong>"{store.item.name}"</strong>? This action cannot be undone.
-                </div>
-                <div className="space-y-2">
-                    <label className="text-sm font-medium text-gray-700">
-                        Type the space name to confirm deletion:
-                    </label>
-                    <FTextField
-                        field={store.confirmationField}
-                        placeholder="Enter space name"
+            <Observer>
+                {() => (
+                    <Checkbox
+                        className="text-base"
+                        value={store.confirmationChecked}
+                        onChange={(checked) => store.confirmationChecked = checked}
+                        label="I understand that deleting this will also delete all its relevant data and proceed further"
                     />
-                    <div className="text-xs text-gray-500">
-                        Click on{" "}
-                        <button
-                            type="button"
-                            onClick={() => store.fillConfirmationText()}
-                            className="text-blue-600 hover:text-blue-800 underline"
-                        >
-                            {store.item.name}
-                        </button>{" "}
-                        to fill automatically
-                    </div>
-                </div>
-            </div>
+                )}
+            </Observer>
+
             <DialogFooter>
                 <Button
                     variant="outline"
-                    onClick={() => store.closeDialog()}
-                    disabled={store.deleteState.isLoading}
-                >
+                    color="secondary"
+                    onClick={() => store.onClose()}>
                     Cancel
                 </Button>
-                <Button
-                    variant="solid"
-                    color="danger"
-                    onClick={() => store.deleteSpace()}
-                    disabled={!store.canDelete || store.deleteState.isLoading}
-                >
-                    {store.deleteState.isLoading ? "Deleting..." : "Delete"}
-                </Button>
+                <Observer>
+                    {() => (
+                        <Button
+                            color="danger"
+                            onClick={() => store.deleteSpace()}
+                            loading={store.deleteState.isLoading}
+                            disabled={!store.isConfirmationValid}
+                        >
+                            Delete
+                        </Button>
+                    )}
+                </Observer>
             </DialogFooter>
         </div>
     );
 }
 
-export function DeleteSpaceDialog(props: DeleteSpaceDialogProps) {
+export function DeleteSpaceDialogProvider({
+    children,
+    store
+}: {
+    children: ReactNode;
+    store: DeleteSpaceDialogStore;
+}) {
     return (
-        <DeleteSpaceDialogProvider {...props}>
+        <DeleteSpaceDialogContext.Provider value={store}>
+            {children}
+        </DeleteSpaceDialogContext.Provider>
+    );
+}
+
+export function DeleteSpaceDialog(props: DeleteSpaceDialogProps) {
+    const storeRef = useRef<DeleteSpaceDialogStore | null>(null);
+    if (!storeRef.current) {
+        storeRef.current = new DeleteSpaceDialogStore({
+            item: props.item,
+            allSpacesStore: props.allSpacesStore,
+            onClose: props.onClose,
+        });
+    }
+    return (
+        <DeleteSpaceDialogProvider store={storeRef.current}>
             <DialogInner />
         </DeleteSpaceDialogProvider>
     );

@@ -1,7 +1,7 @@
-import { AdminSpaceItem } from "~/domain/lms/models/AdminSpaceItem";
-import { AdminSpacesService } from "~/domain/lms/services/AdminSpacesService";
+import { Observer } from "mobx-react-lite";
+import { ReactNode, useRef } from "react";
 import { DialogFooter } from "~/ui/components/dialogs/dialog";
-import { DialogCloseButton, DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
+import { DialogHeader } from "~/ui/components/dialogs/DialogHeaderAndFooter";
 import { Button } from "~/ui/widgets/button/Button";
 import {
     Dialog,
@@ -10,28 +10,28 @@ import {
     DialogScaffold
 } from "~/ui/widgets/dialogmanager";
 import { FTextField } from "~/ui/widgets/form/TextField";
-import { RenameSpaceDialogProvider, useRenameSpaceDialogStore } from "./RenameSpaceDialogContext";
-import { LMSLayoutStore } from "../../layout/LMSLayoutStore";
 import { AllSpacesStore } from "../allspaces/AllSpacesStore";
+import { RenameSpaceDialogContext, useRenameSpaceDialogStore } from "./RenameSpaceDialogContext";
+import { RenameSpaceDialogStore } from "./RenameSpaceDialogStore";
+import { HyperLink } from "~/ui/widgets/button/HyperLink";
+import { AdminSpaceItem } from "~/domain/lms/models/AdminSpaceItem";
 
 export interface RenameSpaceDialogProps {
     item: AdminSpaceItem;
-    adminSpacesService: AdminSpacesService;
-    layoutStore: LMSLayoutStore;
     allSpacesStore: AllSpacesStore;
+    onClose: () => void;
 }
 
 function DialogInner() {
     const store = useRenameSpaceDialogStore();
     return (
-        <Dialog onClose={() => store.closeDialog()}>
+        <Dialog onClose={() => store.onClose()}>
             <DialogOverlay />
             <DialogScaffold>
                 <DialogContent className="w-full max-w-md">
                     <DialogHeader
-                        className="border-"
-                        onClose={<DialogCloseButton onClick={() => store.closeDialog()} />}
-                        title="Rename Space"
+                        className="border-none"
+                        title={`Rename ${store.typeLabel}`}
                     />
                     <DialogForm />
                 </DialogContent>
@@ -42,44 +42,82 @@ function DialogInner() {
 
 function DialogForm() {
     const store = useRenameSpaceDialogStore();
+    return (<div className="space-y-4 p-6">
+        <FTextField
+            required
+            label="Name"
+            placeholder={`Enter ${store.typeLabel.toLowerCase()} name`}
+            field={store.nameField}
+        />
+        <Observer>
+            {() =>
+                store.item.type.isCourse ? (
+                    <HyperLink onClick={() => store.toggleAdditionalFields()}>
+                        <button>{store.showAdditionalFields ? "Hide additional fields" : "Show additional fields"}</button>
+                    </HyperLink>
+                ) : null
+            }
+        </Observer>
+        <Observer>
+            {() =>
+                (store.item.type.isCourse && store.showAdditionalFields) ? (
+                    <>
+                        <FTextField
+                            label="Internal Name"
+                            placeholder="Enter internal name"
+                            field={store.internalNameField}
+                        />
+                    </>
+                ) : null
+            }
+        </Observer>
+
+        <DialogFooter>
+            <Button
+                variant="outline"
+                color="secondary"
+                onClick={() => store.onClose()}>
+                Cancel
+            </Button>
+            <Observer>
+                {() => (
+                    <Button
+                        onClick={() => store.renameSpace()}
+                        loading={store.renameState.isLoading}
+                    >
+                        Rename
+                    </Button>
+                )}
+            </Observer>
+        </DialogFooter>
+    </div>);
+}
+
+export function RenameSpaceDialogProvider({
+    children,
+    store
+}: {
+    children: ReactNode;
+    store: RenameSpaceDialogStore;
+}) {
     return (
-        <div className="space-y-4 p-6">
-            <div className="space-y-4">
-                <FTextField
-                    label="Name"
-                    field={store.nameField}
-                    placeholder="Enter space name"
-                />
-                <FTextField
-                    label="Internal Name"
-                    field={store.internalNameField}
-                    placeholder="Enter internal name"
-                />
-            </div>
-            <DialogFooter>
-                <Button
-                    variant="outline"
-                    onClick={() => store.closeDialog()}
-                    disabled={store.renameState.isLoading}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    variant="solid"
-                    color="primary"
-                    onClick={() => store.renameSpace()}
-                    disabled={!store.canRename || store.renameState.isLoading}
-                >
-                    {store.renameState.isLoading ? "Renaming..." : "Rename"}
-                </Button>
-            </DialogFooter>
-        </div>
+        <RenameSpaceDialogContext.Provider value={store}>
+            {children}
+        </RenameSpaceDialogContext.Provider>
     );
 }
 
 export function RenameSpaceDialog(props: RenameSpaceDialogProps) {
+    const storeRef = useRef<RenameSpaceDialogStore | null>(null);
+    if (!storeRef.current) {
+        storeRef.current = new RenameSpaceDialogStore({
+            item: props.item,
+            allSpacesStore: props.allSpacesStore,
+            onClose: props.onClose,
+        });
+    }
     return (
-        <RenameSpaceDialogProvider {...props}>
+        <RenameSpaceDialogProvider store={storeRef.current}>
             <DialogInner />
         </RenameSpaceDialogProvider>
     );

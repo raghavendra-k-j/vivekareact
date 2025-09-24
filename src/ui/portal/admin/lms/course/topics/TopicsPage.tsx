@@ -4,14 +4,14 @@ import { TopicsContext, useTopicsStore } from "./TopicsContext";
 import { TopicsStore } from "./TopicsStore";
 import { HeaderView } from "./components/HeaderView";
 import { MainTableView } from "./components/MainTableView";
-import TopicDialog from "./components/TopicDialog";
 
 export function TopicsProvider({ children }: { children: ReactNode }) {
     const layoutStore = useCourseLayoutStore();
     const storeRef = useRef<TopicsStore | null>(null);
     if (!storeRef.current) {
         storeRef.current = new TopicsStore({
-            layoutStore: layoutStore
+            layoutStore: layoutStore,
+            dialogManager: layoutStore.dialogManager,
         });
     }
     return (
@@ -31,7 +31,6 @@ function TopicsPageInner() {
         <div className="flex flex-col h-full min-h-0 overflow-y-hidden">
             <HeaderView />
             <MainTableView />
-            <TopicDialog dialogStore={store.topicDialogStore} />
         </div>
     );
 }

@@ -125,6 +125,7 @@ export interface PopoverContentProps extends Omit<
     className?: string;
     style?: React.CSSProperties;
     portalContainer?: HTMLElement | null;
+    disablePortal?: boolean;
     children?: React.ReactNode;
 }
 
@@ -144,6 +145,7 @@ export function PopoverContent({
     className,
     style,
     portalContainer,
+    disablePortal = false,
     children,
     ...rest
 }: PopoverContentProps) {
@@ -162,20 +164,28 @@ export function PopoverContent({
         ...style,
     };
 
+    const content = (
+        <RadixPopover.Content
+            side={side}
+            align={align}
+            sideOffset={sideOffset}
+            avoidCollisions={flip}
+            collisionPadding={collisionPadding}
+            className={className}
+            style={mergedStyle}
+            {...rest}
+        >
+            {children}
+        </RadixPopover.Content>
+    );
+
+    if (disablePortal) {
+        return content;
+    }
+
     return (
         <RadixPopover.Portal container={portalContainer}>
-            <RadixPopover.Content
-                side={side}
-                align={align}
-                sideOffset={sideOffset}
-                avoidCollisions={flip}
-                collisionPadding={collisionPadding}
-                className={className}
-                style={mergedStyle}
-                {...rest}
-            >
-                {children}
-            </RadixPopover.Content>
+            {content}
         </RadixPopover.Portal>
     );
 }

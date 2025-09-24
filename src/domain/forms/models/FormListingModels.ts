@@ -2,6 +2,7 @@ import { JsonObj } from "~/core/types/Json";
 import { FormType } from "./FormType";
 import { UserFormStatus } from "./UserFormStatus";
 import { PageInfo } from "~/domain/common/models/PageInfo";
+import { TopicBase } from "~/domain/lms/models/TopicBase";
 
 export class FormListingReq {
     searchQuery: string | null;
@@ -9,25 +10,33 @@ export class FormListingReq {
     page: number;
     pageSize: number;
     formType: FormType | null;
+    spaceId: number | null;
+    topicId: number | null;
 
     constructor({
         searchQuery,
         status,
         page,
         pageSize,
-        formType
+        formType,
+        spaceId,
+        topicId,
     }: {
         searchQuery: string | null;
         status: UserFormStatus | null;
         page: number;
         pageSize: number;
         formType: FormType | null;
+        spaceId: number | null;
+        topicId: number | null;
     }) {
         this.searchQuery = searchQuery;
         this.status = status;
         this.page = page;
         this.pageSize = pageSize;
         this.formType = formType;
+        this.spaceId = spaceId;
+        this.topicId = topicId;
     }
 
     toJson(): JsonObj {
@@ -36,7 +45,9 @@ export class FormListingReq {
             status: this.status ? this.status.status : null,
             page: this.page,
             pageSize: this.pageSize,
-            formType: this.formType ? this.formType.type : null
+            formType: this.formType ? this.formType.type : null,
+            spaceId: this.spaceId,
+            topicId: this.topicId,
         };
     }
 }
@@ -59,6 +70,8 @@ export class FormItem {
     gainedMarks: number | null;
     percentage: number | null;
     isEvaluated: boolean | null;
+    topic: TopicBase | null;
+
 
     constructor({
         id,
@@ -77,7 +90,8 @@ export class FormItem {
         passingMarks,
         gainedMarks,
         percentage,
-        isEvaluated
+        isEvaluated,
+        topic
     }: {
         id: number;
         type: FormType;
@@ -96,6 +110,7 @@ export class FormItem {
         gainedMarks: number | null;
         percentage: number | null;
         isEvaluated: boolean | null;
+        topic: TopicBase | null;
     }) {
         this.id = id;
         this.type = type;
@@ -114,6 +129,7 @@ export class FormItem {
         this.gainedMarks = gainedMarks;
         this.percentage = percentage;
         this.isEvaluated = isEvaluated;
+        this.topic = topic;
     }
 
     static fromJson(json: JsonObj): FormItem {
@@ -143,6 +159,7 @@ export class FormItem {
             gainedMarks: json.gainedMarks ? Number(json.gainedMarks) : null,
             percentage: json.percentage ? Number(json.percentage) : null,
             isEvaluated: json.isEvaluated ? Boolean(json.isEvaluated) : null,
+            topic: json.topic ? TopicBase.fromJson(json.topic as JsonObj) : null,
         });
     }
 }

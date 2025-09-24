@@ -5,6 +5,9 @@ export type SearchDebounceParams = {
     delay?: number;
 };
 
+
+export type SearchDebounceFn = typeof createSearchDebounce;
+
 export function createSearchDebounce<T extends (...args: any[]) => void>(
     callback: T,
     options: SearchDebounceParams = {}

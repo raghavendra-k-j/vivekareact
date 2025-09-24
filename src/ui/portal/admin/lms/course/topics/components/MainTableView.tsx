@@ -81,15 +81,7 @@ export function MainTableView() {
 function ItemNameCell({ item }: { item: AdminTopicItem }) {
     return (
         <div className="flex items-center gap-2.5 py-1">
-            <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium"
-                style={{ backgroundColor: item.avatarColor.bgColor }}
-            >
-                {item.name.charAt(0).toUpperCase()}
-            </div>
-            <div>
-                <div className="text-sm font-medium text-default leading-tight">{item.name}</div>
-            </div>
+            <div className="text-sm font-medium text-default leading-tight">{item.name}</div>
         </div>
     );
 }
@@ -105,7 +97,7 @@ function ActionsCell({ item }: { item: AdminTopicItem }) {
                         size="xs"
                         variant="ghost"
                         color="primary"
-                        onClick={() => store.topicDialogStore.openEditDialog(item)}
+                        onClick={() => store.openEditTopicDialog(item)}
                         title="Edit topic"
                     >
                         Edit
@@ -114,7 +106,7 @@ function ActionsCell({ item }: { item: AdminTopicItem }) {
                         size="xs"
                         variant="ghost"
                         color="danger"
-                        onClick={() => store.topicDialogStore.deleteTopic(item.id)}
+                        onClick={() => store.openDeleteTopicDialog(item)}
                         title="Delete topic"
                     >
                         Delete
