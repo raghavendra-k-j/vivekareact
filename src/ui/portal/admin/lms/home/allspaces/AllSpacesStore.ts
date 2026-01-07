@@ -17,6 +17,8 @@ import { renameSpaceDialogId } from "../renamespace/RenameSpaceDialogContext";
 import { DeleteSpaceDialog } from "../deletespaces/DeleteSpaceDialog";
 import { deleteSpaceDialogId } from "../deletespaces/DeleteSpaceDialogContext";
 import { AdminSpaceListVm } from "./models/AdminSpaceListVm";
+import { aiCreateSpaceDialogId } from "../dialogIds";
+import { AiCreateSpaceDialog } from "../aicreate/AiCreateSpaceDialog";
 
 
 export class AllSpacesStore {
@@ -200,16 +202,16 @@ export class AllSpacesStore {
     }
 
     showAiCreateDialog() {
-        // this.dialogManager.show({
-        //     id: aiCreateSpaceDialogId,
-        //     component: AiCreateSpaceDialog,
-        //     props: {
-        //         parentId: this.currentFolderPermalink,
-        //         adminSpacesService: this.adminSpacesService,
-        //         layoutStore: this.layoutStore,
-        //         allSpacesStore: this,
-        //     },
-        // });
+        this.dialogManager.show({
+            id: aiCreateSpaceDialogId,
+            component: AiCreateSpaceDialog,
+            props: {
+                parentId: this.currentFolderPermalink,
+                adminSpacesService: this.adminSpacesService,
+                layoutStore: this.layoutStore,
+                allSpacesStore: this,
+            },
+        });
     }
 
     navigateToCouse(permalink: string) {
